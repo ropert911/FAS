@@ -74,9 +74,8 @@ public class FundService {
         return pageInfo;
     }
 
-    public List<String> getAllGPFund() {
+    public List<String> getAllFund(FundTypeEnum ft) {
         List<String> allData = new ArrayList<>();
-        FundTypeEnum ft = FundTypeEnum.GP;
 
         String data = funderRequest(ft, 500, 1);
         PageInfo pageInfo = parseData(data, allData);
