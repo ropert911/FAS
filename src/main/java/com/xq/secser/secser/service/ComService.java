@@ -112,6 +112,7 @@ public class ComService {
                                         }
                                     }
                                 }
+                                comp.setFt(ft.getUrlParam());
                                 compPoList.add(comp);
                             }
                         }
@@ -126,7 +127,7 @@ public class ComService {
             ioe.printStackTrace();
         }
 
-        compPoList.forEach(info -> System.out.println(String.format("%d %s %s %f %d %d", info.getIndex(), info.getName(), info.getEstime(), info.getScale(), info.getFnnum(), info.getManagernum())));
+        compPoList.forEach(info -> System.out.println(String.format("%d %s %s %s %f %d %d", info.getIndex(), info.getName(), info.getEstime(), info.getFt(), info.getScale(), info.getFnnum(), info.getManagernum())));
 
         return compPoList;
     }
