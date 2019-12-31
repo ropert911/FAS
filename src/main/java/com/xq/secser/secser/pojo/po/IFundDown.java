@@ -9,13 +9,6 @@ import java.util.List;
  * @author sk-qianxiao
  */
 public interface IFundDown {
-    @Select("select * from funddownload where code= #{code}")
-    FundDownPo getInfoByCode(String code);
-//
-//    User getUser(int id);
-//
-//    List<User> getUserList();
-
     /**
      * 插入一个记录
      *
@@ -33,4 +26,15 @@ public interface IFundDown {
 //    void updateUser(User user);
 //
 //    void deleteUser(int userId);
+
+    @Select("select * from funddownload where code= #{code}")
+    FundDownPo getInfoByCode(String code);
+
+
+    /**
+     * 查询全部
+     *
+     * @return
+     */
+    List<FundDownPo> getAll();
 }

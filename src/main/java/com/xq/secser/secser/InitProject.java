@@ -1,7 +1,9 @@
 package com.xq.secser.secser;
 
 import com.xq.secser.secser.model.FundTypeEnum;
+import com.xq.secser.secser.pojo.po.FoundPo;
 import com.xq.secser.secser.pojo.po.FundDownPo;
+import com.xq.secser.secser.pojo.po.IFund;
 import com.xq.secser.secser.pojo.po.IFundDown;
 import com.xq.secser.secser.service.FundInitService;
 import com.xq.secser.secser.service.FundService;
@@ -18,6 +20,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.Reader;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,19 +39,19 @@ public class InitProject implements ApplicationRunner {
     @Value("${com.xq.secser.reinit}")
     private boolean reinit;
 
+    @Autowired
+    SqlSessionFactory sqlSessionFactory;
+
 
     @Override
     public void run(ApplicationArguments args) {
         //默认不进行原数据的初始化
-        fundInitService.initOrigData(false);
+        fundInitService.initOrigData(reinit);
 
-//        String code = items[0];
-//        String name = items[1];
-//        double l1y =  Double.valueOf(items[11]) / 100;
-//        double l2y =  Double.valueOf(items[12]) / 100;
-//        double l3y =  Double.valueOf(items[13]);
-//        double ty =  Double.valueOf(items[14]) / 100;
-//        double cy =  Double.valueOf(items[15]) / 100;
+        //把原因数据解析到数据结构表里
+        fundInitService.parseOrigData();
+
+
     }
 
 

@@ -1,7 +1,9 @@
 package com.xq.secser.secser.service;
 
 import com.xq.secser.secser.model.FundTypeEnum;
+import com.xq.secser.secser.pojo.po.FoundPo;
 import com.xq.secser.secser.pojo.po.FundDownPo;
+import com.xq.secser.secser.pojo.po.IFund;
 import com.xq.secser.secser.pojo.po.IFundDown;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -13,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Reader;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,17 +30,8 @@ public class FundInitService {
     @Autowired
     FundService fundService;
 
-    private static SqlSessionFactory sqlSessionFactory;
-    private static Reader reader;
-
-    static {
-        try {
-            reader = Resources.getResourceAsReader("mybatis/Configure.xml");
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    @Autowired
+    SqlSessionFactory sqlSessionFactory;
 
 
     public void initOrigData(boolean reInit) {
@@ -70,6 +65,36 @@ public class FundInitService {
         try {
             IFundDown iFundDown = session.getMapper(IFundDown.class);
             iFundDown.insertFundBatch(fundDownPoList);
+        } finally {
+            session.close();
+        }
+    }
+
+    public void parseOrigData() {
+        SqlSession session = sqlSessionFactory.openSession(true);
+        try {
+            LocalDate localDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String date = localDate.format(formatter);
+
+            List<FoundPo> foundPoList = new ArrayList<>();
+            IFundDown iFundDown = session.getMapper(IFundDown.class);
+            List<FundDownPo> fundDownPoList = iFundDown.getAll();
+            fundDownPoList.forEach(data -> {
+                String[] items = data.getInfo().split(",");
+                String code = items[0];
+                String name = items[1];
+                Double l1y = items[11].length() == 0 ? null : Double.valueOf(items[11]);
+                Double l2y = items[12].length() == 0 ? null : Double.valueOf(items[12]);
+                Double l3y = items[13].length() == 0 ? null : Double.valueOf(items[13]);
+                Double ty = items[14].length() == 0 ? null : Double.valueOf(items[14]);
+                Double cy = items[15].length() == 0 ? null : Double.valueOf(items[15]);
+                FoundPo foundPo = FoundPo.builder().code(code).name(name).ft(data.getFt()).date(date).l1y(l1y).l2y(l2y).l3y(l3y).ty(ty).cy(cy).build();
+                foundPoList.add(foundPo);
+            });
+
+            IFund iFund = session.getMapper(IFund.class);
+            iFund.insertFundBatch(foundPoList);
         } finally {
             session.close();
         }
