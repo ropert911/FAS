@@ -37,7 +37,7 @@ public class ComService {
 
     public String getFilePath(FundTypeEnum ft) {
         String fileFullName = fileApath + File.separator + ft.getUrlParam() + ".xml";
-        logger.info("file path={}", fileFullName);
+        logger.debug("file path={}", fileFullName);
         return fileFullName;
     }
 }
