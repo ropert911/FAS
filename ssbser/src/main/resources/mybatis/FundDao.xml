@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xq.secser.ssbser.pojo.po.IFund">
+    <!--    <delete id="deleteUser" parameterType="int">-->
+    <!--        DELETE FROM user WHERE id = #{id}-->
+    <!--    </delete>-->
+
+    <!--    <insert id="insertFundDown" parameterType="TtFundPo">-->
+    <!--        INSERT INTO ttfund(code,ft, info) VALUES(#{code}, #{ft}, #{info})  ON DUPLICATE KEY UPDATE ft=VALUES(ft), info=VALUES(info)-->
+    <!--    </insert>-->
+    <insert id="insertFundBatch" parameterType="java.util.List">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into fund(code,name,ft,date,l1y,l2y,l3y,ty,cy) values
+        <foreach collection="list" item="fundPo" index="index" separator=",">
+            (
+            #{fundPo.code}, #{fundPo.name}, #{fundPo.ft},#{fundPo.date},#{fundPo.l1y}, #{fundPo.l2y},
+            #{fundPo.l3y},#{fundPo.ty},#{fundPo.cy}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE name=VALUES(name), ft=VALUES(ft), date=VALUES(date), l1y=VALUES(l1y), l2y=VALUES(l2y), l3y=VALUES(l3y),
+        ty=VALUES(ty), cy=VALUES(cy)
+    </insert>
+
+    <!--    <update id="updateUser" parameterType="User">-->
+    <!--        UPDATE user SET name=#{name},dept = #{dept}, website = #{website}, phone = #{phone} WHERE id = #{id}-->
+    <!--    </update>-->
+
+    <!--    <select id="getUser" parameterType="int" resultType="User">-->
+    <!--        SELECT * FROM user WHERE id = #{userId}-->
+    <!--    </select>-->
+
+    <select id="getAll" resultType="TtFundPo">
+            SELECT * FROM ttfund
+        </select>
+</mapper>
