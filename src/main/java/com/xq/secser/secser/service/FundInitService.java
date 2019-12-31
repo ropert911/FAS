@@ -75,7 +75,6 @@ public class FundInitService {
         try {
             LocalDate localDate = LocalDate.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String date = localDate.format(formatter);
 
             List<FoundPo> foundPoList = new ArrayList<>();
             IFundDown iFundDown = session.getMapper(IFundDown.class);
@@ -84,6 +83,10 @@ public class FundInitService {
                 String[] items = data.getInfo().split(",");
                 String code = items[0];
                 String name = items[1];
+                String date = items[3];
+                if (date.length() == 0) {
+                    date = localDate.format(formatter);
+                }
                 Double l1y = items[11].length() == 0 ? null : Double.valueOf(items[11]);
                 Double l2y = items[12].length() == 0 ? null : Double.valueOf(items[12]);
                 Double l3y = items[13].length() == 0 ? null : Double.valueOf(items[13]);
