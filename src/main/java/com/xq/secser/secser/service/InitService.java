@@ -1,17 +1,21 @@
 package com.xq.secser.secser.service;
 
 import com.xq.secser.secser.model.FundTypeEnum;
-import com.xq.secser.secser.pojo.po.FoundPo;
-import com.xq.secser.secser.pojo.po.FundDownPo;
-import com.xq.secser.secser.pojo.po.IFund;
-import com.xq.secser.secser.pojo.po.IFundDown;
+import com.xq.secser.secser.pojo.po.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -80,36 +84,20 @@ public class InitService {
         }
     }
 
-    public void parseOrigData() {
-        SqlSession session = sqlSessionFactory.openSession(true);
-        try {
-            LocalDate localDate = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-            List<FoundPo> foundPoList = new ArrayList<>();
-            IFundDown iFundDown = session.getMapper(IFundDown.class);
-            List<FundDownPo> fundDownPoList = iFundDown.getAll();
-            fundDownPoList.forEach(data -> {
-                String[] items = data.getInfo().split(",");
-                String code = items[0];
-                String name = items[1];
-                String date = items[3];
-                if (date.length() == 0) {
-                    date = localDate.format(formatter);
-                }
-                Double l1y = items[11].length() == 0 ? null : Double.valueOf(items[11]);
-                Double l2y = items[12].length() == 0 ? null : Double.valueOf(items[12]);
-                Double l3y = items[13].length() == 0 ? null : Double.valueOf(items[13]);
-                Double ty = items[14].length() == 0 ? null : Double.valueOf(items[14]);
-                Double cy = items[15].length() == 0 ? null : Double.valueOf(items[15]);
-                FoundPo foundPo = FoundPo.builder().code(code).name(name).ft(data.getFt()).date(date).l1y(l1y).l2y(l2y).l3y(l3y).ty(ty).cy(cy).build();
-                foundPoList.add(foundPo);
-            });
-
+    public void parseFund() {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            List<FoundPo> foundPoList = fundService.parseFund();
             IFund iFund = session.getMapper(IFund.class);
             iFund.insertFundBatch(foundPoList);
         } finally {
-            session.close();
         }
     }
+
+    public void parseCompany() {
+        comService.parseCompFile(FundTypeEnum.GP);
+        comService.parseCompFile(FundTypeEnum.HH);
+        comService.parseCompFile(FundTypeEnum.ZQ);
+    }
+
+
 }

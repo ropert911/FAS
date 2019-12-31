@@ -40,7 +40,10 @@ public class InitProject implements ApplicationRunner {
         initService.initCompany(bDowloadCompany);
 
         //把foud原始数据解析到数据结构表里
-        initService.parseOrigData();
+        initService.parseFund();
+
+        //解析公司数据
+        initService.parseCompany();
     }
 
 
