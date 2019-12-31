@@ -1,6 +1,6 @@
 package com.xq.secser.secser;
 
-import com.xq.secser.secser.service.FundInitService;
+import com.xq.secser.secser.service.InitService;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,24 +19,28 @@ public class InitProject implements ApplicationRunner {
     private static Logger logger = LoggerFactory.getLogger(InitProject.class);
 
     @Autowired
-    FundInitService fundInitService;
+    InitService initService;
 
-    @Value("${com.xq.secser.reinit}")
-    private boolean reinit;
+    @Value("${com.xq.secser.download.fund}")
+    private boolean bDowloadFound;
+
+    @Value("${com.xq.secser.download.company}")
+    private boolean bDowloadCompany;
 
     @Autowired
     SqlSessionFactory sqlSessionFactory;
 
-
     @Override
     public void run(ApplicationArguments args) {
-        //默认不进行原数据的初始化
-        fundInitService.initOrigData(reinit);
+        //TODO:添加时间统计
+        //下载found数据
+        initService.initFoundData(bDowloadFound);
 
-        //把原因数据解析到数据结构表里
-        fundInitService.parseOrigData();
+        //下载com数据
+        initService.initCompany(bDowloadCompany);
 
-
+        //把foud原始数据解析到数据结构表里
+        initService.parseOrigData();
     }
 
 

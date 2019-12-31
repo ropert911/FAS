@@ -5,16 +5,13 @@ import com.xq.secser.secser.pojo.po.FoundPo;
 import com.xq.secser.secser.pojo.po.FundDownPo;
 import com.xq.secser.secser.pojo.po.IFund;
 import com.xq.secser.secser.pojo.po.IFundDown;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.Reader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -25,16 +22,19 @@ import java.util.List;
  * @date 2019/12/31
  */
 @Service
-public class FundInitService {
-    private static Logger logger = LoggerFactory.getLogger(FundInitService.class);
+public class InitService {
+    private static Logger logger = LoggerFactory.getLogger(InitService.class);
+
     @Autowired
     FundService fundService;
+    @Autowired
+    ComService comService;
 
     @Autowired
     SqlSessionFactory sqlSessionFactory;
 
 
-    public void initOrigData(boolean reInit) {
+    public void initFoundData(boolean reInit) {
         if (!reInit) {
             return;
         }
@@ -50,6 +50,16 @@ public class FundInitService {
         fundTypeEnum = FundTypeEnum.ZQ;
         List<String> allData3 = fundService.getAllFund(fundTypeEnum);
         batchInsertDb(fundTypeEnum, allData3);
+    }
+
+    public void initCompany(boolean initCompany) {
+        if (!initCompany) {
+            return;
+        }
+
+        comService.getAllCom(FundTypeEnum.GP);
+        comService.getAllCom(FundTypeEnum.HH);
+        comService.getAllCom(FundTypeEnum.ZQ);
     }
 
 
