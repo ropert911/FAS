@@ -1,6 +1,8 @@
 package com.xq.secser.ssbser.service;
 
+import com.xq.secser.ssbser.pojo.po.CompPo;
 import com.xq.secser.ssbser.pojo.po.FoundPo;
+import com.xq.secser.ssbser.pojo.po.IComp;
 import com.xq.secser.ssbser.pojo.po.IFund;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -68,6 +70,12 @@ public class InitService implements ApplicationRunner {
     }
 
     public void parseCompany() {
-        companyProvider.parseCompany();
+        List<CompPo> compPoList = companyProvider.parseCompany();
+
+       try (SqlSession session = sqlSessionFactory.openSession(true)) {
+           IComp iComp = session.getMapper(IComp.class);
+           iComp.insertCompBatch(compPoList);
+        } finally {
+        }
     }
 }

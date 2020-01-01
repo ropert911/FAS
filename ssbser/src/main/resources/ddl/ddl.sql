@@ -23,3 +23,15 @@ CREATE TABLE  IF NOT EXISTS `fund` (
   `cy`	double ,
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=gbk;
+
+DROP TABLE IF EXISTS `comp`;
+CREATE TABLE  IF NOT EXISTS `comp` (
+  `ft`  char(4) Not null ,
+  `ordernum`  long ,
+  `name` varchar(64) character set gbk NOT NULL DEFAULT '',
+  `estime` DATE NULL DEFAULT NULL,
+  `scale`  double ,
+  `fnnum`  long ,
+  `managernum`  long ,
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=gbk;

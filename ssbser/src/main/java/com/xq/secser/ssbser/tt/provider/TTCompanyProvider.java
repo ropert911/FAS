@@ -1,7 +1,6 @@
 package com.xq.secser.ssbser.tt.provider;
 
 import com.xq.secser.ssbser.model.ComTypEnum;
-import com.xq.secser.ssbser.model.FundTypeEnum;
 import com.xq.secser.ssbser.pojo.po.CompPo;
 import com.xq.secser.ssbser.service.CompanyProvider;
 import com.xq.secser.ssbser.utils.FileWirter;
@@ -101,9 +100,9 @@ public class TTCompanyProvider implements CompanyProvider {
                                     if ("td".equals(itemNode.getNodeName())) {
                                         String content = itemNode.getTextContent().replaceAll("\\s*", "");
                                         switch (k) {
-                                            //index
+                                            //ordernum
                                             case 1:
-                                                comp.setIndex(Long.valueOf(content));
+                                                comp.setOrdernum(Long.valueOf(content));
                                                 break;
                                             //name
                                             case 3:
@@ -146,8 +145,6 @@ public class TTCompanyProvider implements CompanyProvider {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-
-        compPoList.forEach(info -> System.out.println(String.format("%d %s %s %s %f %d %d", info.getIndex(), info.getName(), info.getEstime(), info.getFt(), info.getScale(), info.getFnnum(), info.getManagernum())));
 
         return compPoList;
     }

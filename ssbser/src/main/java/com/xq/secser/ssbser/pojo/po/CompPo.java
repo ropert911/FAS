@@ -15,7 +15,7 @@ public class CompPo {
     /**
      * 排序
      */
-    private Long index;
+    private Long ordernum;
     /**
      * 公司名
      */
