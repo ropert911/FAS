@@ -129,17 +129,10 @@ public class TTFundProvider implements FundProvider {
 
     @Override
     public void initFoundData() {
-        FundTypeEnum fundTypeEnum = FundTypeEnum.GP;
-        List<String> allData1 = getAllFund(fundTypeEnum);
-        batchInsertDb(fundTypeEnum, allData1);
-
-        fundTypeEnum = FundTypeEnum.HH;
-        List<String> allData2 = getAllFund(fundTypeEnum);
-        batchInsertDb(fundTypeEnum, allData2);
-
-        fundTypeEnum = FundTypeEnum.ZQ;
-        List<String> allData3 = getAllFund(fundTypeEnum);
-        batchInsertDb(fundTypeEnum, allData3);
+        for (FundTypeEnum fte : FundTypeEnum.values()) {
+            List<String> allData1 = getAllFund(fte);
+            batchInsertDb(fte, allData1);
+        }
     }
 
     private void batchInsertDb(FundTypeEnum fundTypeEnum, List<String> allData) {

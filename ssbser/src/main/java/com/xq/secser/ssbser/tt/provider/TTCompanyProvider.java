@@ -1,5 +1,6 @@
 package com.xq.secser.ssbser.tt.provider;
 
+import com.xq.secser.ssbser.model.ComTypEnum;
 import com.xq.secser.ssbser.model.FundTypeEnum;
 import com.xq.secser.ssbser.pojo.po.CompPo;
 import com.xq.secser.ssbser.service.CompanyProvider;
@@ -37,9 +38,9 @@ public class TTCompanyProvider implements CompanyProvider {
     private String fileApath;
     private static RestTemplate restTemplate = new RestTemplate();
 
-    private void getAllCom(FundTypeEnum ft) {
+    private void getAllCom(ComTypEnum ft) {
         String pattern = "http://fund.eastmoney.com/Company/home/gspmlist?fundType=%d";
-        String url = String.format(pattern, ft.getIcode());
+        String url = String.format(pattern, ft.getCode());
 
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         String data = responseEntity.getBody();
@@ -50,32 +51,30 @@ public class TTCompanyProvider implements CompanyProvider {
 
     @Override
     public void initCompany() {
-        getAllCom(FundTypeEnum.GP);
-        getAllCom(FundTypeEnum.HH);
-        getAllCom(FundTypeEnum.ZQ);
+        for (ComTypEnum cte : ComTypEnum.values()) {
+            getAllCom(cte);
+        }
     }
 
     @Override
     public List<CompPo> parseCompany() {
         List<CompPo> compPosList = new ArrayList<>();
 
-        List<CompPo> gpCompList = parseCompFile(FundTypeEnum.GP);
-        compPosList.addAll(gpCompList);
-        List<CompPo> hhCompList = parseCompFile(FundTypeEnum.HH);
-        compPosList.addAll(hhCompList);
-        List<CompPo> zqCompList = parseCompFile(FundTypeEnum.ZQ);
-        compPosList.addAll(zqCompList);
+        for (ComTypEnum cte : ComTypEnum.values()) {
+            List<CompPo> compList = parseCompFile(cte);
+            compPosList.addAll(compList);
+        }
 
         return compPosList;
     }
 
-    public String getFilePath(FundTypeEnum ft) {
-        String fileFullName = fileApath + File.separator + ft.getUrlParam() + ".xml";
-        logger.info("file path={}", fileFullName);
+    public String getFilePath(ComTypEnum ft) {
+        String fileFullName = fileApath + File.separator + ft.getAbb() + ".xml";
+        logger.debug("file path={}", fileFullName);
         return fileFullName;
     }
 
-    public List<CompPo> parseCompFile(FundTypeEnum ft) {
+    public List<CompPo> parseCompFile(ComTypEnum ft) {
         List<CompPo> compPoList = new ArrayList<>();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -133,7 +132,7 @@ public class TTCompanyProvider implements CompanyProvider {
                                         }
                                     }
                                 }
-                                comp.setFt(ft.getUrlParam());
+                                comp.setFt(ft.getAbb());
                                 compPoList.add(comp);
                             }
                         }

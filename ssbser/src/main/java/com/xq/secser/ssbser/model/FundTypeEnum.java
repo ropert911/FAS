@@ -5,29 +5,23 @@ package com.xq.secser.ssbser.model;
  * @date 2019/12/30
  */
 public enum FundTypeEnum {
-    GP(1, "gp",25),
-    HH(2, "hh",27),
-    ZQ(3, "zq",31);
+    BB("bb"),
+    GP("gp"),
+    HH("hh"),
+    ZQ("zq"),
+    ZS("zs"),
+    QDII("qdii"),
+    LOF("lof"),
+    FOF("fof");
 
-    private int code;
     private String urlParam;
     private long icode;
 
-    FundTypeEnum(int code, String urlParam, long icode) {
-        this.code = code;
+    FundTypeEnum(String urlParam) {
         this.urlParam = urlParam;
-        this.icode=icode;
-    }
-
-    public int getCode() {
-        return code;
     }
 
     public String getUrlParam() {
         return urlParam;
-    }
-
-    public long getIcode() {
-        return icode;
     }
 }
