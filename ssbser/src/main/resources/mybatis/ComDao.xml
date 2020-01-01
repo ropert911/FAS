@@ -21,7 +21,7 @@
             #{compPo.managernum}
             )
         </foreach>
-        ON DUPLICATE KEY UPDATE ft=VALUES(ft), ordernum=VALUES(ordernum), estime=VALUES(estime), scale=VALUES(scale),
+        ON DUPLICATE KEY UPDATE ordernum=VALUES(ordernum), estime=VALUES(estime), scale=VALUES(scale),
         fnnum=VALUES(fnnum), managernum=VALUES(managernum)
     </insert>
 

@@ -33,5 +33,5 @@ CREATE TABLE  IF NOT EXISTS `comp` (
   `scale`  double ,
   `fnnum`  long ,
   `managernum`  long ,
-  PRIMARY KEY (`name`)
+  PRIMARY KEY (`ft`,`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=gbk;
