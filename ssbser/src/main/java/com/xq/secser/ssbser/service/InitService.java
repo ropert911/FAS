@@ -128,7 +128,7 @@ public class InitService implements ApplicationRunner {
             });
 
             //过滤
-            List<FoundPo> filtrResult = foundPoResult.stream().filter(s -> s.getL1y() >= 20).filter(s -> s.getL3y() >= 50).collect(Collectors.toList());
+            List<FoundPo> filtrResult = foundPoResult.stream().filter(s -> s.getL1y() >= 30).filter(s -> s.getL3y() >= 50).collect(Collectors.toList());
             //去重
             List<FoundPo> unique = filtrResult.stream().collect(
                     Collectors.collectingAndThen(
@@ -146,6 +146,11 @@ public class InitService implements ApplicationRunner {
                         item.getL1y(), item.getL3y(),
                         item.getComcode(), comMap.get(item.getComcode()).getName());
             }
+            /*
+            select * from fund  left outer join comp on fund.comcode = comp.comcode
+where fund.level>=4 and fund.l1y>=30 and fund.l3y>=50 and fund.ft in("gp","hh") and comp.ordernum<=20 and comp.ft in("gp","hh")
+group by code  order by l3y desc
+             */
         } finally {
         }
     }
