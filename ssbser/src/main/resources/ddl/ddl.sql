@@ -28,6 +28,7 @@ CREATE TABLE  IF NOT EXISTS `fund` (
 
 DROP TABLE IF EXISTS `comp`;
 CREATE TABLE  IF NOT EXISTS `comp` (
+  `comcode`  char(10) Not null ,
   `ft`  char(4) Not null ,
   `ordernum`  long ,
   `name` varchar(64) character set gbk NOT NULL DEFAULT '',
@@ -35,5 +36,5 @@ CREATE TABLE  IF NOT EXISTS `comp` (
   `scale`  double ,
   `fnnum`  long ,
   `managernum`  long ,
-  PRIMARY KEY (`ft`,`name`)
+  PRIMARY KEY (`comcode`,`ft`)
 ) ENGINE=InnoDB DEFAULT CHARSET=gbk;

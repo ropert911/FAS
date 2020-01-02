@@ -13,6 +13,10 @@ import lombok.ToString;
 @ToString
 public class CompPo {
     /**
+     * 公司编码
+     */
+    private String comcode;
+    /**
      * 排序
      */
     private Long ordernum;

@@ -14,10 +14,11 @@
         <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into comp(ft,ordernum,name,estime,scale,fnnum,managernum) values
+        insert into comp(comcode,ft,ordernum,name,estime,scale,fnnum,managernum) values
         <foreach collection="list" item="compPo" index="index" separator=",">
             (
-            #{compPo.ft}, #{compPo.ordernum}, #{compPo.name},#{compPo.estime},#{compPo.scale},#{compPo.fnnum},
+            #{compPo.comcode},#{compPo.ft}, #{compPo.ordernum},
+            #{compPo.name},#{compPo.estime},#{compPo.scale},#{compPo.fnnum},
             #{compPo.managernum}
             )
         </foreach>

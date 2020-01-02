@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -106,6 +103,18 @@ public class TTCompanyProvider implements CompanyProvider {
                                                 break;
                                             //name
                                             case 3:
+                                                String ocontent = itemNode.getTextContent();
+                                                NodeList l = itemNode.getChildNodes();
+                                                for (int f = 0; f < l.getLength(); ++f) {
+                                                    Node itemNode2 = l.item(f);
+                                                    if ("a".equals(itemNode2.getNodeName())) {
+                                                        NamedNodeMap amap = itemNode2.getAttributes();
+                                                        Node chref = amap.getNamedItem("href");
+                                                        String href = chref.getTextContent();
+                                                        String comanycode = href.replaceAll("[^\\d]+", "");
+                                                        comp.setComcode(comanycode);
+                                                    }
+                                                }
                                                 comp.setName(content);
                                                 break;
                                             //es time
