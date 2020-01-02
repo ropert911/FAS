@@ -21,13 +21,27 @@
             #{fundPo.l3y},#{fundPo.ty},#{fundPo.cy}
             )
         </foreach>
-        ON DUPLICATE KEY UPDATE name=VALUES(name), ft=VALUES(ft), date=VALUES(date), l1y=VALUES(l1y), l2y=VALUES(l2y), l3y=VALUES(l3y),
+        ON DUPLICATE KEY UPDATE name=VALUES(name), ft=VALUES(ft), date=VALUES(date), l1y=VALUES(l1y), l2y=VALUES(l2y),
+        l3y=VALUES(l3y),
         ty=VALUES(ty), cy=VALUES(cy)
     </insert>
 
-    <!--    <update id="updateUser" parameterType="User">-->
-    <!--        UPDATE user SET name=#{name},dept = #{dept}, website = #{website}, phone = #{phone} WHERE id = #{id}-->
-    <!--    </update>-->
+    <insert id="updateLevel" parameterType="java.util.List">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into fund(code,comcode,level) values
+        <foreach collection="list" item="foundLevelPo" index="index" separator=",">
+            (
+            #{foundLevelPo.code}, #{foundLevelPo.comcode}, #{foundLevelPo.level}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE comcode=VALUES(comcode), level=VALUES(level)
+    </insert>
+
+    <!--    <update id="updateLevel" parameterType="FoundLevelPo">-->
+    <!--            UPDATE fund SET comcode=#{comcode},level = #{level} WHERE code = #{code}-->
+    <!--   </update>-->
 
     <!--    <select id="getUser" parameterType="int" resultType="User">-->
     <!--        SELECT * FROM user WHERE id = #{userId}-->

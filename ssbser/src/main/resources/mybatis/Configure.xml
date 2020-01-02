@@ -6,6 +6,7 @@
     <typeAliases>
         <typeAlias alias="TtFundPo" type="com.xq.secser.ssbser.tt.pojo.TtFundPo"/>
         <typeAlias alias="FoundPo" type="com.xq.secser.ssbser.pojo.po.FoundPo"/>
+        <typeAlias alias="FoundLevelPo" type="com.xq.secser.ssbser.pojo.po.FoundLevelPo"/>
     </typeAliases>
     <environments default="development">
         <environment id="development">

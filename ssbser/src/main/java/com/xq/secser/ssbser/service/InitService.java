@@ -1,9 +1,6 @@
 package com.xq.secser.ssbser.service;
 
-import com.xq.secser.ssbser.pojo.po.CompPo;
-import com.xq.secser.ssbser.pojo.po.FoundPo;
-import com.xq.secser.ssbser.pojo.po.IComp;
-import com.xq.secser.ssbser.pojo.po.IFund;
+import com.xq.secser.ssbser.pojo.po.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
@@ -27,6 +24,8 @@ public class InitService implements ApplicationRunner {
     @Autowired
     FundProvider fundProvider;
     @Autowired
+    FundLevelProvider fundLevelProvider;
+    @Autowired
     CompanyProvider companyProvider;
     @Autowired
     SqlSessionFactory sqlSessionFactory;
@@ -44,6 +43,7 @@ public class InitService implements ApplicationRunner {
         //下载found数据
         if (bDowloadFound) {
             fundProvider.initFoundData();
+            fundLevelProvider.initFundLevelData();
         }
 
         //下载com数据
@@ -53,13 +53,15 @@ public class InitService implements ApplicationRunner {
 
         //把foud原始数据解析到数据结构表里
         parseFund();
+        parseFundLevelData();
+
 
         //解析公司数据
         parseCompany();
     }
 
 
-    public void parseFund() {
+    private void parseFund() {
         List<FoundPo> foundPoList = fundProvider.parseFund();
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
@@ -69,12 +71,26 @@ public class InitService implements ApplicationRunner {
         }
     }
 
-    public void parseCompany() {
+    private void parseFundLevelData() {
+        List<FoundLevelPo> foundLevelPoList = fundLevelProvider.parseFundLevelData();
+
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            IFund iFund = session.getMapper(IFund.class);
+            iFund.updateLevel(foundLevelPoList);
+            foundLevelPoList.forEach(found -> {
+                logger.info("{} {} {}", found.getCode(), found.getComcode(), found.getLevel());
+            });
+        } finally {
+        }
+    }
+
+    private void parseCompany() {
         List<CompPo> compPoList = companyProvider.parseCompany();
 
-       try (SqlSession session = sqlSessionFactory.openSession(true)) {
-           IComp iComp = session.getMapper(IComp.class);
-           iComp.insertCompBatch(compPoList);
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            IComp iComp = session.getMapper(IComp.class);
+            iComp.insertCompBatch(compPoList);
         } finally {
         }
     }
