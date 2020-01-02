@@ -8,4 +8,5 @@ import java.util.List;
  */
 public interface IComp {
     void insertCompBatch(List<CompPo> compPoList);
+    List<CompPo> getTopN(/*String ft, int limit*/);
 }

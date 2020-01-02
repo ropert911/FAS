@@ -30,11 +30,11 @@ DROP TABLE IF EXISTS `comp`;
 CREATE TABLE  IF NOT EXISTS `comp` (
   `comcode`  char(10) Not null ,
   `ft`  char(4) Not null ,
-  `ordernum`  long ,
+  `ordernum`  bigint ,
   `name` varchar(64) character set gbk NOT NULL DEFAULT '',
   `estime` DATE NULL DEFAULT NULL,
   `scale`  double ,
-  `fnnum`  long ,
-  `managernum`  long ,
+  `fnnum`  bigint ,
+  `managernum`  bigint ,
   PRIMARY KEY (`comcode`,`ft`)
 ) ENGINE=InnoDB DEFAULT CHARSET=gbk;

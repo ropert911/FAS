@@ -18,6 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +72,8 @@ public class TTCompanyProvider implements CompanyProvider {
     }
 
     public List<CompPo> parseCompFile(ComTypEnum ft) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
         List<CompPo> compPoList = new ArrayList<>();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -119,7 +122,13 @@ public class TTCompanyProvider implements CompanyProvider {
                                                 break;
                                             //es time
                                             case 7:
-                                                comp.setEstime(content);
+                                                try {
+                                                    java.util.Date d = format.parse(content);
+                                                    comp.setEstime(new java.sql.Date(d.getTime()));
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+
                                                 break;
                                             //scale
                                             case 11:

@@ -58,6 +58,8 @@ public class InitService implements ApplicationRunner {
 
         //解析公司数据
         parseCompany();
+
+        search();
     }
 
 
@@ -94,6 +96,15 @@ public class InitService implements ApplicationRunner {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             IComp iComp = session.getMapper(IComp.class);
             iComp.insertCompBatch(compPoList);
+        } finally {
+        }
+    }
+
+    private void search() {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            IComp iComp = session.getMapper(IComp.class);
+            List<CompPo> compPoList = iComp.getTopN();
+            compPoList.forEach(item -> logger.info("bbb =={}", item));
         } finally {
         }
     }
