@@ -8,5 +8,6 @@ import java.util.List;
  */
 public interface IFund {
     void insertFundBatch(List<FoundPo> foundPoList);
+    void delNameEpItem();
     void updateLevel(List<FoundLevelPo> foundLevelPoList);
 }

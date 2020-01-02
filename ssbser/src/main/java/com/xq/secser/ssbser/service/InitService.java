@@ -78,9 +78,12 @@ public class InitService implements ApplicationRunner {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             IFund iFund = session.getMapper(IFund.class);
             iFund.updateLevel(foundLevelPoList);
-            foundLevelPoList.forEach(found -> {
-                logger.info("{} {} {}", found.getCode(), found.getComcode(), found.getLevel());
-            });
+            iFund.delNameEpItem();
+            if (logger.isDebugEnabled()) {
+                foundLevelPoList.forEach(found -> {
+                    logger.debug("{} {} {}", found.getCode(), found.getComcode(), found.getLevel());
+                });
+            }
         } finally {
         }
     }

@@ -3,9 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.xq.secser.ssbser.pojo.po.IFund">
-    <!--    <delete id="deleteUser" parameterType="int">-->
-    <!--        DELETE FROM user WHERE id = #{id}-->
-    <!--    </delete>-->
+
 
     <!--    <insert id="insertFundDown" parameterType="TtFundPo">-->
     <!--        INSERT INTO ttfund(code,ft, info) VALUES(#{code}, #{ft}, #{info})  ON DUPLICATE KEY UPDATE ft=VALUES(ft), info=VALUES(info)-->
@@ -38,6 +36,10 @@
         </foreach>
         ON DUPLICATE KEY UPDATE comcode=VALUES(comcode), level=VALUES(level)
     </insert>
+
+        <delete id="delNameEpItem">
+           delete from fund where name is null or name=''
+        </delete>
 
     <!--    <update id="updateLevel" parameterType="FoundLevelPo">-->
     <!--            UPDATE fund SET comcode=#{comcode},level = #{level} WHERE code = #{code}-->
