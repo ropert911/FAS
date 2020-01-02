@@ -11,7 +11,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author sk-qianxiao
@@ -52,12 +53,12 @@ public class InitService implements ApplicationRunner {
         }
 
         //把foud原始数据解析到数据结构表里
-//        parseFund();
-//        parseFundLevelData();
+        parseFund();
+        parseFundLevelData();
 
 
         //解析公司数据
-//        parseCompany();
+        parseCompany();
 
         search();
     }
@@ -102,9 +103,49 @@ public class InitService implements ApplicationRunner {
 
     private void search() {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            IFund iFund = session.getMapper(IFund.class);
             IComp iComp = session.getMapper(IComp.class);
-            List<CompPo> compPoList = iComp.getTopN("gp",20);
-            compPoList.forEach(item -> logger.info("bbb =={}", item));
+
+            Map<String, CompPo> comMap = new HashMap<>();
+
+            List<CompPo> compPoList = iComp.getTopN("gp", 20);
+            compPoList.forEach(item -> comMap.put(item.getComcode(), item));
+            compPoList = iComp.getTopN("hh", 20);
+            compPoList.forEach(item -> comMap.put(item.getComcode(), item));
+
+            List<FoundPo> foundPoResult = new ArrayList<>();
+            List<FoundPo> foundPoList = iFund.getByLevel("gp", 4);
+            foundPoList.forEach(item -> {
+                if (null != comMap.get(item.getComcode())) {
+                    foundPoResult.add(item);
+                }
+            });
+            foundPoList = iFund.getByLevel("hh", 4);
+            foundPoList.forEach(item -> {
+                if (null != comMap.get(item.getComcode())) {
+                    foundPoResult.add(item);
+                }
+            });
+
+            //过滤
+            List<FoundPo> filtrResult = foundPoResult.stream().filter(s -> s.getL1y() >= 20).filter(s -> s.getL3y() >= 50).collect(Collectors.toList());
+            //去重
+            List<FoundPo> unique = filtrResult.stream().collect(
+                    Collectors.collectingAndThen(
+                            Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(FoundPo::getCode))), ArrayList::new)
+            );
+
+            //排序
+            unique.sort(Comparator.comparing(FoundPo::getL3y));
+            Collections.reverse(unique);
+
+            logger.info("size={}", unique.size());
+            for (FoundPo item : unique) {
+                logger.info("code={} name={}, levle={}, ly={}% l3y={}% ccode={},cname={}",
+                        item.getCode(), item.getName(), item.getLevel(),
+                        item.getL1y(), item.getL3y(),
+                        item.getComcode(), comMap.get(item.getComcode()).getName());
+            }
         } finally {
         }
     }

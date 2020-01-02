@@ -18,9 +18,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -87,8 +89,8 @@ public class TTFundProvider implements FundProvider {
         List<FoundPo> foundPoList = new ArrayList<>();
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            LocalDate localDate = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            java.util.Date now = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
             ITtFund iTtFund = session.getMapper(ITtFund.class);
             List<TtFundPo> ttFundPoList = iTtFund.getAll();
@@ -97,15 +99,23 @@ public class TTFundProvider implements FundProvider {
                 String code = items[0];
                 String name = items[1];
                 String date = items[3];
-                if (date.length() == 0) {
-                    date = localDate.format(formatter);
-                }
+
                 Double l1y = items[11].length() == 0 ? null : Double.valueOf(items[11]);
                 Double l2y = items[12].length() == 0 ? null : Double.valueOf(items[12]);
                 Double l3y = items[13].length() == 0 ? null : Double.valueOf(items[13]);
                 Double ty = items[14].length() == 0 ? null : Double.valueOf(items[14]);
                 Double cy = items[15].length() == 0 ? null : Double.valueOf(items[15]);
-                FoundPo foundPo = FoundPo.builder().code(code).name(name).ft(data.getFt()).date(date).l1y(l1y).l2y(l2y).l3y(l3y).ty(ty).cy(cy).build();
+                FoundPo foundPo = FoundPo.builder().code(code).name(name).ft(data.getFt()).l1y(l1y).l2y(l2y).l3y(l3y).ty(ty).cy(cy).build();
+                try {
+                    java.util.Date d = now;
+                    if (date.length() > 0) {
+                        d = format.parse(date);
+                    }
+
+                    foundPo.setDate(new java.sql.Date(d.getTime()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 foundPoList.add(foundPo);
             });
         } finally {
