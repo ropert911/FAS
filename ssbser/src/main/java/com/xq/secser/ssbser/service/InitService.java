@@ -52,12 +52,12 @@ public class InitService implements ApplicationRunner {
         }
 
         //把foud原始数据解析到数据结构表里
-        parseFund();
-        parseFundLevelData();
+//        parseFund();
+//        parseFundLevelData();
 
 
         //解析公司数据
-        parseCompany();
+//        parseCompany();
 
         search();
     }
@@ -103,7 +103,7 @@ public class InitService implements ApplicationRunner {
     private void search() {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             IComp iComp = session.getMapper(IComp.class);
-            List<CompPo> compPoList = iComp.getTopN();
+            List<CompPo> compPoList = iComp.getTopN("gp",20);
             compPoList.forEach(item -> logger.info("bbb =={}", item));
         } finally {
         }

@@ -1,5 +1,7 @@
 package com.xq.secser.ssbser.pojo.po;
 
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,12 @@ import java.util.List;
  * @date 2019/12/31
  */
 public interface IComp {
+    /**
+     * 批量插入公司信息
+     *
+     * @param compPoList
+     */
     void insertCompBatch(List<CompPo> compPoList);
-    List<CompPo> getTopN(/*String ft, int limit*/);
+
+    List<CompPo> getTopN(@Param("ft") String ft, @Param("limit") int limit);
 }

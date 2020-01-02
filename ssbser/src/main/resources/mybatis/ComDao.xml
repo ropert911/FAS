@@ -35,6 +35,6 @@
     <!--    </select>-->
 
     <select id="getTopN" resultType="CompPo">
-            SELECT * FROM comp
+           SELECT * FROM comp where ft=#{ft} order by ordernum asc limit #{limit}
     </select>
 </mapper>
