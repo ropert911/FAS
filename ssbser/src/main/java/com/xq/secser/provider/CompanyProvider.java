@@ -1,4 +1,4 @@
-package com.xq.secser.ssbser.service;
+package com.xq.secser.provider;
 
 import com.xq.secser.ssbser.pojo.po.CompPo;
 
@@ -15,7 +15,9 @@ public interface CompanyProvider {
     void initCompany();
 
     /**
+     * 解析基金公司
      *
+     * @return
      */
     List<CompPo> parseCompany();
 }

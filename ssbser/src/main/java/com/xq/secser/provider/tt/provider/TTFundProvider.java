@@ -1,4 +1,4 @@
-package com.xq.secser.ssbser.tt.provider;
+package com.xq.secser.provider.tt.provider;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -6,24 +6,31 @@ import com.alibaba.fastjson.JSONObject;
 import com.xq.secser.ssbser.model.FundTypeEnum;
 import com.xq.secser.ssbser.model.PageInfo;
 import com.xq.secser.ssbser.pojo.po.FoundPo;
-import com.xq.secser.ssbser.service.FundProvider;
-import com.xq.secser.ssbser.tt.pojo.ITtFund;
-import com.xq.secser.ssbser.tt.pojo.TtFundPo;
+import com.xq.secser.provider.FundProvider;
+import com.xq.secser.provider.tt.pojo.ITtFund;
+import com.xq.secser.provider.tt.pojo.TtFundPo;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author sk-qianxiao
@@ -121,7 +128,99 @@ public class TTFundProvider implements FundProvider {
         } finally {
         }
 
+
+        //包含基金的公司和基金的评级
+        List<FoundPo> cCodeLevel = parseFundLevelData();
+        Map<String, FoundPo> levMap = cCodeLevel.stream().collect(Collectors.toMap(FoundPo::getCode, a -> a, (key1, key2) -> key2));
+        foundPoList.forEach(item -> {
+            FoundPo t = levMap.get(item.getCode());
+            if (t != null) {
+                item.setComcode(t.getComcode());
+                item.setLevel(t.getLevel());
+            }
+        });
+
+
         return foundPoList;
+    }
+
+
+    private List<FoundPo> parseFundLevelData() {
+        List<FoundPo> foundLevelList = new ArrayList<>();
+        try {
+            Resource res2 = new ClassPathResource("评级.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(res2.getInputStream());
+            XSSFSheet dataSheet = workbook.getSheet("data");
+            XSSFRow dataheader = dataSheet == null ? null : dataSheet.getRow(0);
+            int itfCellNum = dataheader == null ? 0 : dataheader.getPhysicalNumberOfCells();
+            int fcodei = 0;
+            int ccodei = 0;
+            int flevelsh = -1, flevelzs = -1, flevelja = -1;
+            for (int i = 0; i < itfCellNum; i++) {
+                String content = getCellString(dataheader, i);
+                switch (content) {
+                    case "代码":
+                        fcodei = i;
+                        break;
+                    case "简称":
+                        break;
+                    case "相关链接":
+                        break;
+                    case "基金经理":
+                        break;
+                    case "基金公司":
+                        ccodei = i;
+                        break;
+                    case "5星评级家数":
+                        break;
+                    case "上海证券":
+                        flevelsh = i;
+                        break;
+                    case "招商证券":
+                        flevelzs = i;
+                        break;
+                    case "济安金信":
+                        flevelja = i;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            int itfRowsNum = dataSheet.getPhysicalNumberOfRows();
+            for (int i = 1; i < itfRowsNum; i++) {
+                FoundPo foundLevel = FoundPo.builder().build();
+                //从第二列获取
+                XSSFRow xssfRow = dataSheet.getRow(i);
+                String code = getCellString(xssfRow, fcodei);
+                while (code.length() < 6) {
+                    code = "0" + code;
+                }
+                foundLevel.setCode(code);
+
+                String ccode = getLinkString(xssfRow, ccodei);
+                ccode = ccode.replaceAll("[^\\d]+", "");
+                foundLevel.setComcode(ccode);
+
+                String lsh = getCellString(xssfRow, flevelsh);
+                lsh = lsh.replaceAll("[^★]+", "");
+
+                String lzs = getCellString(xssfRow, flevelzs);
+                lzs = lzs.replaceAll("[^★]+", "");
+
+                String lja = getCellString(xssfRow, flevelja);
+                lja = lja.replaceAll("[^★]+", "");
+                double level = getLevel(lsh.length(), lzs.length(), lja.length());
+                foundLevel.setLevel(level);
+                foundLevelList.add(foundLevel);
+                logger.debug("{}-{}-{}-{}-{}==={}", code, ccode, lsh, lzs, lja, level);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return foundLevelList;
     }
 
     private List<String> getAllFund(FundTypeEnum ft) {
@@ -143,6 +242,8 @@ public class TTFundProvider implements FundProvider {
             List<String> allData1 = getAllFund(fte);
             batchInsertDb(fte, allData1);
         }
+
+        //评组表格从 http://fund.eastmoney.com/data/fundrating.html 基金评级得到
     }
 
     private void batchInsertDb(FundTypeEnum fundTypeEnum, List<String> allData) {
@@ -160,5 +261,45 @@ public class TTFundProvider implements FundProvider {
         } finally {
             session.close();
         }
+    }
+
+    private String getCellString(XSSFRow xssfRow, int index) {
+        XSSFCell cell = xssfRow.getCell(index);
+        if (cell == null) {
+            return "";
+        }
+        cell.setCellType(CellType.STRING);
+        return cell.toString();
+    }
+
+    private String getLinkString(XSSFRow xssfRow, int index) {
+        XSSFCell cell = xssfRow.getCell(index);
+        if (cell == null) {
+            return "";
+        }
+        XSSFHyperlink link = cell.getHyperlink();
+        if (link == null) {
+            return "";
+        }
+        return link.getAddress();
+    }
+
+    private double getLevel(double i, double j, double k) {
+        double sum = 0;
+        int num = 0;
+        if (i > 0) {
+            sum += i;
+            num++;
+        }
+        if (j > 0) {
+            sum += j;
+            num++;
+        }
+        if (k > 0) {
+            sum += k;
+            num++;
+        }
+
+        return num > 0 ? (sum / num) : 0d;
     }
 }

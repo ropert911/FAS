@@ -16,5 +16,12 @@ public interface IComp {
      */
     void insertCompBatch(List<CompPo> compPoList);
 
+    /**
+     * 获取排名在前N名的某一类基金公司
+     *
+     * @param ft
+     * @param limit
+     * @return
+     */
     List<CompPo> getTopN(@Param("ft") String ft, @Param("limit") int limit);
 }

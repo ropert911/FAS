@@ -1,8 +1,8 @@
-package com.xq.secser.ssbser.tt.provider;
+package com.xq.secser.provider.tt.provider;
 
 import com.xq.secser.ssbser.model.ComTypEnum;
 import com.xq.secser.ssbser.pojo.po.CompPo;
-import com.xq.secser.ssbser.service.CompanyProvider;
+import com.xq.secser.provider.CompanyProvider;
 import com.xq.secser.ssbser.utils.FileWirter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

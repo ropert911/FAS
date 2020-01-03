@@ -1,4 +1,4 @@
-package com.xq.secser.ssbser.service;
+package com.xq.secser.provider;
 
 import com.xq.secser.ssbser.pojo.po.FoundPo;
 

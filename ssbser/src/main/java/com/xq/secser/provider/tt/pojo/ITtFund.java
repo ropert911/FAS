@@ -1,4 +1,4 @@
-package com.xq.secser.ssbser.tt.pojo;
+package com.xq.secser.provider.tt.pojo;
 
 
 import org.apache.ibatis.annotations.Select;

@@ -4,9 +4,8 @@
 <configuration>
     <properties resource="mybatis/db.properties"/>
     <typeAliases>
-        <typeAlias alias="TtFundPo" type="com.xq.secser.ssbser.tt.pojo.TtFundPo"/>
+        <typeAlias alias="TtFundPo" type="com.xq.secser.provider.tt.pojo.TtFundPo"/>
         <typeAlias alias="FoundPo" type="com.xq.secser.ssbser.pojo.po.FoundPo"/>
-        <typeAlias alias="FoundLevelPo" type="com.xq.secser.ssbser.pojo.po.FoundLevelPo"/>
         <typeAlias alias="CompPo" type="com.xq.secser.ssbser.pojo.po.CompPo"/>
     </typeAliases>
     <environments default="development">

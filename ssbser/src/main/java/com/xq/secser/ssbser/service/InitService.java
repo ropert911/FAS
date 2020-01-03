@@ -1,5 +1,7 @@
 package com.xq.secser.ssbser.service;
 
+import com.xq.secser.provider.CompanyProvider;
+import com.xq.secser.provider.FundProvider;
 import com.xq.secser.ssbser.pojo.po.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -25,8 +27,6 @@ public class InitService implements ApplicationRunner {
     @Autowired
     FundProvider fundProvider;
     @Autowired
-    FundLevelProvider fundLevelProvider;
-    @Autowired
     CompanyProvider companyProvider;
     @Autowired
     SqlSessionFactory sqlSessionFactory;
@@ -44,7 +44,6 @@ public class InitService implements ApplicationRunner {
         //下载found数据
         if (bDowloadFound) {
             fundProvider.initFoundData();
-            fundLevelProvider.initFundLevelData();
         }
 
         //下载com数据
@@ -54,8 +53,6 @@ public class InitService implements ApplicationRunner {
 
         //把foud原始数据解析到数据结构表里
         parseFund();
-        parseFundLevelData();
-
 
         //解析公司数据
         parseCompany();
@@ -70,23 +67,6 @@ public class InitService implements ApplicationRunner {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             IFund iFund = session.getMapper(IFund.class);
             iFund.insertFundBatch(foundPoList);
-        } finally {
-        }
-    }
-
-    private void parseFundLevelData() {
-        List<FoundLevelPo> foundLevelPoList = fundLevelProvider.parseFundLevelData();
-
-
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            IFund iFund = session.getMapper(IFund.class);
-            iFund.updateLevel(foundLevelPoList);
-            iFund.delNameEpItem();
-            if (logger.isDebugEnabled()) {
-                foundLevelPoList.forEach(found -> {
-                    logger.debug("{} {} {}", found.getCode(), found.getComcode(), found.getLevel());
-                });
-            }
         } finally {
         }
     }
