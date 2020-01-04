@@ -13,6 +13,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -88,19 +89,22 @@ public class InitService implements ApplicationRunner {
 
             Map<String, CompPo> comMap = new HashMap<>();
 
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date d2014 = format.parse("2014-06-06");
             List<CompPo> compPoList = iComp.getTopN("gp", 20);
-            compPoList.forEach(item -> comMap.put(item.getComcode(), item));
+            compPoList.stream().filter(item -> item.getEstime().compareTo(d2014) < 0).forEach(item -> comMap.put(item.getComcode(), item));
             compPoList = iComp.getTopN("hh", 20);
-            compPoList.forEach(item -> comMap.put(item.getComcode(), item));
+            compPoList.stream().filter(item -> item.getEstime().compareTo(d2014) < 0).forEach(item -> comMap.put(item.getComcode(), item));
+
 
             List<FoundPo> foundPoResult = new ArrayList<>();
-            List<FoundPo> foundPoList = iFund.getByLevel("gp", 4);
+            List<FoundPo> foundPoList = iFund.getByLevel("gp", 3.5);
             foundPoList.forEach(item -> {
                 if (null != comMap.get(item.getComcode())) {
                     foundPoResult.add(item);
                 }
             });
-            foundPoList = iFund.getByLevel("hh", 4);
+            foundPoList = iFund.getByLevel("hh", 3.5);
             foundPoList.forEach(item -> {
                 if (null != comMap.get(item.getComcode())) {
                     foundPoResult.add(item);
@@ -128,9 +132,18 @@ public class InitService implements ApplicationRunner {
             }
             /*
             select * from fund  left outer join comp on fund.comcode = comp.comcode
-where fund.level>=4 and fund.l1y>=30 and fund.l3y>=50 and fund.ft in("gp","hh") and comp.ordernum<=20 and comp.ft in("gp","hh")
-group by code  order by l3y desc
+            where
+                fund.ft in("gp","hh") 			#类型为股票和混合
+                and comp.ft in("gp","hh")
+                and fund.level>=3.5            #机构为4星级以上
+                and fund.l1y>=30             #近一年30%
+                and fund.l3y>=50             #近3年50%
+                and comp.estime<='2014-06-06'  #2014年前的基金公司，穿越牛熊周期
+                and comp.ordernum<= 20      #基金公司规模在前20名
+            group by code  order by l3y desc
              */
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
         }
     }

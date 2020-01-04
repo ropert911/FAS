@@ -23,5 +23,5 @@ public interface IFund {
      * @param level
      * @return
      */
-    List<FoundPo> getByLevel(@Param("ft") String ft, @Param("level") long level);
+    List<FoundPo> getByLevel(@Param("ft") String ft, @Param("level") double level);
 }
