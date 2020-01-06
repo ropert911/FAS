@@ -6,6 +6,7 @@
     <typeAliases>
         <typeAlias alias="TtFundPo" type="com.xq.secser.provider.tt.pojo.TtFundPo"/>
         <typeAlias alias="FoundPo" type="com.xq.secser.ssbser.pojo.po.FoundPo"/>
+        <typeAlias alias="FundQuarterPo" type="com.xq.secser.ssbser.pojo.po.FundQuarterPo"/>
         <typeAlias alias="CompPo" type="com.xq.secser.ssbser.pojo.po.CompPo"/>
     </typeAliases>
     <environments default="development">
@@ -22,6 +23,7 @@
 
     <mappers>
         <mapper resource="mybatis/FundDao.xml"/>
+        <mapper resource="mybatis/FundQuarterDao.xml"/>
         <mapper resource="mybatis/ComDao.xml"/>
         <mapper resource="mybatis/tt/FundDao.xml"/>
     </mappers>

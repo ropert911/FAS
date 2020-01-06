@@ -26,6 +26,15 @@ CREATE TABLE  IF NOT EXISTS `fund` (
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=gbk;
 
+DROP TABLE IF EXISTS `fund_quarter`;
+CREATE TABLE  IF NOT EXISTS `fund_quarter` (
+  `code` char(64) NOT NULL comment '基金代码',
+  `quarter` char(10)  comment '季度',
+  `rank`  double comment '同类排名',
+  `rise`  double comment '季度涨幅',
+  PRIMARY KEY (`code`,`quarter`)
+) ENGINE=InnoDB DEFAULT CHARSET=gbk;
+
 DROP TABLE IF EXISTS `comp`;
 CREATE TABLE  IF NOT EXISTS `comp` (
   `comcode`  char(10) Not null ,
