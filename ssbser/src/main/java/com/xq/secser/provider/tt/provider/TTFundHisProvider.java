@@ -516,7 +516,6 @@ public class TTFundHisProvider implements FundHisProvider {
 
 
             if (null != fy2.getRank()) {
-                logger.info("date=={}", fy2);
                 fundYearPoList.add(fy2);
             }
             if (null != fy3.getRank()) {

@@ -30,6 +30,14 @@
     <!--    </select>-->
 
     <select id="getByLevel" resultType="FoundPo">
-            select * from fund where ft=#{ft} and level>=#{level}
-        </select>
+            select * from fund
+        <where>
+            <if test="ft !=null and ft !='' ">
+                ft=#{ft}
+            </if>
+            <if test="level !=null ">
+                AND  level>=#{level}
+            </if>
+        </where>
+    </select>
 </mapper>

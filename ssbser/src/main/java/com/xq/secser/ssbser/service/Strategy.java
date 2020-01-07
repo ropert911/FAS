@@ -3,11 +3,16 @@ package com.xq.secser.ssbser.service;
 import com.xq.secser.ssbser.pojo.po.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -21,6 +26,8 @@ import java.util.stream.Collectors;
 public class Strategy {
     private static Logger logger = LoggerFactory.getLogger(Strategy.class);
 
+    @Value("${com.xq.secser.export.path}")
+    private String outputpath;
     @Autowired
     FundHisService fundHisService;
 
@@ -126,6 +133,8 @@ public class Strategy {
         //显示
         printResult(rFoundPoResult, comMap, fyListMap, fqListMap);
 
+        export(rFoundPoResult, comMap, fyListMap, fqListMap);
+
     }
 
     private void printResult(List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap, Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap) {
@@ -155,20 +164,104 @@ public class Strategy {
                     item.getComcode(), comMap.get(item.getComcode()).getName(),
                     df.format(item.getL1y()), df.format(item.getL3y())));
             System.out.println(String.format("        季度  %s=%s  %s=%s  %s=%s  %s=%s  %s=%s  %s=%s  %s=%s  %s=%s",
-                    q1.getQuarter(), df.format(q1.getRank()),
-                    q2.getQuarter(), df.format(q2.getRank()),
-                    q3.getQuarter(), df.format(q3.getRank()),
-                    q4.getQuarter(), df.format(q4.getRank()),
-                    q5.getQuarter(), df.format(q5.getRank()),
-                    q6.getQuarter(), df.format(q6.getRank()),
-                    q7.getQuarter(), df.format(q7.getRank()),
-                    q8.getQuarter(), df.format(q8.getRank())));
+                    q1.getQuarter(), q1.getRank() != null ? df.format(q1.getRank()) : "-",
+                    q2.getQuarter(), q2.getRank() != null ? df.format(q2.getRank()) : "-",
+                    q3.getQuarter(), q3.getRank() != null ? df.format(q3.getRank()) : "-",
+                    q4.getQuarter(), q4.getRank() != null ? df.format(q4.getRank()) : "-",
+                    q5.getQuarter(), q5.getRank() != null ? df.format(q5.getRank()) : "-",
+                    q6.getQuarter(), q6.getRank() != null ? df.format(q6.getRank()) : "-",
+                    q7.getQuarter(), q7.getRank() != null ? df.format(q7.getRank()) : "-",
+                    q8.getQuarter(), q8.getRank() != null ? df.format(q8.getRank()) : "-"));
             System.out.println(String.format("        年度  %s=%s  %s=%s  %s=%s  %s=%s  %s=%s",
                     y1 != null ? y1.getYear() : "null", y1 != null ? df.format(y1.getRank()) : "null",
                     y2 != null ? y2.getYear() : "null", y2 != null ? df.format(y2.getRank()) : "null",
                     y3 != null ? y3.getYear() : "null", y3 != null ? df.format(y3.getRank()) : "null",
                     y4 != null ? y4.getYear() : "null", y4 != null ? df.format(y4.getRank()) : "null",
                     y5 != null ? y5.getYear() : "null", y5 != null ? df.format(y5.getRank()) : "null"));
+        }
+    }
+
+    private void export(List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap, Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap) {
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet("gphh");
+        final XSSFRow row = sheet.createRow(0);
+        XSSFCell cellCode = row.createCell(0);
+        XSSFCell cellName = row.createCell(1);
+        sheet.setColumnWidth(1, 6000);
+        XSSFCell cellLevel = row.createCell(2);
+        XSSFCell cellCCode = row.createCell(3);
+        XSSFCell cellCName = row.createCell(4);
+        sheet.setColumnWidth(4, 6500);
+        XSSFCell cellCL1y = row.createCell(5);
+        XSSFCell cellCL3y = row.createCell(6);
+        cellCode.setCellValue("代码");
+        cellName.setCellValue("名称");
+        cellLevel.setCellValue("级别");
+        cellCCode.setCellValue("公司代码");
+        cellCName.setCellValue("公司名称");
+        cellCL1y.setCellValue("近1年");
+        cellCL3y.setCellValue("近3年");
+
+        DecimalFormat df = new DecimalFormat("0.000");
+
+        int rowNum = 1;
+        for (FoundPo item : rFoundPoResult) {
+            List<FundYearPo> fundYearPoList = fyListMap.get(item.getCode());
+            List<FundQuarterPo> fundQuarterPoList = fqListMap.get(item.getCode());
+
+
+            if (1 == rowNum) {
+                int rowIndex = 7;
+                for (FundQuarterPo fundQuarterPo : fundQuarterPoList) {
+                    XSSFCell cq = row.createCell(rowIndex++);
+                    cq.setCellValue(fundQuarterPo.getQuarter() + "季");
+                }
+
+                rowIndex = 15;
+                for (FundYearPo fundYearPo : fundYearPoList) {
+                    XSSFCell cy = row.createCell(rowIndex++);
+                    cy.setCellValue(fundYearPo.getYear()+"年");
+                }
+            }
+
+            XSSFRow row2 = sheet.createRow(rowNum++);
+            cellCode = row2.createCell(0);
+            cellCode.setCellValue(item.getCode());
+            cellName = row2.createCell(1);
+            cellName.setCellValue(item.getName());
+            cellLevel = row2.createCell(2);
+            cellLevel.setCellValue(df.format(item.getLevel()));
+            cellCCode = row2.createCell(3);
+            cellCCode.setCellValue(item.getComcode());
+            cellCName = row2.createCell(4);
+            cellCName.setCellValue(comMap.get(item.getComcode()).getName());
+            cellCL1y = row2.createCell(5);
+            cellCL1y.setCellValue(df.format(item.getL1y()));
+            cellCL3y = row2.createCell(6);
+            cellCL3y.setCellValue(df.format(item.getL3y()));
+
+            //季度
+            int rowIndex = 7;
+            for (FundQuarterPo fundQuarterPo : fundQuarterPoList) {
+                XSSFCell cq = row2.createCell(rowIndex++);
+                cq.setCellValue(fundQuarterPo.getRank() != null ? df.format(fundQuarterPo.getRank()) : "-");
+            }
+
+            //年
+            rowIndex = 15;
+            for (FundYearPo fundYearPo : fundYearPoList) {
+                XSSFCell cy1 = row2.createCell(rowIndex++);
+                cy1.setCellValue(fundYearPo != null ? df.format(fundYearPo.getRank()) : "-");
+            }
+        }
+
+        try {
+            File outfile = new File(outputpath + File.separator + "out_gphh.xlsx");
+            FileOutputStream outputStream = new FileOutputStream(outfile);
+            wb.write(outputStream);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
