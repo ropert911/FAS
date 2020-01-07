@@ -150,7 +150,7 @@ public class Strategy {
             FundQuarterPo q7 = lenq > 6 ? fundQuarterPoList.get(6) : null;
             FundQuarterPo q8 = lenq > 7 ? fundQuarterPoList.get(7) : null;
             System.out.println(String.format(
-                    "code=%s name=%s  level=%f 公司代号=%s 公司=%s 近1年=%s%%  近3年%s%%",
+                    "code=%s name=%s  level=%.3f 公司代号=%s 公司=%s 近1年=%s%%  近3年%s%%",
                     item.getCode(), item.getName(), item.getLevel(),
                     item.getComcode(), comMap.get(item.getComcode()).getName(),
                     df.format(item.getL1y()), df.format(item.getL3y())));
