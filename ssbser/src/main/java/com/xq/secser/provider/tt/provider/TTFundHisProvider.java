@@ -4,9 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.xq.secser.provider.FundHisProvider;
 import com.xq.secser.ssbser.pojo.po.FundQuarterPo;
-import com.xq.secser.ssbser.pojo.po.IFundHistory;
-import org.apache.ibatis.session.SqlSession;
+import com.xq.secser.ssbser.pojo.po.FundYearPo;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ import java.util.List;
  */
 @Service
 public class TTFundHisProvider implements FundHisProvider {
+    private static Logger logger = LoggerFactory.getLogger(TTFundHisProvider.class);
     @Autowired
     SqlSessionFactory sqlSessionFactory;
 
@@ -52,6 +54,19 @@ public class TTFundHisProvider implements FundHisProvider {
         return fundQuarterPoList;
     }
 
+    @Override
+    public List<FundYearPo> downLoadFoudYearData(List<String> notexistCodeList) {
+        List<FundYearPo> fundYearPos = new ArrayList<>();
+        for (String code : notexistCodeList) {
+            String data = getYearData(code);
+            List<FundYearPo> fql = parseYearData(code, data);
+            fundYearPos.addAll(fql);
+        }
+
+        return fundYearPos;
+    }
+
+
     private String getQuarterData(String code) {
         String pattern = "http://fundf10.eastmoney.com/FundArchivesDatas.aspx?type=quarterzf&code=%s&rt=0.13838623850422516";
         String url = String.format(pattern, code);
@@ -60,6 +75,22 @@ public class TTFundHisProvider implements FundHisProvider {
         data = data.replaceAll("var qapidata=", "");
         data = data.replaceAll(";$", "");
         data = data.replaceAll("<img.+gif' >", "");
+        return data;
+    }
+
+
+    private String getYearData(String code) {
+        String pattern = "http://fundf10.eastmoney.com/FundArchivesDatas.aspx?type=yearzf&code=%s&rt=0.35966013707740463";
+        String url = String.format(pattern, code);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        String data = responseEntity.getBody();
+//        logger.info("{}",data);
+        data = data.replaceAll("var yapidata=", "");
+//        logger.info("{}",data);
+        data = data.replaceAll(";$", "");
+//        logger.info("{}",data);
+        data = data.replaceAll("<img.+gif' >", "");
+//        logger.info("{}",data);
         return data;
     }
 
@@ -325,5 +356,190 @@ public class TTFundHisProvider implements FundHisProvider {
         }
 
         return fundQuarterPoList;
+    }
+
+
+    private List<FundYearPo> parseYearData(String code, String data) {
+        FundYearPo fy2 = FundYearPo.builder().code(code).build();
+        FundYearPo fy3 = FundYearPo.builder().code(code).build();
+        FundYearPo fy4 = FundYearPo.builder().code(code).build();
+        FundYearPo fy5 = FundYearPo.builder().code(code).build();
+        FundYearPo fy6 = FundYearPo.builder().code(code).build();
+        JSONObject configJson = JSON.parseObject(data);
+        String content = configJson.getString("content");
+        List<FundYearPo> fundYearPoList = new ArrayList<>();
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+
+            ByteArrayInputStream is = new ByteArrayInputStream(content.getBytes());
+            Document document = builder.parse(is);
+            NodeList nodelist = document.getElementsByTagName("table");
+            Node table = nodelist.item(0);
+
+            //季度
+            Node n1 = table.getFirstChild().getFirstChild().getFirstChild();
+
+            Node node = n1.getNextSibling();
+            String yearTime = node.getTextContent().substring(0, 4);
+            fy2.setYear(yearTime);
+
+            node = node.getNextSibling();
+            yearTime = node.getTextContent().substring(0, 4);
+            fy3.setYear(yearTime);
+
+            node = node.getNextSibling();
+            yearTime = node.getTextContent().substring(0, 4);
+            fy4.setYear(yearTime);
+
+            node = node.getNextSibling();
+            yearTime = node.getTextContent().substring(0, 4);
+            fy5.setYear(yearTime);
+
+            node = node.getNextSibling();
+            yearTime = node.getTextContent().substring(0, 4);
+            fy6.setYear(yearTime);
+
+//            logger.info("{}--{}--{}--{}--{}--{}--{}--{}--{}", "", date2, date3, date4, date5, date6, date7, date8, date9);
+
+            Node tbodyNode = table.getLastChild();
+            //阶段涨幅
+            Node tr1Node = tbodyNode.getFirstChild();
+            n1 = tr1Node.getFirstChild();
+            node = n1.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                Double r = Double.valueOf(content.replace("%", ""));
+                fy2.setRise(r);
+            }
+
+            node = node.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                Double r = Double.valueOf(content.replace("%", ""));
+                fy3.setRise(r);
+            }
+
+            node = node.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                Double r = Double.valueOf(content.replace("%", ""));
+                fy4.setRise(r);
+            }
+
+            node = node.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                Double r5 = Double.valueOf(content.replace("%", ""));
+                fy5.setRise(r5);
+            }
+
+            node = node.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                Double r = Double.valueOf(content.replace("%", ""));
+                fy6.setRise(r);
+            }
+
+            //沪深300
+            Node tr3Node = tr1Node.getNextSibling().getNextSibling();
+            n1 = tr3Node.getFirstChild();
+            node = n1.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                Double.valueOf(content.replace("%", ""));
+            }
+
+            node = node.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                Double.valueOf(content.replace("%", ""));
+            }
+
+            node = node.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                Double.valueOf(content.replace("%", ""));
+            }
+
+            node = node.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                Double.valueOf(content.replace("%", ""));
+            }
+
+            node = node.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                Double.valueOf(content.replace("%", ""));
+            }
+
+            //同类排名
+            Node tr4Node = tr3Node.getNextSibling();
+            n1 = tr4Node.getFirstChild();
+            node = n1.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                String[] items = content.split("\\|");
+                fy2.setRank(Double.valueOf(items[0]) / Double.valueOf(items[1]));
+            }
+
+            node = node.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                String[] items = content.split("\\|");
+                fy3.setRank(Double.valueOf(items[0]) / Double.valueOf(items[1]));
+            }
+
+            node = node.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                String[] items = content.split("\\|");
+                fy4.setRank(Double.valueOf(items[0]) / Double.valueOf(items[1]));
+            }
+
+            node = node.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                String[] items = content.split("\\|");
+                fy5.setRank(Double.valueOf(items[0]) / Double.valueOf(items[1]));
+            }
+
+            node = node.getNextSibling();
+            content = node.getTextContent();
+            if (!content.equals("---")) {
+                String[] items = content.split("\\|");
+                fy6.setRank(Double.valueOf(items[0]) / Double.valueOf(items[1]));
+            }
+
+//            logger.info("{}--{}--{}--{}--{}--{}--{}--{}--{}", n1.getTextContent(), r2, r3, r4, r5, r6, r7, r8, r9);
+
+
+            if (null != fy2.getRank()) {
+                logger.info("date=={}", fy2);
+                fundYearPoList.add(fy2);
+            }
+            if (null != fy3.getRank()) {
+                fundYearPoList.add(fy3);
+            }
+            if (null != fy4.getRank()) {
+                fundYearPoList.add(fy4);
+            }
+            if (null != fy5.getRank()) {
+                fundYearPoList.add(fy5);
+            }
+            if (null != fy6.getRank()) {
+                fundYearPoList.add(fy6);
+            }
+
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+
+        return fundYearPoList;
     }
 }

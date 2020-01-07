@@ -2,6 +2,7 @@ package com.xq.secser.ssbser.service;
 
 import com.xq.secser.provider.FundHisProvider;
 import com.xq.secser.ssbser.pojo.po.FundQuarterPo;
+import com.xq.secser.ssbser.pojo.po.FundYearPo;
 import com.xq.secser.ssbser.pojo.po.IFundHistory;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -24,6 +25,9 @@ public class FundHisService {
     List<FundQuarterPo> downLoadFoudQuartData(List<String> notexistCodeList){
         return fundHisProvider.downLoadFoudQuartData(notexistCodeList);
     }
+    List<FundYearPo> downLoadFoudYearData(List<String> notexistCodeList){
+        return fundHisProvider.downLoadFoudYearData(notexistCodeList);
+    }
     public List<FundQuarterPo> getQuarterDataByCode(List<String> codeList) {
         List<FundQuarterPo> fqList = null;
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
@@ -33,6 +37,17 @@ public class FundHisService {
         }
         return fqList;
     }
+
+    public List<FundYearPo> getYearDataByCode(List<String> codeList) {
+        List<FundYearPo> fyList = null;
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            IFundHistory iFundHistory = session.getMapper(IFundHistory.class);
+            fyList = iFundHistory.getYearDataByCode(codeList);
+        } finally {
+        }
+        return fyList;
+    }
+
 
     public List<String> getExistCodes(List<String> codes) {
         List<String> existCodes = null;
@@ -50,6 +65,16 @@ public class FundHisService {
             try (SqlSession session = sqlSessionFactory.openSession(true)) {
                 IFundHistory iFundHistory = session.getMapper(IFundHistory.class);
                 iFundHistory.insertFundQuarterBatch(fqList);
+            } finally {
+            }
+        }
+    }
+
+    public void insertBatchYearHis(List<FundYearPo> fyList) {
+        if (!fyList.isEmpty()) {
+            try (SqlSession session = sqlSessionFactory.openSession(true)) {
+                IFundHistory iFundHistory = session.getMapper(IFundHistory.class);
+                iFundHistory.insertFundYearBatch(fyList);
             } finally {
             }
         }

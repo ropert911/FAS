@@ -7,6 +7,7 @@
         <typeAlias alias="TtFundPo" type="com.xq.secser.provider.tt.pojo.TtFundPo"/>
         <typeAlias alias="FoundPo" type="com.xq.secser.ssbser.pojo.po.FoundPo"/>
         <typeAlias alias="FundQuarterPo" type="com.xq.secser.ssbser.pojo.po.FundQuarterPo"/>
+        <typeAlias alias="FundYearPo" type="com.xq.secser.ssbser.pojo.po.FundYearPo"/>
         <typeAlias alias="CompPo" type="com.xq.secser.ssbser.pojo.po.CompPo"/>
     </typeAliases>
     <environments default="development">
