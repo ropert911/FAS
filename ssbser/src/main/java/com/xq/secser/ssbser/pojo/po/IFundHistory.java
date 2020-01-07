@@ -8,7 +8,7 @@ import java.util.List;
  * @author sk-qianxiao
  * @date 2019/12/31
  */
-public interface IFundQuarter {
+public interface IFundHistory {
     /**
      * 插入基金季度数据
      *

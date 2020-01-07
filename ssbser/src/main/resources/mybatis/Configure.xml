@@ -23,7 +23,7 @@
 
     <mappers>
         <mapper resource="mybatis/FundDao.xml"/>
-        <mapper resource="mybatis/FundQuarterDao.xml"/>
+        <mapper resource="mybatis/FundHisDao.xml"/>
         <mapper resource="mybatis/ComDao.xml"/>
         <mapper resource="mybatis/tt/FundDao.xml"/>
     </mappers>
