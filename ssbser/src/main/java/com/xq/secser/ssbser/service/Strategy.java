@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -75,12 +76,12 @@ public class Strategy {
             }
         }
         //获取季度数据筛选
+        //获取季度数据
+        List<FundQuarterPo> fundQuartList = fundHisService.getQuarterDataByCode(foundCodeList);
+        //找到平均季度排名在0.3以下的
+        Map<String, List<FundQuarterPo>> fqListMap = fundQuartList.stream().collect(Collectors.groupingBy(FundQuarterPo::getCode));
         {
             Set<String> qokcodelist = new HashSet<>();
-            //获取季度数据
-            List<FundQuarterPo> fundQuartList = fundHisService.getQuarterDataByCode(foundCodeList);
-            //找到平均季度排名在0.3以下的
-            Map<String, List<FundQuarterPo>> fqListMap = fundQuartList.stream().collect(Collectors.groupingBy(FundQuarterPo::getCode));
             fqListMap.forEach((key, value) -> {
                 if (!value.isEmpty()) {
                     Double rank = value.stream().filter(item -> item.getRank() != null).collect(Collectors.averagingDouble(FundQuarterPo::getRank));
@@ -96,14 +97,14 @@ public class Strategy {
         }
 
         //获取年度度数据筛选
+        //获取季度数据
+        List<FundYearPo> fundYearList = fundHisService.getYearDataByCode(foundCodeList);
+        //找到平均季度排名在0.3以下的
+        Map<String, List<FundYearPo>> fyListMap = fundYearList.stream().collect(Collectors.groupingBy(FundYearPo::getCode));
         {
             Set<String> qokcodelist = new HashSet<>();
-            //获取季度数据
-            List<FundYearPo> fundYearList = fundHisService.getYearDataByCode(foundCodeList);
 
-            //找到平均季度排名在0.3以下的
-            Map<String, List<FundYearPo>> fqListMap = fundYearList.stream().collect(Collectors.groupingBy(FundYearPo::getCode));
-            fqListMap.forEach((key, value) -> {
+            fyListMap.forEach((key, value) -> {
                 if (!value.isEmpty()) {
                     Double rank = value.stream().filter(item -> item.getRank() != null).collect(Collectors.averagingDouble(FundYearPo::getRank));
                     if (rank <= yhisrank) {
@@ -123,16 +124,51 @@ public class Strategy {
         Collections.reverse(rFoundPoResult);
 
         //显示
-        printResult(rFoundPoResult, comMap);
+        printResult(rFoundPoResult, comMap, fyListMap, fqListMap);
 
     }
 
-    private void printResult(List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap) {
+    private void printResult(List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap, Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap) {
+        DecimalFormat df = new DecimalFormat("0.000");
+
         for (FoundPo item : rFoundPoResult) {
-            logger.info("code={} name={}, level={}, ly={}% l3y={}% 公司代号={},公司={}",
+            List<FundYearPo> fundYearPoList = fyListMap.get(item.getCode());
+            List<FundQuarterPo> fundQuarterPoList = fqListMap.get(item.getCode());
+            int leny = fundYearPoList.size();
+            FundYearPo y1 = leny > 0 ? fundYearPoList.get(0) : null;
+            FundYearPo y2 = leny > 1 ? fundYearPoList.get(1) : null;
+            FundYearPo y3 = leny > 2 ? fundYearPoList.get(2) : null;
+            FundYearPo y4 = leny > 3 ? fundYearPoList.get(3) : null;
+            FundYearPo y5 = leny > 4 ? fundYearPoList.get(4) : null;
+            int lenq = fundQuarterPoList.size();
+            FundQuarterPo q1 = lenq > 0 ? fundQuarterPoList.get(0) : null;
+            FundQuarterPo q2 = lenq > 1 ? fundQuarterPoList.get(1) : null;
+            FundQuarterPo q3 = lenq > 2 ? fundQuarterPoList.get(2) : null;
+            FundQuarterPo q4 = lenq > 3 ? fundQuarterPoList.get(3) : null;
+            FundQuarterPo q5 = lenq > 4 ? fundQuarterPoList.get(4) : null;
+            FundQuarterPo q6 = lenq > 5 ? fundQuarterPoList.get(5) : null;
+            FundQuarterPo q7 = lenq > 6 ? fundQuarterPoList.get(6) : null;
+            FundQuarterPo q8 = lenq > 7 ? fundQuarterPoList.get(7) : null;
+            System.out.println(String.format(
+                    "code=%s name=%s  level=%f 公司代号=%s 公司=%s 近1年=%s%%  近3年%s%%",
                     item.getCode(), item.getName(), item.getLevel(),
-                    item.getL1y(), item.getL3y(),
-                    item.getComcode(), comMap.get(item.getComcode()).getName());
+                    item.getComcode(), comMap.get(item.getComcode()).getName(),
+                    df.format(item.getL1y()), df.format(item.getL3y())));
+            System.out.println(String.format("        季度  %s=%s  %s=%s  %s=%s  %s=%s  %s=%s  %s=%s  %s=%s  %s=%s",
+                    q1.getQuarter(), df.format(q1.getRank()),
+                    q2.getQuarter(), df.format(q2.getRank()),
+                    q3.getQuarter(), df.format(q3.getRank()),
+                    q4.getQuarter(), df.format(q4.getRank()),
+                    q5.getQuarter(), df.format(q5.getRank()),
+                    q6.getQuarter(), df.format(q6.getRank()),
+                    q7.getQuarter(), df.format(q7.getRank()),
+                    q8.getQuarter(), df.format(q8.getRank())));
+            System.out.println(String.format("        年度  %s=%s  %s=%s  %s=%s  %s=%s  %s=%s",
+                    y1 != null ? y1.getYear() : "null", y1 != null ? df.format(y1.getRank()) : "null",
+                    y2 != null ? y2.getYear() : "null", y2 != null ? df.format(y2.getRank()) : "null",
+                    y3 != null ? y3.getYear() : "null", y3 != null ? df.format(y3.getRank()) : "null",
+                    y4 != null ? y4.getYear() : "null", y4 != null ? df.format(y4.getRank()) : "null",
+                    y5 != null ? y5.getYear() : "null", y5 != null ? df.format(y5.getRank()) : "null"));
         }
     }
 
