@@ -1,7 +1,6 @@
 package com.xq.secser.ssbser.service;
 
 import com.xq.secser.ssbser.pojo.po.*;
-import com.xq.secser.ssbser.utils.ConsoleTable;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
