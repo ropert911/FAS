@@ -26,7 +26,19 @@
     <!--        SELECT * FROM user WHERE id = #{userId}-->
     <!--    </select>-->
 
-<!--    <select id="getByLevel" resultType="FoundPo">-->
-<!--            select * from fund where ft=#{ft} and level>=#{level}-->
-<!--        </select>-->
+    <select id="getExistCodes" resultType="java.lang.String">
+        select distinct(code) from fund_quarter where code in (
+        <foreach collection="list" item="code" index="index" separator=",">
+            #{code}
+        </foreach>
+        )
+    </select>
+
+    <select id="getQuarterDataByCode" resultType="FundQuarterPo" parameterType="java.util.List">
+        select * from fund_quarter where code in (
+        <foreach collection="list" item="code" index="index" separator=",">
+            #{code}
+        </foreach>
+        )
+    </select>
 </mapper>
