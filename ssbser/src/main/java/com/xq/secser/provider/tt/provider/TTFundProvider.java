@@ -575,12 +575,12 @@ public class TTFundProvider implements FundProvider {
                 "</body>\n" +
                 "</html>";
         int index = data.indexOf("申购费率（前端）");
-        index = data.indexOf("小于100万元", index);
         index = data.indexOf("</strike>", index);
         int index2 = data.indexOf("</td>", index);
         String sub = data.substring(index + 9, index2);
         sub = sub.replaceAll("&nbsp;", "");
         sub = sub.substring(1);
+        logger.info("aaa==={}", sub);
         String[] items = sub.split("\\|");
         Double purchfl = Double.valueOf(items[0].replace("%", ""));
 
@@ -625,7 +625,7 @@ public class TTFundProvider implements FundProvider {
         index = r1.indexOf("<td>", index2);
         index2 = r1.indexOf("</td>", index);
         String value1 = r1.substring(index + 4, index2);
-        logger.info("{}=={}", item1, value1.replace("%",""));
+        logger.info("{}=={}", item1, value1.replace("%", ""));
 
         index = r2.indexOf("<td>");
         index2 = r2.indexOf("</td>", index);
@@ -633,7 +633,7 @@ public class TTFundProvider implements FundProvider {
         index = r2.indexOf("<td>", index2);
         index2 = r2.indexOf("</td>", index);
         String value2 = r2.substring(index + 4, index2);
-        logger.info("{}=={}", item2, value2.replace("%",""));
+        logger.info("{}=={}", item2, value2.replace("%", ""));
 
         index = r3.indexOf("<td>");
         index2 = r3.indexOf("</td>", index);
@@ -641,7 +641,7 @@ public class TTFundProvider implements FundProvider {
         index = r3.indexOf("<td>", index2);
         index2 = r3.indexOf("</td>", index);
         String value3 = r3.substring(index + 4, index2);
-        logger.info("{}=={}", item3, value3.replace("%",""));
+        logger.info("{}=={}", item3, value3.replace("%", ""));
 
         logger.info("{}", r1);
         logger.info("{}", r2);

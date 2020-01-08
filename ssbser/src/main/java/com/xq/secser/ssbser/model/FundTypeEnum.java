@@ -5,13 +5,11 @@ package com.xq.secser.ssbser.model;
  * @date 2019/12/30
  */
 public enum FundTypeEnum {
-    BB("bb"),
     GP("gp"),
     HH("hh"),
     ZQ("zq"),
     ZS("zs"),
     QDII("qdii"),
-    LOF("lof"),
     FOF("fof");
 
     private String urlParam;
