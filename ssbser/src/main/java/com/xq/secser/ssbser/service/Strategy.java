@@ -82,6 +82,7 @@ public class Strategy {
 
         /**基金筛选:类型，级别，公司列表*/
         final List<FoundPo> foundPoResult = filterFund(searchInfo.getFt(), searchInfo.getFoudLevel(), comMap);
+        logger.info("1. 初始基金 级别[{}] Topn[{}]=={}", searchInfo.getFoudLevel(), searchInfo.getTopN(), foundPoResult.stream().map(FoundPo::getCode).collect(Collectors.toSet()));
 
         /**基金筛选：近1、3年利润过滤；子类型过滤：如果为空，不过滤*/
         List<FoundPo> rFoundPoResult = foundPoResult.stream().filter(s -> s.getL1y() >= searchInfo.getL1y()).filter(s -> s.getL3y() >= searchInfo.getL3y())
@@ -104,6 +105,7 @@ public class Strategy {
         rFoundPoResult = rFoundPoResult.stream().collect(
                 Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(FoundPo::getCode))), ArrayList::new)
         );
+        logger.info("2. 最近1、3年[{}][{}]过滤后=={}", searchInfo.getL1y(), searchInfo.getL3y(), rFoundPoResult.stream().map(FoundPo::getCode).collect(Collectors.toSet()));
 
         /**下载季和年历史；进行季度排名过滤；年排名过滤*/
         List<String> foundCodeList = rFoundPoResult.stream().map(FoundPo::getCode).collect(Collectors.toList());
@@ -123,8 +125,8 @@ public class Strategy {
 
             rFoundPoResult = rFoundPoResult.stream().filter(item -> qokcodelist.contains(item.getCode())).collect(Collectors.toList());
             foundCodeList = rFoundPoResult.stream().map(FoundPo::getCode).collect(Collectors.toList());
-            logger.info("季度筛选后={}", foundCodeList.size());
         }
+        logger.info("3. 季度排名{}过滤后[{}]=={}", searchInfo.getQhisrank(), foundCodeList.size(), foundCodeList);
         List<FundYearPo> fundYearList = fundHisService.getYearDataByCode(foundCodeList);
         Map<String, List<FundYearPo>> fyListMap = fundYearList.stream().collect(Collectors.groupingBy(FundYearPo::getCode));
         {
@@ -140,8 +142,8 @@ public class Strategy {
 
             rFoundPoResult = rFoundPoResult.stream().filter(item -> yokcodelist.contains(item.getCode())).collect(Collectors.toList());
             foundCodeList = rFoundPoResult.stream().map(FoundPo::getCode).collect(Collectors.toList());
-            logger.info("年筛选后={}", foundCodeList.size());
         }
+        logger.info("4. 年排名{}后过滤后[{}]个=={}", searchInfo.getYhisrank(), foundCodeList.size(), foundCodeList);
 
 
         //基金筛选:排序
@@ -203,7 +205,7 @@ public class Strategy {
         int rowNum = 0;
         final XSSFRow row = sheet.createRow(rowNum++);
         int columnIndex = 0;
-        int yearColumnIndex = 16;
+        int yearColumnIndex = 17;
         XSSFCell cellCode = row.createCell(columnIndex++);
         XSSFCell cellName = row.createCell(columnIndex++);
         XSSFCell cellSubT = row.createCell(columnIndex++);
@@ -212,6 +214,7 @@ public class Strategy {
         XSSFCell cellCName = row.createCell(columnIndex++);
         XSSFCell cellCL1y = row.createCell(columnIndex++);
         XSSFCell cellCL3y = row.createCell(columnIndex++);
+        XSSFCell cellComment = row.createCell(columnIndex++);
         cellCode.setCellValue("代码");
         cellName.setCellValue("名称");
         cellSubT.setCellValue("子类型");
@@ -220,9 +223,11 @@ public class Strategy {
         cellCName.setCellValue("公司名称");
         cellCL1y.setCellValue("近1年");
         cellCL3y.setCellValue("近3年");
+        cellComment.setCellValue("备注");
 
         sheet.setColumnWidth(cellName.getColumnIndex(), 6000);
         sheet.setColumnWidth(cellCName.getColumnIndex(), 6500);
+        sheet.setColumnWidth(cellComment.getColumnIndex(), 6500);
 
 
         /**初始化行字体*/
@@ -280,6 +285,7 @@ public class Strategy {
             cellCL1y.setCellValue(df.format(item.getL1y()));
             cellCL3y = row2.createCell(columnIndex++);
             cellCL3y.setCellValue(df.format(item.getL3y()));
+            row2.createCell(columnIndex++);
 
             //季度
             for (FundQuarterPo fundQuarterPo : fundQuarterPoList) {
