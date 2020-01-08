@@ -31,12 +31,19 @@ public class Strategy {
     @Value("${com.xq.secser.export.path}")
     private String outputpath;
     @Autowired
+    FundService fundService;
+    @Autowired
     FundHisService fundHisService;
 
     @Autowired
     SqlSessionFactory sqlSessionFactory;
 
     public void search() {
+        int a = 1;
+        if (1 == a) {
+            fundService.getflinfo("110022");
+            return;
+        }
         List<StrategySearchInfo> strategySearchInfoList = new ArrayList<>();
         StrategySearchInfo czqSearchInfo = StrategySearchInfo.builder().ft(new String[]{"zq"}).subt(new String[]{"lc", "sc"}).foudLevel(4).l1y(5).l3y(15)
                 .qhisrank(0.5).yhisrank(0.5)

@@ -20,4 +20,5 @@ public interface FundProvider {
      * @return
      */
     List<FoundPo> parseFund();
+    void getflinfo(String ccode);
 }

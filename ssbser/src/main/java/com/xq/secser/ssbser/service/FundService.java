@@ -46,4 +46,8 @@ public class FundService {
         } finally {
         }
     }
+
+    public void getflinfo(String code){
+        fundProvider.getflinfo(code);
+    }
 }
