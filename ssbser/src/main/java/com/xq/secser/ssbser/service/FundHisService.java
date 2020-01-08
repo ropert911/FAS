@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author sk-qianxiao
@@ -58,6 +60,23 @@ public class FundHisService {
         }
 
         return existCodes;
+    }
+
+    /**
+     * 历史数据下载
+     * @param foundCodeList
+     */
+    public void dowloadHis(List<String> foundCodeList)
+    {
+        /**判断哪些code没有季度数据：然后进行下载下载季度数据*/
+        Set<String> existCodeSet = getExistCodes(foundCodeList).stream().collect(Collectors.toSet());
+        List<String> notexistCodeList = foundCodeList.stream().filter(code -> !existCodeSet.contains(code)).collect(Collectors.toList());
+        if (!notexistCodeList.isEmpty()) {
+            List<FundQuarterPo> fqList = downLoadFoudQuartData(notexistCodeList);
+            insertBatchQuarterHis(fqList);
+            List<FundYearPo> fyList = downLoadFoudYearData(notexistCodeList);
+            insertBatchYearHis(fyList);
+        }
     }
 
     public void insertBatchQuarterHis(List<FundQuarterPo> fqList) {

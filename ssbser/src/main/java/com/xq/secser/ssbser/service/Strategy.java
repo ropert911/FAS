@@ -34,29 +34,31 @@ public class Strategy {
     @Autowired
     SqlSessionFactory sqlSessionFactory;
 
-    public void searchGpAHh() {
+    public void searchZq(){
         /**哪些类基金放在一起来找*/
-        String[] ft = {"gp", "hh"};
-        /**级别要大于这个级别才会有4级的评价*/
-        double foudlevel = 3.5;
+        String[] ft = {"zq"};
+        /**级别平均要大于等于4星*/
+        double foudlevel = 4;
         /**近一年利率大于等于*/
-        double l1y = 8;
+        double l1y = 6.3;
         /**近三年利率大于等于*/
-        double l3y = 24;
+        double l3y = 19;
 
         /**季度历史排名平均在前30%*/
-        double qhisrank = 0.3;
+        double qhisrank = 0.4;
         /**近5年历史排名平均在前30%*/
-        double yhisrank = 0.3;
+        double yhisrank = 0.4;
 
+        /**公司类型*/
+        String[] cft = {"zq"};
         /**公司模型排名*/
-        int topN = 30;
+        int topN = 40;
         /**公司成立要在这个时间点前，这样公司至少穿越了牛熊*/
         String esTime = "2014-06-06";
 
         //////////////////////////////////***********/////////////////
         /**公司筛选*/
-        Map<String, CompPo> comMap = filterCompany(ft, esTime, topN);
+        Map<String, CompPo> comMap = filterCompany(cft, esTime, topN);
 
         /**基金筛选:类型，级别，公司*/
         final List<FoundPo> foundPoResult = filterFund(ft, foudlevel, comMap);
@@ -71,19 +73,8 @@ public class Strategy {
 
         /**对近2年季度排名进行处理*/
         List<String> foundCodeList = rFoundPoResult.stream().map(FoundPo::getCode).collect(Collectors.toList());
-        {
-            /**判断哪些code没有季度数据：然后进行下载下载季度数据*/
-            Set<String> existCodeSet = fundHisService.getExistCodes(foundCodeList).stream().collect(Collectors.toSet());
-            List<String> notexistCodeList = foundCodeList.stream().filter(code -> !existCodeSet.contains(code)).collect(Collectors.toList());
-            if (!notexistCodeList.isEmpty()) {
-                List<FundQuarterPo> fqList = fundHisService.downLoadFoudQuartData(notexistCodeList);
-                fundHisService.insertBatchQuarterHis(fqList);
-                List<FundYearPo> fyList = fundHisService.downLoadFoudYearData(notexistCodeList);
-                fundHisService.insertBatchYearHis(fyList);
-            }
-        }
-        //获取季度数据筛选
-        //获取季度数据
+        fundHisService.dowloadHis(foundCodeList);
+        /**获取季度数据*/
         List<FundQuarterPo> fundQuartList = fundHisService.getQuarterDataByCode(foundCodeList);
         //找到平均季度排名在0.3以下的
         Map<String, List<FundQuarterPo>> fqListMap = fundQuartList.stream().collect(Collectors.groupingBy(FundQuarterPo::getCode));
@@ -133,7 +124,99 @@ public class Strategy {
         //显示
         printResult(rFoundPoResult, comMap, fyListMap, fqListMap);
 
-        export(rFoundPoResult, comMap, fyListMap, fqListMap);
+        export(ft, rFoundPoResult, comMap, fyListMap, fqListMap);
+    }
+    public void searchGpAHh() {
+        /**哪些类基金放在一起来找*/
+        String[] ft = {"gp", "hh"};
+        /**级别要大于这个级别才会有4级的评价*/
+        double foudlevel = 3.5;
+        /**近一年利率大于等于*/
+        double l1y = 8;
+        /**近三年利率大于等于*/
+        double l3y = 24;
+
+        /**季度历史排名平均在前30%*/
+        double qhisrank = 0.3;
+        /**近5年历史排名平均在前30%*/
+        double yhisrank = 0.3;
+
+        /**公司类型*/
+        String[] cft = {"gp", "hh"};
+        /**公司模型排名*/
+        int topN = 30;
+        /**公司成立要在这个时间点前，这样公司至少穿越了牛熊*/
+        String esTime = "2014-06-06";
+
+        //////////////////////////////////***********/////////////////
+        /**公司筛选*/
+        Map<String, CompPo> comMap = filterCompany(cft, esTime, topN);
+
+        /**基金筛选:类型，级别，公司*/
+        final List<FoundPo> foundPoResult = filterFund(ft, foudlevel, comMap);
+
+        /**基金筛选:利润过滤*/
+        List<FoundPo> rFoundPoResult = foundPoResult.stream().filter(s -> s.getL1y() >= l1y).filter(s -> s.getL3y() >= l3y).collect(Collectors.toList());
+        /**基金筛选:去重*/
+        rFoundPoResult = rFoundPoResult.stream().collect(
+                Collectors.collectingAndThen(
+                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(FoundPo::getCode))), ArrayList::new)
+        );
+
+        /**对近2年季度排名进行处理*/
+        List<String> foundCodeList = rFoundPoResult.stream().map(FoundPo::getCode).collect(Collectors.toList());
+        fundHisService.dowloadHis(foundCodeList);
+        /**获取季度数据*/
+        List<FundQuarterPo> fundQuartList = fundHisService.getQuarterDataByCode(foundCodeList);
+        //找到平均季度排名在0.3以下的
+        Map<String, List<FundQuarterPo>> fqListMap = fundQuartList.stream().collect(Collectors.groupingBy(FundQuarterPo::getCode));
+        {
+            Set<String> qokcodelist = new HashSet<>();
+            fqListMap.forEach((key, value) -> {
+                if (!value.isEmpty()) {
+                    Double rank = value.stream().filter(item -> item.getRank() != null).collect(Collectors.averagingDouble(FundQuarterPo::getRank));
+                    if (rank <= qhisrank) {
+                        qokcodelist.add(key);
+                    }
+                }
+            });
+
+            rFoundPoResult = rFoundPoResult.stream().filter(item -> qokcodelist.contains(item.getCode())).collect(Collectors.toList());
+            foundCodeList = rFoundPoResult.stream().map(FoundPo::getCode).collect(Collectors.toList());
+            logger.info("季度筛选后={}", foundCodeList.size());
+        }
+
+        //获取年度度数据筛选
+        //获取季度数据
+        List<FundYearPo> fundYearList = fundHisService.getYearDataByCode(foundCodeList);
+        //找到平均季度排名在0.3以下的
+        Map<String, List<FundYearPo>> fyListMap = fundYearList.stream().collect(Collectors.groupingBy(FundYearPo::getCode));
+        {
+            Set<String> qokcodelist = new HashSet<>();
+
+            fyListMap.forEach((key, value) -> {
+                if (!value.isEmpty()) {
+                    Double rank = value.stream().filter(item -> item.getRank() != null).collect(Collectors.averagingDouble(FundYearPo::getRank));
+                    if (rank <= yhisrank) {
+                        qokcodelist.add(key);
+                    }
+                }
+            });
+
+            rFoundPoResult = rFoundPoResult.stream().filter(item -> qokcodelist.contains(item.getCode())).collect(Collectors.toList());
+            foundCodeList = rFoundPoResult.stream().map(FoundPo::getCode).collect(Collectors.toList());
+            logger.info("年筛选后={}", foundCodeList.size());
+        }
+
+
+        //基金筛选:排序
+        rFoundPoResult.sort(Comparator.comparing(FoundPo::getL3y));
+        Collections.reverse(rFoundPoResult);
+
+        //显示
+        printResult(rFoundPoResult, comMap, fyListMap, fqListMap);
+
+        export(ft, rFoundPoResult, comMap, fyListMap, fqListMap);
 
     }
 
@@ -181,7 +264,7 @@ public class Strategy {
         }
     }
 
-    private void export(List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap, Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap) {
+    private void export(String[] ft, List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap, Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap) {
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet("gphh");
         final XSSFRow row = sheet.createRow(0);
@@ -220,7 +303,7 @@ public class Strategy {
                 rowIndex = 15;
                 for (FundYearPo fundYearPo : fundYearPoList) {
                     XSSFCell cy = row.createCell(rowIndex++);
-                    cy.setCellValue(fundYearPo.getYear()+"年");
+                    cy.setCellValue(fundYearPo.getYear() + "年");
                 }
             }
 
@@ -256,7 +339,12 @@ public class Strategy {
         }
 
         try {
-            File outfile = new File(outputpath + File.separator + "out_gphh.xlsx");
+            String fname = "out";
+            for (String t : ft) {
+                fname = fname + "_" + t;
+            }
+            fname += ".xlsx";
+            File outfile = new File(outputpath + File.separator + fname);
             FileOutputStream outputStream = new FileOutputStream(outfile);
             wb.write(outputStream);
             outputStream.close();
@@ -286,7 +374,7 @@ public class Strategy {
         return foundPoResult;
     }
 
-    Map<String, CompPo> filterCompany(String[] ft, String esTime, int topN) {
+    private Map<String, CompPo> filterCompany(String[] ft, String esTime, int topN) {
         Map<String, CompPo> comMap = new HashMap<>();
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {

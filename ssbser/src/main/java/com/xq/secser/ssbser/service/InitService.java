@@ -50,7 +50,7 @@ public class InitService implements ApplicationRunner {
             companyService.parseCompany();
         }
 
-        //
         strategy.searchGpAHh();
+        strategy.searchZq();
     }
 }
