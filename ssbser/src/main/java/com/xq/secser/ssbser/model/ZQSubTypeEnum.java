@@ -5,21 +5,19 @@ package com.xq.secser.ssbser.model;
  * @date 2020/1/8
  */
 public enum ZQSubTypeEnum {
-    //长期纯债
-    LC("041", "lc"),
-    //短期纯债
-    SC("042", "sc"),
-    //混合债基
-    HH("043", "hh"),
-    //可转债
-    KZ("045", "kz");
+    LC("041", "lc", "长期纯债"),
+    SC("042", "sc", "短期纯债"),
+    HH("043", "hh", "混合债基"),
+    KZ("045", "kz", "可转债");
 
     private String code;
     private String subt;
+    private String dis;
 
-    ZQSubTypeEnum(String code, String subt) {
+    ZQSubTypeEnum(String code, String subt, String dis) {
         this.code = code;
         this.subt = subt;
+        this.dis = dis;
     }
 
     public String getCode() {
@@ -30,25 +28,17 @@ public enum ZQSubTypeEnum {
         return subt;
     }
 
+    public String getDis() {
+        return dis;
+    }
+
     public static String getDisStringBySubT(String subt) {
-        String dis = "";
-        switch (subt) {
-            case "lc":
-                dis = "长期纯债";
-                break;
-            case "sc":
-                dis = "短期纯债";
-                break;
-            case "hh":
-                dis = "混合债基";
-                break;
-            case "kz":
-                dis = "可转债";
-                break;
-            default:
-                break;
+        for (ZQSubTypeEnum st : values()) {
+            if (st.subt.equals(subt)) {
+                return st.dis;
+            }
         }
 
-        return dis;
+        return "";
     }
 }

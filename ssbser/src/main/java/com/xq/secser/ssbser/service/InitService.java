@@ -58,11 +58,6 @@ public class InitService implements ApplicationRunner {
             companyService.parseCompany();
         }
 
-        /**高利润的股票-混合*/
-        strategy.searchGpAHh();
-        /**高利润的债券*/
-        strategy.searchZq();
-        /**纯债:不分长短期，只是出来时标明*/
-        strategy.exportczq();
+        strategy.search();
     }
 }
