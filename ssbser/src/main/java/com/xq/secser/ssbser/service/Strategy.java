@@ -3,16 +3,19 @@ package com.xq.secser.ssbser.service;
 import com.xq.secser.ssbser.pojo.po.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -40,14 +43,14 @@ public class Strategy {
         /**级别平均要大于等于4星*/
         double foudlevel = 4;
         /**近一年利率大于等于*/
-        double l1y = 6.3;
+        double l1y = 7;
         /**近三年利率大于等于*/
-        double l3y = 19;
+        double l3y = 20;
 
-        /**季度历史排名平均在前30%*/
-        double qhisrank = 0.4;
-        /**近5年历史排名平均在前30%*/
-        double yhisrank = 0.4;
+        /**季度历史排名平均在前50%--债券安全性高*/
+        double qhisrank = 0.5;
+        /**近5年历史排名平均在前50%--债券安全性高*/
+        double yhisrank = 0.5;
 
         /**公司类型*/
         String[] cft = {"zq"};
