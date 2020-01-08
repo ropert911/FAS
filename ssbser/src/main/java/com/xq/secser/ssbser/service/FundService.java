@@ -7,6 +7,8 @@ import com.xq.secser.ssbser.pojo.po.FoundPo;
 import com.xq.secser.ssbser.pojo.po.IFund;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.util.List;
  */
 @Service
 public class FundService {
+    private static Logger logger = LoggerFactory.getLogger(FundService.class);
     @Autowired
     FundProvider fundProvider;
     @Autowired
@@ -26,12 +29,20 @@ public class FundService {
     public void initFoundData() {
         fundProvider.initFoundData();
     }
+
     public void parseFund() {
         List<FoundPo> foundPoList = fundProvider.parseFund();
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             IFund iFund = session.getMapper(IFund.class);
-            iFund.insertFundBatch(foundPoList);
+            int beginIndex = 0, step = 500, endIndex = 0;
+            int len = foundPoList.size();
+            while (beginIndex < len) {
+                endIndex = beginIndex + 500;
+                endIndex = endIndex > len ? len : endIndex;
+                iFund.insertFundBatch(foundPoList.subList(beginIndex, endIndex));
+                beginIndex += step;
+            }
         } finally {
         }
     }

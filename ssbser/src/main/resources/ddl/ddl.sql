@@ -7,6 +7,7 @@ CREATE TABLE  IF NOT EXISTS `ttfund` (
   `code` char(64) NOT NULL,
   `ft`  char(4) Not null ,
   `info` varchar(400) character set gbk NOT NULL DEFAULT '',
+  `subt`  char(6) Not null ,
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=gbk;
 
@@ -23,6 +24,7 @@ CREATE TABLE  IF NOT EXISTS `fund` (
   `l3y`  double comment '近3年收益',
   `ty`	double comment '今年收益',
   `cy`	double comment '成立以来收益',
+  `subt`  char(6) Not null ,
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=gbk;
 

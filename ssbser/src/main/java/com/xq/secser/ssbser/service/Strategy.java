@@ -1,12 +1,11 @@
 package com.xq.secser.ssbser.service;
 
+import com.xq.secser.ssbser.model.ZQSubTypeEnum;
 import com.xq.secser.ssbser.pojo.po.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,102 @@ public class Strategy {
     @Autowired
     SqlSessionFactory sqlSessionFactory;
 
-    public void searchZq(){
+    public void exportczq() {
+        /**哪些类基金放在一起来找*/
+        String[] ft = {"zq"};
+        /**级别平均要大于等于4星*/
+        double foudlevel = 4;
+        /**近一年利率大于等于*/
+        double l1y = 5;
+        /**近三年利率大于等于*/
+        double l3y = 15;
+
+        /**季度历史排名平均在前50%--债券安全性高*/
+        double qhisrank = 0.5;
+        /**近5年历史排名平均在前50%--债券安全性高*/
+        double yhisrank = 0.5;
+
+        /**公司类型*/
+        String[] cft = {"zq"};
+        /**公司模型排名*/
+        int topN = 40;
+        /**公司成立要在这个时间点前，这样公司至少穿越了牛熊*/
+        String esTime = "2014-06-06";
+
+        //////////////////////////////////***********/////////////////
+        /**公司筛选*/
+        Map<String, CompPo> comMap = filterCompany(cft, esTime, topN);
+
+        /**基金筛选:类型，级别，公司*/
+        final List<FoundPo> foundPoResult = filterFund(ft, foudlevel, comMap);
+
+        /**基金筛选:利润过滤，过滤纯债*/
+        List<FoundPo> rFoundPoResult = foundPoResult.stream().filter(s -> s.getL1y() >= l1y).filter(s -> s.getL3y() >= l3y).
+                filter(s->"lc".equals(s.getSubt())||"sc".equals(s.getSubt()))
+                .collect(Collectors.toList());
+        /**基金筛选:去重*/
+        rFoundPoResult = rFoundPoResult.stream().collect(
+                Collectors.collectingAndThen(
+                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(FoundPo::getCode))), ArrayList::new)
+        );
+
+        /**对近2年季度排名进行处理*/
+        List<String> foundCodeList = rFoundPoResult.stream().map(FoundPo::getCode).collect(Collectors.toList());
+        fundHisService.dowloadHis(foundCodeList);
+        /**获取季度数据*/
+        List<FundQuarterPo> fundQuartList = fundHisService.getQuarterDataByCode(foundCodeList);
+        //找到平均季度排名在0.3以下的
+        Map<String, List<FundQuarterPo>> fqListMap = fundQuartList.stream().collect(Collectors.groupingBy(FundQuarterPo::getCode));
+        {
+            Set<String> qokcodelist = new HashSet<>();
+            fqListMap.forEach((key, value) -> {
+                if (!value.isEmpty()) {
+                    Double rank = value.stream().filter(item -> item.getRank() != null).collect(Collectors.averagingDouble(FundQuarterPo::getRank));
+                    if (rank <= qhisrank) {
+                        qokcodelist.add(key);
+                    }
+                }
+            });
+
+            rFoundPoResult = rFoundPoResult.stream().filter(item -> qokcodelist.contains(item.getCode())).collect(Collectors.toList());
+            foundCodeList = rFoundPoResult.stream().map(FoundPo::getCode).collect(Collectors.toList());
+            logger.info("季度筛选后={}", foundCodeList.size());
+        }
+
+        //获取年度度数据筛选
+        //获取季度数据
+        List<FundYearPo> fundYearList = fundHisService.getYearDataByCode(foundCodeList);
+        //找到平均季度排名在0.3以下的
+        Map<String, List<FundYearPo>> fyListMap = fundYearList.stream().collect(Collectors.groupingBy(FundYearPo::getCode));
+        {
+            Set<String> qokcodelist = new HashSet<>();
+
+            fyListMap.forEach((key, value) -> {
+                if (!value.isEmpty()) {
+                    Double rank = value.stream().filter(item -> item.getRank() != null).collect(Collectors.averagingDouble(FundYearPo::getRank));
+                    if (rank <= yhisrank) {
+                        qokcodelist.add(key);
+                    }
+                }
+            });
+
+            rFoundPoResult = rFoundPoResult.stream().filter(item -> qokcodelist.contains(item.getCode())).collect(Collectors.toList());
+            foundCodeList = rFoundPoResult.stream().map(FoundPo::getCode).collect(Collectors.toList());
+            logger.info("年筛选后={}", foundCodeList.size());
+        }
+
+
+        //基金筛选:排序
+        rFoundPoResult.sort(Comparator.comparing(FoundPo::getL3y));
+        Collections.reverse(rFoundPoResult);
+
+        //显示
+        printResult(rFoundPoResult, comMap, fyListMap, fqListMap);
+
+        exportlzq(ft, rFoundPoResult, comMap, fyListMap, fqListMap);
+    }
+
+    public void searchZq() {
         /**哪些类基金放在一起来找*/
         String[] ft = {"zq"};
         /**级别平均要大于等于4星*/
@@ -127,8 +221,9 @@ public class Strategy {
         //显示
         printResult(rFoundPoResult, comMap, fyListMap, fqListMap);
 
-        export(ft, rFoundPoResult, comMap, fyListMap, fqListMap);
+        exportzqAll(ft, rFoundPoResult, comMap, fyListMap, fqListMap);
     }
+
     public void searchGpAHh() {
         /**哪些类基金放在一起来找*/
         String[] ft = {"gp", "hh"};
@@ -219,8 +314,7 @@ public class Strategy {
         //显示
         printResult(rFoundPoResult, comMap, fyListMap, fqListMap);
 
-        export(ft, rFoundPoResult, comMap, fyListMap, fqListMap);
-
+        exportgphh(ft, rFoundPoResult, comMap, fyListMap, fqListMap);
     }
 
     private void printResult(List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap, Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap) {
@@ -267,9 +361,9 @@ public class Strategy {
         }
     }
 
-    private void export(String[] ft, List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap, Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap) {
+    private void exportgphh(String[] ft, List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap, Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap) {
         XSSFWorkbook wb = new XSSFWorkbook();
-        XSSFSheet sheet = wb.createSheet("gphh");
+        XSSFSheet sheet = wb.createSheet("股票混合");
         final XSSFRow row = sheet.createRow(0);
         XSSFCell cellCode = row.createCell(0);
         XSSFCell cellName = row.createCell(1);
@@ -335,6 +429,376 @@ public class Strategy {
 
             //年
             rowIndex = 15;
+            for (FundYearPo fundYearPo : fundYearPoList) {
+                XSSFCell cy1 = row2.createCell(rowIndex++);
+                cy1.setCellValue(fundYearPo != null ? df.format(fundYearPo.getRank()) : "-");
+            }
+        }
+
+        try {
+            String fname = "out";
+            for (String t : ft) {
+                fname = fname + "_" + t;
+            }
+            fname += ".xlsx";
+            File outfile = new File(outputpath + File.separator + fname);
+            FileOutputStream outputStream = new FileOutputStream(outfile);
+            wb.write(outputStream);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportczq(String[] ft, List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap, Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap) {
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet("债券");
+        final XSSFRow row = sheet.createRow(0);
+        XSSFCell cellCode = row.createCell(0);
+        XSSFCell cellName = row.createCell(1);
+        sheet.setColumnWidth(1, 6000);
+        XSSFCell cellSubT = row.createCell(2);
+        XSSFCell cellLevel = row.createCell(3);
+        XSSFCell cellCCode = row.createCell(4);
+        XSSFCell cellCName = row.createCell(5);
+        sheet.setColumnWidth(5, 6500);
+        XSSFCell cellCL1y = row.createCell(6);
+        XSSFCell cellCL3y = row.createCell(7);
+        cellCode.setCellValue("代码");
+        cellName.setCellValue("名称");
+        cellSubT.setCellValue("子类型");
+        cellLevel.setCellValue("级别");
+        cellCCode.setCellValue("公司代码");
+        cellCName.setCellValue("公司名称");
+        cellCL1y.setCellValue("近1年");
+        cellCL3y.setCellValue("近3年");
+
+
+        XSSFFont fonlc = wb.createFont();
+        fonlc.setColor(IndexedColors.GREEN.index);
+        XSSFCellStyle stylelc = wb.createCellStyle();
+        stylelc.setFont(fonlc);
+        XSSFFont fonsc = wb.createFont();
+        fonsc.setColor(IndexedColors.BLUE.index);
+        XSSFCellStyle stylesc = wb.createCellStyle();
+        stylesc.setFont(fonsc);
+        XSSFFont fonkz = wb.createFont();
+        fonkz.setColor(IndexedColors.YELLOW.index);
+        XSSFCellStyle stylekz = wb.createCellStyle();
+        stylekz.setFont(fonkz);
+
+        DecimalFormat df = new DecimalFormat("0.000");
+
+        int rowNum = 1;
+        for (FoundPo item : rFoundPoResult) {
+            List<FundYearPo> fundYearPoList = fyListMap.get(item.getCode());
+            List<FundQuarterPo> fundQuarterPoList = fqListMap.get(item.getCode());
+
+
+            if (1 == rowNum) {
+                int rowIndex = 8;
+                for (FundQuarterPo fundQuarterPo : fundQuarterPoList) {
+                    XSSFCell cq = row.createCell(rowIndex++);
+                    cq.setCellValue(fundQuarterPo.getQuarter() + "季");
+                }
+
+                rowIndex = 16;
+                for (FundYearPo fundYearPo : fundYearPoList) {
+                    XSSFCell cy = row.createCell(rowIndex++);
+                    cy.setCellValue(fundYearPo.getYear() + "年");
+                }
+            }
+
+            XSSFRow row2 = sheet.createRow(rowNum++);
+            cellCode = row2.createCell(0);
+            cellCode.setCellValue(item.getCode());
+            cellName = row2.createCell(1);
+            cellName.setCellValue(item.getName());
+            cellSubT = row2.createCell(2);
+            cellSubT.setCellValue(ZQSubTypeEnum.getDisStringBySubT(item.getSubt()));
+            cellLevel = row2.createCell(3);
+            cellLevel.setCellValue(df.format(item.getLevel()));
+            cellCCode = row2.createCell(4);
+            cellCCode.setCellValue(item.getComcode());
+            cellCName = row2.createCell(5);
+            cellCName.setCellValue(comMap.get(item.getComcode()).getName());
+            cellCL1y = row2.createCell(6);
+            cellCL1y.setCellValue(df.format(item.getL1y()));
+            cellCL3y = row2.createCell(7);
+            cellCL3y.setCellValue(df.format(item.getL3y()));
+
+            switch (item.getSubt()) {
+                case "lc": {
+                    cellCode.setCellStyle(stylelc);
+                    cellName.setCellStyle(stylelc);
+                }
+                break;
+                case "sc": {
+                    cellCode.setCellStyle(stylesc);
+                    cellName.setCellStyle(stylesc);
+                }
+                break;
+                case "kz": {
+                    cellCode.setCellStyle(stylekz);
+                    cellName.setCellStyle(stylekz);
+                }
+                break;
+            }
+
+            //季度
+            int rowIndex = 8;
+            for (FundQuarterPo fundQuarterPo : fundQuarterPoList) {
+                XSSFCell cq = row2.createCell(rowIndex++);
+                cq.setCellValue(fundQuarterPo.getRank() != null ? df.format(fundQuarterPo.getRank()) : "-");
+            }
+
+            //年
+            rowIndex = 16;
+            for (FundYearPo fundYearPo : fundYearPoList) {
+                XSSFCell cy1 = row2.createCell(rowIndex++);
+                cy1.setCellValue(fundYearPo != null ? df.format(fundYearPo.getRank()) : "-");
+            }
+        }
+
+        try {
+            String fname = "out";
+            for (String t : ft) {
+                fname = fname + "_" + t;
+            }
+            fname += ".xlsx";
+            File outfile = new File(outputpath + File.separator + fname);
+            FileOutputStream outputStream = new FileOutputStream(outfile);
+            wb.write(outputStream);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void exportlzq(String[] ft, List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap, Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap) {
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet("纯债");
+        final XSSFRow row = sheet.createRow(0);
+        XSSFCell cellCode = row.createCell(0);
+        XSSFCell cellName = row.createCell(1);
+        sheet.setColumnWidth(1, 6000);
+        XSSFCell cellSubT = row.createCell(2);
+        XSSFCell cellLevel = row.createCell(3);
+        XSSFCell cellCCode = row.createCell(4);
+        XSSFCell cellCName = row.createCell(5);
+        sheet.setColumnWidth(5, 6500);
+        XSSFCell cellCL1y = row.createCell(6);
+        XSSFCell cellCL3y = row.createCell(7);
+        cellCode.setCellValue("代码");
+        cellName.setCellValue("名称");
+        cellSubT.setCellValue("子类型");
+        cellLevel.setCellValue("级别");
+        cellCCode.setCellValue("公司代码");
+        cellCName.setCellValue("公司名称");
+        cellCL1y.setCellValue("近1年");
+        cellCL3y.setCellValue("近3年");
+
+
+        XSSFFont fonlc = wb.createFont();
+        fonlc.setColor(IndexedColors.GREEN.index);
+        XSSFCellStyle stylelc = wb.createCellStyle();
+        stylelc.setFont(fonlc);
+        XSSFFont fonsc = wb.createFont();
+        fonsc.setColor(IndexedColors.BLUE.index);
+        XSSFCellStyle stylesc = wb.createCellStyle();
+        stylesc.setFont(fonsc);
+        XSSFFont fonkz = wb.createFont();
+        fonkz.setColor(IndexedColors.YELLOW.index);
+        XSSFCellStyle stylekz = wb.createCellStyle();
+        stylekz.setFont(fonkz);
+
+        DecimalFormat df = new DecimalFormat("0.000");
+
+        int rowNum = 1;
+        for (FoundPo item : rFoundPoResult) {
+            List<FundYearPo> fundYearPoList = fyListMap.get(item.getCode());
+            List<FundQuarterPo> fundQuarterPoList = fqListMap.get(item.getCode());
+
+
+            if (1 == rowNum) {
+                int rowIndex = 8;
+                for (FundQuarterPo fundQuarterPo : fundQuarterPoList) {
+                    XSSFCell cq = row.createCell(rowIndex++);
+                    cq.setCellValue(fundQuarterPo.getQuarter() + "季");
+                }
+
+                rowIndex = 16;
+                for (FundYearPo fundYearPo : fundYearPoList) {
+                    XSSFCell cy = row.createCell(rowIndex++);
+                    cy.setCellValue(fundYearPo.getYear() + "年");
+                }
+            }
+
+            XSSFRow row2 = sheet.createRow(rowNum++);
+            cellCode = row2.createCell(0);
+            cellCode.setCellValue(item.getCode());
+            cellName = row2.createCell(1);
+            cellName.setCellValue(item.getName());
+            cellSubT = row2.createCell(2);
+            cellSubT.setCellValue(ZQSubTypeEnum.getDisStringBySubT(item.getSubt()));
+            cellLevel = row2.createCell(3);
+            cellLevel.setCellValue(df.format(item.getLevel()));
+            cellCCode = row2.createCell(4);
+            cellCCode.setCellValue(item.getComcode());
+            cellCName = row2.createCell(5);
+            cellCName.setCellValue(comMap.get(item.getComcode()).getName());
+            cellCL1y = row2.createCell(6);
+            cellCL1y.setCellValue(df.format(item.getL1y()));
+            cellCL3y = row2.createCell(7);
+            cellCL3y.setCellValue(df.format(item.getL3y()));
+
+            switch (item.getSubt()) {
+                case "lc": {
+                    cellCode.setCellStyle(stylelc);
+                    cellName.setCellStyle(stylelc);
+                }
+                break;
+                case "sc": {
+                    cellCode.setCellStyle(stylesc);
+                    cellName.setCellStyle(stylesc);
+                }
+                break;
+                case "kz": {
+                    cellCode.setCellStyle(stylekz);
+                    cellName.setCellStyle(stylekz);
+                }
+                break;
+            }
+
+            //季度
+            int rowIndex = 8;
+            for (FundQuarterPo fundQuarterPo : fundQuarterPoList) {
+                XSSFCell cq = row2.createCell(rowIndex++);
+                cq.setCellValue(fundQuarterPo.getRank() != null ? df.format(fundQuarterPo.getRank()) : "-");
+            }
+
+            //年
+            rowIndex = 16;
+            for (FundYearPo fundYearPo : fundYearPoList) {
+                XSSFCell cy1 = row2.createCell(rowIndex++);
+                cy1.setCellValue(fundYearPo != null ? df.format(fundYearPo.getRank()) : "-");
+            }
+        }
+
+        try {
+            String fname = "out_lzq.xlsx";
+            File outfile = new File(outputpath + File.separator + fname);
+            FileOutputStream outputStream = new FileOutputStream(outfile);
+            wb.write(outputStream);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportzqAll(String[] ft, List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap, Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap) {
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet("债券");
+        final XSSFRow row = sheet.createRow(0);
+        XSSFCell cellCode = row.createCell(0);
+        XSSFCell cellName = row.createCell(1);
+        sheet.setColumnWidth(1, 6000);
+        XSSFCell cellSubT = row.createCell(2);
+        XSSFCell cellLevel = row.createCell(3);
+        XSSFCell cellCCode = row.createCell(4);
+        XSSFCell cellCName = row.createCell(5);
+        sheet.setColumnWidth(5, 6500);
+        XSSFCell cellCL1y = row.createCell(6);
+        XSSFCell cellCL3y = row.createCell(7);
+        cellCode.setCellValue("代码");
+        cellName.setCellValue("名称");
+        cellSubT.setCellValue("子类型");
+        cellLevel.setCellValue("级别");
+        cellCCode.setCellValue("公司代码");
+        cellCName.setCellValue("公司名称");
+        cellCL1y.setCellValue("近1年");
+        cellCL3y.setCellValue("近3年");
+
+
+        XSSFFont fonlc = wb.createFont();
+        fonlc.setColor(IndexedColors.GREEN.index);
+        XSSFCellStyle stylelc = wb.createCellStyle();
+        stylelc.setFont(fonlc);
+        XSSFFont fonsc = wb.createFont();
+        fonsc.setColor(IndexedColors.BLUE.index);
+        XSSFCellStyle stylesc = wb.createCellStyle();
+        stylesc.setFont(fonsc);
+        XSSFFont fonkz = wb.createFont();
+        fonkz.setColor(IndexedColors.YELLOW.index);
+        XSSFCellStyle stylekz = wb.createCellStyle();
+        stylekz.setFont(fonkz);
+
+        DecimalFormat df = new DecimalFormat("0.000");
+
+        int rowNum = 1;
+        for (FoundPo item : rFoundPoResult) {
+            List<FundYearPo> fundYearPoList = fyListMap.get(item.getCode());
+            List<FundQuarterPo> fundQuarterPoList = fqListMap.get(item.getCode());
+
+
+            if (1 == rowNum) {
+                int rowIndex = 8;
+                for (FundQuarterPo fundQuarterPo : fundQuarterPoList) {
+                    XSSFCell cq = row.createCell(rowIndex++);
+                    cq.setCellValue(fundQuarterPo.getQuarter() + "季");
+                }
+
+                rowIndex = 16;
+                for (FundYearPo fundYearPo : fundYearPoList) {
+                    XSSFCell cy = row.createCell(rowIndex++);
+                    cy.setCellValue(fundYearPo.getYear() + "年");
+                }
+            }
+
+            XSSFRow row2 = sheet.createRow(rowNum++);
+            cellCode = row2.createCell(0);
+            cellCode.setCellValue(item.getCode());
+            cellName = row2.createCell(1);
+            cellName.setCellValue(item.getName());
+            cellSubT = row2.createCell(2);
+            cellSubT.setCellValue(ZQSubTypeEnum.getDisStringBySubT(item.getSubt()));
+            cellLevel = row2.createCell(3);
+            cellLevel.setCellValue(df.format(item.getLevel()));
+            cellCCode = row2.createCell(4);
+            cellCCode.setCellValue(item.getComcode());
+            cellCName = row2.createCell(5);
+            cellCName.setCellValue(comMap.get(item.getComcode()).getName());
+            cellCL1y = row2.createCell(6);
+            cellCL1y.setCellValue(df.format(item.getL1y()));
+            cellCL3y = row2.createCell(7);
+            cellCL3y.setCellValue(df.format(item.getL3y()));
+
+            switch (item.getSubt()) {
+                case "lc": {
+                    cellCode.setCellStyle(stylelc);
+                    cellName.setCellStyle(stylelc);
+                }
+                break;
+                case "sc": {
+                    cellCode.setCellStyle(stylesc);
+                    cellName.setCellStyle(stylesc);
+                }
+                break;
+                case "kz": {
+                    cellCode.setCellStyle(stylekz);
+                    cellName.setCellStyle(stylekz);
+                }
+                break;
+            }
+
+            //季度
+            int rowIndex = 8;
+            for (FundQuarterPo fundQuarterPo : fundQuarterPoList) {
+                XSSFCell cq = row2.createCell(rowIndex++);
+                cq.setCellValue(fundQuarterPo.getRank() != null ? df.format(fundQuarterPo.getRank()) : "-");
+            }
+
+            //年
+            rowIndex = 16;
             for (FundYearPo fundYearPo : fundYearPoList) {
                 XSSFCell cy1 = row2.createCell(rowIndex++);
                 cy1.setCellValue(fundYearPo != null ? df.format(fundYearPo.getRank()) : "-");

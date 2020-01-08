@@ -14,7 +14,7 @@ import java.sql.Date;
 @Builder
 @ToString
 public class FoundPo {
-    public FoundPo(String code, String comcode, String name, String ft, Date date, Double level, Double l1y, Double l2y, Double l3y, Double ty, Double cy) {
+    public FoundPo(String code, String comcode, String name, String ft, Date date, Double level, Double l1y, Double l2y, Double l3y, Double ty, Double cy, String subt) {
         this.code = code;
         this.comcode = comcode;
         this.name = name;
@@ -26,6 +26,7 @@ public class FoundPo {
         this.l3y = l3y;
         this.ty = ty;
         this.cy = cy;
+        this.subt = subt;
     }
 
     /**
@@ -74,4 +75,8 @@ public class FoundPo {
      * 成立以来
      */
     private Double cy;
+    /**
+     * 子类型
+     */
+    private String subt;
 }

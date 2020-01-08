@@ -14,13 +14,13 @@
         <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into ttfund(code,ft, info) values
+        insert into ttfund(code,ft, info,subt) values
         <foreach collection="list" item="ttFundPo" index="index" separator=",">
             (
-            #{ttFundPo.code}, #{ttFundPo.ft}, #{ttFundPo.info}
+            #{ttFundPo.code}, #{ttFundPo.ft}, #{ttFundPo.info}, #{ttFundPo.subt}
             )
         </foreach>
-        ON DUPLICATE KEY UPDATE ft=VALUES(ft), info=VALUES(info)
+        ON DUPLICATE KEY UPDATE ft=VALUES(ft), info=VALUES(info), subt=VALUES(subt)
     </insert>
 
     <!--    <update id="updateUser" parameterType="User">-->

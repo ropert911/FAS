@@ -15,4 +15,5 @@ public class TtFundPo {
     private String code;
     private String ft;
     private String info;
+    private String subt;
 }

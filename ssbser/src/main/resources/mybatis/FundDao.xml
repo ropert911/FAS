@@ -12,16 +12,16 @@
         <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into fund(code,name,comcode,level,ft,date,l1y,l2y,l3y,ty,cy) values
+        insert into fund(code,name,comcode,level,ft,date,l1y,l2y,l3y,ty,cy,subt) values
         <foreach collection="list" item="fundPo" index="index" separator=",">
             (
             #{fundPo.code}, #{fundPo.name}, #{fundPo.comcode},#{fundPo.level},
             #{fundPo.ft},#{fundPo.date},#{fundPo.l1y}, #{fundPo.l2y},
-            #{fundPo.l3y},#{fundPo.ty},#{fundPo.cy}
+            #{fundPo.l3y},#{fundPo.ty},#{fundPo.cy},#{fundPo.subt}
             )
         </foreach>
         ON DUPLICATE KEY UPDATE name=VALUES(name), comcode=VALUES(comcode),level=VALUES(level),ft=VALUES(ft),
-        date=VALUES(date), l1y=VALUES(l1y), l2y=VALUES(l2y), l3y=VALUES(l3y), ty=VALUES(ty), cy=VALUES(cy)
+        date=VALUES(date), l1y=VALUES(l1y), l2y=VALUES(l2y), l3y=VALUES(l3y), ty=VALUES(ty), cy=VALUES(cy), subt=VALUES(subt)
     </insert>
 
 

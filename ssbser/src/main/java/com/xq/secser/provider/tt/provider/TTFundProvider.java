@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.xq.secser.ssbser.model.FundTypeEnum;
 import com.xq.secser.ssbser.model.PageInfo;
+import com.xq.secser.ssbser.model.ZQSubTypeEnum;
 import com.xq.secser.ssbser.pojo.po.FoundPo;
 import com.xq.secser.provider.FundProvider;
 import com.xq.secser.provider.tt.pojo.ITtFund;
@@ -44,24 +45,29 @@ public class TTFundProvider implements FundProvider {
     SqlSessionFactory sqlSessionFactory;
 
 
-    private String getUrl(FundTypeEnum fundTypeEnum, long pageNum, long pageIndex) {
-        String urlPattern = "http://fund.eastmoney.com/data/rankhandler.aspx?op=ph&dt=kf&ft=%s&rs=&gs=0&sc=zzf&st=desc&sd=%s&ed=%s&qdii=&tabSubtype=,,,,,&pi=%d&pn=%d&dx=1&v=0.5797826098327001";
+    private String getUrl(FundTypeEnum fundTypeEnum, String subType, long pageNum, long pageIndex) {
+        String urlPattern = "http://fund.eastmoney.com/data/rankhandler.aspx?op=ph&dt=kf&ft=%s&rs=&gs=0&sc=zzf&st=desc&sd=%s&ed=%s&qdii=%s|&tabSubtype=%s,,,,,&pi=%d&pn=%d&dx=1&v=0.5797826098327001";
+        if (fundTypeEnum == FundTypeEnum.QDII) {
+            urlPattern = "http://fund.eastmoney.com/data/rankhandler.aspx?op=ph&dt=kf&ft=%s&rs=&gs=0&sc=zzf&st=desc&sd=%s&ed=%s&qdii=%s&tabSubtype=%s,,,,,&pi=%d&pn=%d&dx=1&v=0.5797826098327001";
+        }
 
         LocalDate localDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String date = localDate.format(formatter);
-        String url = String.format(urlPattern, fundTypeEnum.getUrlParam(), date, date, pageIndex, pageNum);
+        String url = String.format(urlPattern, fundTypeEnum.getUrlParam(), date, date, subType, subType, pageIndex, pageNum);
         return url;
     }
 
     private String rmUnuseData(String data) {
+        logger.info("rmUnuseData data=={}", data);
         String outData = data.replace("var rankData =", "");
         outData = outData.replace(";", "");
         return outData;
     }
 
-    private String funderRequest(FundTypeEnum ft, long pageNum, long pageIndex) {
-        String url = getUrl(ft, pageNum, pageIndex);
+    private String funderRequest(FundTypeEnum ft, String subType, long pageNum, long pageIndex) {
+        String url = getUrl(ft, subType, pageNum, pageIndex);
+        logger.info("funderRequest ft={} subType={} url={}", ft, subType, url);
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         String data = rmUnuseData(responseEntity.getBody());
         return data;
@@ -123,6 +129,8 @@ public class TTFundProvider implements FundProvider {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                foundPo.setSubt(data.getSubt());
+
                 foundPoList.add(foundPo);
             });
         } finally {
@@ -223,13 +231,13 @@ public class TTFundProvider implements FundProvider {
         return foundLevelList;
     }
 
-    private List<String> getAllFund(FundTypeEnum ft) {
+    private List<String> getAllFund(FundTypeEnum ft, String subType) {
         List<String> allData = new ArrayList<>();
 
-        String data = funderRequest(ft, 500, 1);
+        String data = funderRequest(ft, subType, 500, 1);
         PageInfo pageInfo = parseReqData(data, allData);
         for (long i = pageInfo.getPageIndex() + 1; i <= pageInfo.getAllPages(); ++i) {
-            String data2 = funderRequest(ft, pageInfo.getPageNum(), i);
+            String data2 = funderRequest(ft, subType, pageInfo.getPageNum(), i);
             parseReqData(data2, allData);
         }
 
@@ -239,18 +247,25 @@ public class TTFundProvider implements FundProvider {
     @Override
     public void initFoundData() {
         for (FundTypeEnum fte : FundTypeEnum.values()) {
-            List<String> allData1 = getAllFund(fte);
-            batchInsertDb(fte, allData1);
+            if (FundTypeEnum.ZQ == fte) {
+                for (ZQSubTypeEnum st : ZQSubTypeEnum.values()) {
+                    List<String> allData1 = getAllFund(fte, st.getCode());
+                    batchInsertDb(fte, st.getSubt(), allData1);
+                }
+            } else {
+                List<String> allData1 = getAllFund(fte, "");
+                batchInsertDb(fte, "", allData1);
+            }
         }
 
         //评组表格从 http://fund.eastmoney.com/data/fundrating.html 基金评级得到
     }
 
-    private void batchInsertDb(FundTypeEnum fundTypeEnum, List<String> allData) {
+    private void batchInsertDb(FundTypeEnum fundTypeEnum, String subType, List<String> allData) {
         List<TtFundPo> ttFundPoList = new ArrayList<>();
         allData.forEach(data -> {
             String[] items = data.split(",", 2);
-            TtFundPo ttFundPo = TtFundPo.builder().code(items[0]).ft(fundTypeEnum.getUrlParam()).info(data).build();
+            TtFundPo ttFundPo = TtFundPo.builder().code(items[0]).ft(fundTypeEnum.getUrlParam()).info(data).subt(subType).build();
             ttFundPoList.add(ttFundPo);
         });
 
