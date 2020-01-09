@@ -1,6 +1,7 @@
 package com.xq.secser.provider;
 
 import com.xq.secser.ssbser.pojo.po.FoundPo;
+import com.xq.secser.ssbser.pojo.vo.RedeemRate;
 
 import java.util.List;
 
@@ -20,5 +21,11 @@ public interface FundProvider {
      * @return
      */
     List<FoundPo> parseFund();
-    void getflinfo(String ccode);
+
+    /**
+     *
+     * @param ccode
+     * @return
+     */
+    RedeemRate getflinfo(String ccode);
 }

@@ -10,6 +10,7 @@ import com.xq.secser.ssbser.pojo.po.FoundPo;
 import com.xq.secser.provider.FundProvider;
 import com.xq.secser.provider.tt.pojo.ITtFund;
 import com.xq.secser.provider.tt.pojo.TtFundPo;
+import com.xq.secser.ssbser.pojo.vo.RedeemRate;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.ss.usermodel.CellType;
@@ -155,73 +156,107 @@ public class TTFundProvider implements FundProvider {
     }
 
     @Override
-    public void getflinfo(String fundCode) {
+    public RedeemRate getflinfo(String fundCode) {
         String patten = "http://fundf10.eastmoney.com/jjfl_%s.html";
         String url = String.format(patten, fundCode);
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         String data = responseEntity.getBody();
 
-        int index = data.indexOf("申购费率（前端）");
-        index = data.indexOf("</strike>", index);
-        int index2 = data.indexOf("</td>", index);
-        String sub = data.substring(index + 9, index2);
-        sub = sub.replaceAll("&nbsp;", "");
-        sub = sub.substring(1);
-        List<String> mutir = getmutiString("([0-9,\\.]+).*([0-9,\\.]+)", sub);
-        Double purchfl = Double.valueOf(mutir.get(1));
 
-        index = data.indexOf("管理费率");
-        sub = data.substring(index, index + 300);
-        index = sub.indexOf("\">");
-        sub = sub.substring(index + 2, index + 10);
-        String r = getString("([0-9,\\.]+)%\\（每年", sub);
-        Double managefl = Double.valueOf(r);
+        Double purchfl = null, managefl = null, tgfl = null;
+        int index = 0, index2 = 0;
+        String sub;
+        {
+            index = data.indexOf("申购费率（前端）");
+            index = data.indexOf("</strike>", index);
+            if (-1 != index) {
+                index2 = data.indexOf("</td>", index);
+                sub = data.substring(index + 9, index2);
+                sub = sub.replaceAll("&nbsp;", "");
+                sub = sub.substring(1);
+                List<String> mutir = getmutiString("([0-9,\\.]+)%\\|([0-9,\\.]+)%", sub);
+                purchfl = Double.valueOf(mutir.get(1));
+            }
+        }
+
+        {
+            index = data.indexOf("管理费率");
+            sub = data.substring(index, index + 300);
+            index = sub.indexOf("\">");
+            sub = sub.substring(index + 2, index + 10);
+            String r = getString("([0-9,\\.]+)%\\（每年", sub);
+            managefl = Double.valueOf(r);
+        }
 
 
-        index = data.indexOf("托管费率");
-        sub = data.substring(index, index + 300);
-        index = sub.indexOf("\">");
-        sub = sub.substring(index + 2, index + 20);
-        r = getString("([0-9,\\.]+)%\\（每年", sub);
-        Double tgfl = Double.valueOf(r);
-
+        {
+            index = data.indexOf("托管费率");
+            sub = data.substring(index, index + 300);
+            index = sub.indexOf("\">");
+            sub = sub.substring(index + 2, index + 20);
+            String r = getString("([0-9,\\.]+)%\\（每年", sub);
+            tgfl = Double.valueOf(r);
+        }
 
         index = data.indexOf("赎回费率");
         index = data.indexOf("赎回费率", index + 1);
         sub = data.substring(index, index + 500);
         index = sub.indexOf("<tr>");
+        index2 = sub.indexOf("</table>");
+        sub = sub.substring(index, index2);
 
-        sub = sub.substring(index);
-        index = sub.indexOf("<tr>");
-        index2 = sub.indexOf("<tr>", index + 3);
-        String r1 = sub.substring(index, index2);
-        sub = sub.substring(index2);
+        RedeemRate redeemRate = RedeemRate.builder().build();
+        boolean bend = false;
+        int shflindex = 1;
+        while (true) {
+            index = sub.indexOf("<tr>");
+            index2 = sub.indexOf("<tr>", index + 3);
+            String row = "";
+            if (-1 == index2) {
+                index2 = sub.indexOf("</tr>", index + 3);
+                bend = true;
+            }
 
-        index = sub.indexOf("<tr>");
-        index2 = sub.indexOf("<tr>", index + 3);
-        String r2 = sub.substring(index, index2);
-        sub = sub.substring(index2);
+            row = sub.substring(index, index2);
+            sub = sub.substring(index2);
 
-        index = sub.indexOf("<tr>");
-        index2 = sub.indexOf("<tr>", index + 3);
-        String r3 = sub.substring(index, index2);
 
-        mutir = getmutiString("<td>(.+)</td><td>([0-9,\\.]+)%", r1);
-        String item1 = mutir.get(0);
-        Double value1 = Double.valueOf(mutir.get(1));
+            List<String> mutir = getmutiString("<td>(.+)</td><td>([0-9,\\.]+)%", row);
+            String item = mutir.get(0);
+            Double value = Double.valueOf(mutir.get(1));
+            switch (shflindex) {
+                case 1:
+                    redeemRate.setC1(item);
+                    redeemRate.setFl(value);
+                    break;
+                case 2:
+                    redeemRate.setC2(item);
+                    redeemRate.setF2(value);
+                    break;
+                case 3:
+                    redeemRate.setC3(item);
+                    redeemRate.setF3(value);
+                    break;
+                case 4:
+                    redeemRate.setC4(item);
+                    redeemRate.setF4(value);
+                    break;
+                default:
+                    break;
+            }
 
-        mutir = getmutiString("<td>(.+)</td><td>([0-9,\\.]+)%", r2);
-        String item2 = mutir.get(0);
-        Double value2 = Double.valueOf(mutir.get(1));
+            if (bend) {
+                break;
+            }
+            shflindex++;
+        }
 
-        mutir = getmutiString("<td>(.+)</td><td>([0-9,\\.]+)%", r3);
-        String item3 = mutir.get(0);
-        Double value3 = Double.valueOf(mutir.get(1));
+        redeemRate.setSgfl(purchfl);
+        redeemRate.setYzfl(managefl + tgfl);
+        redeemRate.setManagefl(managefl);
+        redeemRate.setTgfl(tgfl);
 
-        logger.info("申购费率=={} 管理费率={} 托管费率={}", purchfl, managefl, tgfl);
-        logger.info("{}==>{}", item1, value1);
-        logger.info("{}==>{}", item2, value2);
-        logger.info("{}==>{}", item3, value3);
+        return redeemRate;
     }
 
     public static String getString(String pstr, String text) {

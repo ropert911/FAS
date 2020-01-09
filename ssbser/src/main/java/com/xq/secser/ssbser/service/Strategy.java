@@ -1,10 +1,16 @@
 package com.xq.secser.ssbser.service;
 
+import com.xq.secser.constant.TransactionTypeEnum;
 import com.xq.secser.ssbser.model.ZQSubTypeEnum;
 import com.xq.secser.ssbser.pojo.po.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
+import org.apache.poi.hssf.usermodel.HSSFComment;
+import org.apache.poi.hssf.usermodel.HSSFPatriarch;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +24,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -39,11 +46,6 @@ public class Strategy {
     SqlSessionFactory sqlSessionFactory;
 
     public void search() {
-        int a = 1;
-        if (1 == a) {
-            fundService.getflinfo("110022");
-            return;
-        }
         List<StrategySearchInfo> strategySearchInfoList = new ArrayList<>();
         StrategySearchInfo czqSearchInfo = StrategySearchInfo.builder().ft(new String[]{"zq"}).subt(new String[]{"lc", "sc"}).foudLevel(4).l1y(5).l3y(15)
                 .qhisrank(0.5).yhisrank(0.5)
@@ -157,10 +159,13 @@ public class Strategy {
         rFoundPoResult.sort(Comparator.comparing(FoundPo::getL3y));
         Collections.reverse(rFoundPoResult);
 
+        List<FoundFlPo> flList = fundService.getflinfo(foundCodeList);
+        Map<String, FoundFlPo> flMap = flList.stream().collect(Collectors.toMap(FoundFlPo::getCode, s -> s, (key1, key2) -> key2));
+
         //显示
         printResult(rFoundPoResult, comMap, fyListMap, fqListMap);
 
-        exportFunds(wb, searchInfo.getSheetName(), rFoundPoResult, comMap, fyListMap, fqListMap);
+        exportFunds(wb, searchInfo.getSheetName(), rFoundPoResult, comMap, fyListMap, fqListMap, flMap);
     }
 
     private void printResult(List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap, Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap) {
@@ -207,12 +212,14 @@ public class Strategy {
         }
     }
 
-    private void exportFunds(XSSFWorkbook wb, String sheetName, List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap, Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap) {
+    private void exportFunds(XSSFWorkbook wb, String sheetName, List<FoundPo> rFoundPoResult, Map<String, CompPo> comMap,
+                             Map<String, List<FundYearPo>> fyListMap, Map<String, List<FundQuarterPo>> fqListMap, Map<String, FoundFlPo> flMap) {
         XSSFSheet sheet = wb.createSheet(sheetName);
         int rowNum = 0;
         final XSSFRow row = sheet.createRow(rowNum++);
         int columnIndex = 0;
         int yearColumnIndex = 17;
+        int flColumnIndex = yearColumnIndex + 5;
         XSSFCell cellCode = row.createCell(columnIndex++);
         XSSFCell cellName = row.createCell(columnIndex++);
         XSSFCell cellSubT = row.createCell(columnIndex++);
@@ -238,10 +245,10 @@ public class Strategy {
 
 
         /**初始化行字体*/
-        XSSFFont fonLc = wb.createFont();
-        fonLc.setColor(IndexedColors.GREEN.index);
-        XSSFCellStyle styleLc = wb.createCellStyle();
-        styleLc.setFont(fonLc);
+        XSSFFont fongreen = wb.createFont();
+        fongreen.setColor(IndexedColors.GREEN.index);
+        XSSFCellStyle stylegreen = wb.createCellStyle();
+        stylegreen.setFont(fongreen);
 
         XSSFFont fonSc = wb.createFont();
         fonSc.setColor(IndexedColors.BLUE.index);
@@ -252,6 +259,11 @@ public class Strategy {
         fonKz.setColor(IndexedColors.YELLOW.index);
         XSSFCellStyle styleKz = wb.createCellStyle();
         styleKz.setFont(fonKz);
+
+        XSSFFont fonRed = wb.createFont();
+        fonRed.setColor(IndexedColors.RED.index);
+        XSSFCellStyle styleRed = wb.createCellStyle();
+        styleRed.setFont(fonRed);
 
         DecimalFormat df = new DecimalFormat("0.000");
 
@@ -272,6 +284,25 @@ public class Strategy {
                     XSSFCell cy = row.createCell(columnIndex++);
                     cy.setCellValue(fundYearPo.getYear() + "年");
                 }
+
+                columnIndex = flColumnIndex;
+                XSSFCell sg = row.createCell(columnIndex++);
+                sg.setCellValue("申购费");
+
+                XSSFCell yz = row.createCell(columnIndex++);
+                yz.setCellValue("动作费");
+
+                XSSFCell sh1 = row.createCell(columnIndex++);
+                sh1.setCellValue("赎回1");
+
+                XSSFCell sh2 = row.createCell(columnIndex++);
+                sh2.setCellValue("赎回2");
+
+                XSSFCell sh3 = row.createCell(columnIndex++);
+                sh3.setCellValue("赎回3");
+
+                XSSFCell sh4 = row.createCell(columnIndex++);
+                sh4.setCellValue("赎回3");
             }
 
             XSSFRow row2 = sheet.createRow(rowNum++);
@@ -307,11 +338,70 @@ public class Strategy {
                 cy1.setCellValue(fundYearPo != null ? df.format(fundYearPo.getRank()) : "-");
             }
 
+            columnIndex = flColumnIndex;
+            FoundFlPo flPo = flMap.get(item.getCode());
+            if (null != flPo) {
+                XSSFCell sgcell = row2.createCell(columnIndex++);
+                if (flPo.getSgfl() != null) {
+                    sgcell.setCellValue(flPo.getSgfl());
+                    if (!TransactionTypeEnum.isFlReasonable(item.getFt(), item.getSubt(), TransactionTypeEnum.SG, flPo.getSgfl())) {
+                        sgcell.setCellStyle(styleRed);
+                    }
+                }
+
+                XSSFCell yzcell = row2.createCell(columnIndex++);
+                if (flPo.getYzfl() != null) {
+                    yzcell.setCellValue(flPo.getYzfl());
+                    if (!TransactionTypeEnum.isFlReasonable(item.getFt(), item.getSubt(), TransactionTypeEnum.YZ, flPo.getYzfl())) {
+                        yzcell.setCellStyle(styleRed);
+                    }
+                }
+
+                XSSFCell shf1cell = row2.createCell(columnIndex++);
+                if (flPo.getF1() != null) {
+                    shf1cell.setCellValue(flPo.getF1());
+                    shf1cell.setCellComment(createComment(wb, sheet, flPo.getC1()));
+                }
+
+                XSSFCell shf2cell = row2.createCell(columnIndex++);
+                if (flPo.getF2() != null) {
+                    shf2cell.setCellValue(flPo.getF2());
+                    shf2cell.setCellComment(createComment(wb, sheet, flPo.getC2()));
+                    if (!TransactionTypeEnum.isFlReasonable(item.getFt(), item.getSubt(), TransactionTypeEnum.SH, flPo.getF2())) {
+                        shf2cell.setCellStyle(styleRed);
+                    } else {
+                        shf2cell.setCellStyle(stylegreen);
+                    }
+                }
+
+                XSSFCell shf3cell = row2.createCell(columnIndex++);
+                if (flPo.getF3() != null) {
+                    shf3cell.setCellValue(flPo.getF3());
+                    shf3cell.setCellComment(createComment(wb, sheet, flPo.getC3()));
+                    if (!TransactionTypeEnum.isFlReasonable(item.getFt(), item.getSubt(), TransactionTypeEnum.SH, flPo.getF3())) {
+                        shf3cell.setCellStyle(styleRed);
+                    } else {
+                        shf3cell.setCellStyle(stylegreen);
+                    }
+                }
+
+                XSSFCell shf4cell = row2.createCell(columnIndex++);
+                if (flPo.getF4() != null) {
+                    shf4cell.setCellValue(flPo.getF4());
+                    shf4cell.setCellComment(createComment(wb, sheet, flPo.getC4()));
+                    if (!TransactionTypeEnum.isFlReasonable(item.getFt(), item.getSubt(), TransactionTypeEnum.SH, flPo.getF4())) {
+                        shf4cell.setCellStyle(styleRed);
+                    } else {
+                        shf4cell.setCellStyle(stylegreen);
+                    }
+                }
+            }
+
             //设置本行显示格式
             switch (item.getSubt()) {
                 case "lc": {
-                    cellCode.setCellStyle(styleLc);
-                    cellName.setCellStyle(styleLc);
+                    cellCode.setCellStyle(stylegreen);
+                    cellName.setCellStyle(stylegreen);
                 }
                 break;
                 case "sc": {
@@ -331,6 +421,14 @@ public class Strategy {
         }
     }
 
+    Comment createComment(XSSFWorkbook wb, XSSFSheet sheet, String content) {
+        CreationHelper factory = wb.getCreationHelper();
+        Drawing drawing = sheet.createDrawingPatriarch();
+        ClientAnchor anchor = factory.createClientAnchor();
+        Comment comment1 = drawing.createCellComment(anchor);
+        comment1.setString(factory.createRichTextString(content));
+        return comment1;
+    }
 
     List<FoundPo> filterFund(String[] ft, double foudLevel, Map<String, CompPo> comMap) {
         final List<FoundPo> foundPoResult = new ArrayList<>();

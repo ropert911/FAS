@@ -46,6 +46,23 @@ CREATE TABLE  IF NOT EXISTS `fund_year` (
   PRIMARY KEY (`code`,`year`)
 ) ENGINE=InnoDB DEFAULT CHARSET=gbk;
 
+CREATE TABLE  IF NOT EXISTS `fundfl` (
+  `code` char(64) NOT NULL comment '基金代码',
+  `sgfl`  double  comment '申购费率',
+  `yzfl`  double  comment '动作费率',
+  `managefl`  double  comment '管理费率',
+  `tgfl`  double  comment '托管费率',
+  `c1`  char(30)  comment '说明1',
+  `f1`  double  comment '费率',
+  `c2`  char(30)  comment '说明2',
+  `f2`  double  comment '费率',
+  `c3`  char(30)  comment '说明3',
+  `f3`  double  comment '费率',
+  `c4`  char(30)  comment '说明1',
+  `f4`  double  comment '费率',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB  DEFAULT CHARSET=gbk;
+
 DROP TABLE IF EXISTS `comp`;
 CREATE TABLE  IF NOT EXISTS `comp` (
   `comcode`  char(10) Not null ,
