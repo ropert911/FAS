@@ -12,6 +12,10 @@ import lombok.ToString;
 @Builder
 @ToString
 public class RedeemRate {
+    /**
+     * 资产模式
+     */
+    private Double zcgm;
     //申购
     private Double sgfl;
     //动作费率

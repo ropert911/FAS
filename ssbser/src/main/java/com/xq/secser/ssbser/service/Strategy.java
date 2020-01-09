@@ -212,12 +212,13 @@ public class Strategy {
         int rowNum = 0;
         final XSSFRow row = sheet.createRow(rowNum++);
         int columnIndex = 0;
-        int yearColumnIndex = 21;
+        int yearColumnIndex = 22;
         int flColumnIndex = yearColumnIndex + 5;
         XSSFCell cellCode = row.createCell(columnIndex++);
         XSSFCell cellName = row.createCell(columnIndex++);
         XSSFCell cellSubT = row.createCell(columnIndex++);
         XSSFCell cellLevel = row.createCell(columnIndex++);
+        XSSFCell cellZcgf = row.createCell(columnIndex++);
         XSSFCell cellCCode = row.createCell(columnIndex++);
         XSSFCell cellCName = row.createCell(columnIndex++);
         XSSFCell cellCL1m = row.createCell(columnIndex++);
@@ -231,6 +232,7 @@ public class Strategy {
         cellName.setCellValue("名称");
         cellSubT.setCellValue("子类型");
         cellLevel.setCellValue("级别");
+        cellZcgf.setCellValue("模型(亿元)");
         cellCCode.setCellValue("公司代码");
         cellCName.setCellValue("公司名称");
         cellCL1m.setCellValue("近1月");
@@ -267,6 +269,13 @@ public class Strategy {
         fonRed.setColor(IndexedColors.RED.index);
         XSSFCellStyle styleRed = wb.createCellStyle();
         styleRed.setFont(fonRed);
+
+        XSSFFont fonRedBold = wb.createFont();
+        fonRedBold.setColor(IndexedColors.RED.index);
+        fonRedBold.setBold(true);
+        XSSFCellStyle styleRedBold = wb.createCellStyle();
+        styleRedBold.setFont(fonRedBold);
+
 
         DecimalFormat df = new DecimalFormat("0.000");
 
@@ -310,6 +319,7 @@ public class Strategy {
                 sh4.setCellValue("赎回3");
             }
 
+            FoundFlPo flPo = flMap.get(item.getCode());
             XSSFRow row2 = sheet.createRow(rowNum++);
             columnIndex = 0;
             cellCode = row2.createCell(columnIndex++);
@@ -320,6 +330,13 @@ public class Strategy {
             cellSubT.setCellValue(ZQSubTypeEnum.getDisStringBySubT(item.getSubt()));
             cellLevel = row2.createCell(columnIndex++);
             cellLevel.setCellValue(df.format(item.getLevel()));
+            cellZcgf = row2.createCell(columnIndex++);
+            if (null != flPo) {
+                cellZcgf.setCellValue(df.format(flPo.getZcgm()));
+                if (flPo.getZcgm() < 8.0d) {
+                    cellZcgf.setCellStyle(styleRedBold);
+                }
+            }
             cellCCode = row2.createCell(columnIndex++);
             cellCCode.setCellValue(item.getComcode());
             cellCName = row2.createCell(columnIndex++);
@@ -352,7 +369,7 @@ public class Strategy {
             }
 
             columnIndex = flColumnIndex;
-            FoundFlPo flPo = flMap.get(item.getCode());
+
             if (null != flPo) {
                 XSSFCell sgcell = row2.createCell(columnIndex++);
                 if (flPo.getSgfl() != null) {

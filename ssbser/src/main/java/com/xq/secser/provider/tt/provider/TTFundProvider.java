@@ -166,9 +166,13 @@ public class TTFundProvider implements FundProvider {
         String data = responseEntity.getBody();
 
 
-        Double purchfl = null, managefl = null, tgfl = null;
+        Double zcgm=null, purchfl=null, managefl=null, tgfl = null;
         int index = 0, index2 = 0;
         String sub;
+        {
+            String r = getString(" 资产规模：<span>\\s+([0-9,\\.]+)亿元", data);
+            zcgm = Double.valueOf(r);
+        }
         {
             index = data.indexOf("申购费率（前端）");
             index = data.indexOf("</strike>", index);
@@ -254,6 +258,7 @@ public class TTFundProvider implements FundProvider {
             shflindex++;
         }
 
+        redeemRate.setZcgm(zcgm);
         redeemRate.setSgfl(purchfl);
         redeemRate.setYzfl(managefl + tgfl);
         redeemRate.setManagefl(managefl);

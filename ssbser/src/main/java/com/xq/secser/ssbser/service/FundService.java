@@ -107,7 +107,7 @@ public class FundService {
         List<FoundFlPo> dlFlPoList = new ArrayList<>(4);
         for (String fcode : foundCodeList) {
             RedeemRate redeemRate = fundProvider.getflinfo(fcode);
-            FoundFlPo foundFlPo = FoundFlPo.builder().code(fcode)
+            FoundFlPo foundFlPo = FoundFlPo.builder().code(fcode).zcgm(redeemRate.getZcgm())
                     .sgfl(redeemRate.getSgfl()).yzfl(redeemRate.getYzfl()).managefl(redeemRate.getManagefl()).tgfl(redeemRate.getTgfl())
                     .c1(redeemRate.getC1()).f1(redeemRate.getFl())
                     .c2(redeemRate.getC2()).f2(redeemRate.getF2())

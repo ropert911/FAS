@@ -14,6 +14,8 @@ import lombok.ToString;
 public class FoundFlPo {
     private String code;
 
+    //资产规模
+    private Double zcgm;
     //申购
     private Double sgfl;
     //动作费率
