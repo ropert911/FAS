@@ -14,13 +14,16 @@ import java.sql.Date;
 @Builder
 @ToString
 public class FoundPo {
-    public FoundPo(String code, String comcode, String name, String ft, Date date, Double level, Double l1y, Double l2y, Double l3y, Double ty, Double cy, String subt) {
+    public FoundPo(String code, String comcode, String name, String ft, Date date, Double level, Double l1m, Double l3m, Double l6m, Double l1y, Double l2y, Double l3y, Double ty, Double cy, String subt) {
         this.code = code;
         this.comcode = comcode;
         this.name = name;
         this.ft = ft;
         this.date = date;
         this.level = level;
+        this.l1m = l1m;
+        this.l3m = l3m;
+        this.l6m = l6m;
         this.l1y = l1y;
         this.l2y = l2y;
         this.l3y = l3y;
@@ -55,6 +58,18 @@ public class FoundPo {
      * 级别
      */
     private Double level;
+    /**
+     * 近1月
+     */
+    private Double l1m;
+    /**
+     * 近3月
+     */
+    private Double l3m;
+    /**
+     * 近6月
+     */
+    private Double l6m;
     /**
      * 近1年
      */

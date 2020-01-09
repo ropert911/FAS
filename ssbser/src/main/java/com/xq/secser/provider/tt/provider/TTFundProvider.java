@@ -116,12 +116,15 @@ public class TTFundProvider implements FundProvider {
                 String name = items[1];
                 String date = items[3];
 
+                Double l1m = items[8].length() == 0 ? null : Double.valueOf(items[8]);
+                Double l3m = items[9].length() == 0 ? null : Double.valueOf(items[9]);
+                Double l6m = items[10].length() == 0 ? null : Double.valueOf(items[10]);
                 Double l1y = items[11].length() == 0 ? null : Double.valueOf(items[11]);
                 Double l2y = items[12].length() == 0 ? null : Double.valueOf(items[12]);
                 Double l3y = items[13].length() == 0 ? null : Double.valueOf(items[13]);
                 Double ty = items[14].length() == 0 ? null : Double.valueOf(items[14]);
                 Double cy = items[15].length() == 0 ? null : Double.valueOf(items[15]);
-                FoundPo foundPo = FoundPo.builder().code(code).name(name).ft(data.getFt()).l1y(l1y).l2y(l2y).l3y(l3y).ty(ty).cy(cy).build();
+                FoundPo foundPo = FoundPo.builder().code(code).name(name).ft(data.getFt()).l1m(l1m).l3m(l3m).l6m(l6m).l1y(l1y).l2y(l2y).l3y(l3y).ty(ty).cy(cy).build();
                 try {
                     java.util.Date d = now;
                     if (date.length() > 0) {

@@ -212,7 +212,7 @@ public class Strategy {
         int rowNum = 0;
         final XSSFRow row = sheet.createRow(rowNum++);
         int columnIndex = 0;
-        int yearColumnIndex = 18;
+        int yearColumnIndex = 21;
         int flColumnIndex = yearColumnIndex + 5;
         XSSFCell cellCode = row.createCell(columnIndex++);
         XSSFCell cellName = row.createCell(columnIndex++);
@@ -220,6 +220,9 @@ public class Strategy {
         XSSFCell cellLevel = row.createCell(columnIndex++);
         XSSFCell cellCCode = row.createCell(columnIndex++);
         XSSFCell cellCName = row.createCell(columnIndex++);
+        XSSFCell cellCL1m = row.createCell(columnIndex++);
+        XSSFCell cellCL3m = row.createCell(columnIndex++);
+        XSSFCell cellCL6m = row.createCell(columnIndex++);
         XSSFCell cellCL1y = row.createCell(columnIndex++);
         XSSFCell cellCL2y = row.createCell(columnIndex++);
         XSSFCell cellCL3y = row.createCell(columnIndex++);
@@ -230,6 +233,9 @@ public class Strategy {
         cellLevel.setCellValue("级别");
         cellCCode.setCellValue("公司代码");
         cellCName.setCellValue("公司名称");
+        cellCL1m.setCellValue("近1月");
+        cellCL3m.setCellValue("近3月");
+        cellCL6m.setCellValue("近6月");
         cellCL1y.setCellValue("近1年");
         cellCL2y.setCellValue("近2年");
         cellCL3y.setCellValue("近3年");
@@ -318,6 +324,12 @@ public class Strategy {
             cellCCode.setCellValue(item.getComcode());
             cellCName = row2.createCell(columnIndex++);
             cellCName.setCellValue(comMap.get(item.getComcode()).getName());
+            cellCL1m = row2.createCell(columnIndex++);
+            cellCL1m.setCellValue(df.format(item.getL1m()));
+            cellCL3m = row2.createCell(columnIndex++);
+            cellCL3m.setCellValue(df.format(item.getL3m()));
+            cellCL6m = row2.createCell(columnIndex++);
+            cellCL6m.setCellValue(df.format(item.getL6m()));
             cellCL1y = row2.createCell(columnIndex++);
             cellCL1y.setCellValue(df.format(item.getL1y()));
             cellCL2y = row2.createCell(columnIndex++);
