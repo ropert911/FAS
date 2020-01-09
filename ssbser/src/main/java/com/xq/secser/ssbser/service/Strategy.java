@@ -1,7 +1,7 @@
 package com.xq.secser.ssbser.service;
 
 import com.xq.secser.constant.TransactionTypeEnum;
-import com.xq.secser.ssbser.model.ZQSubTypeEnum;
+import com.xq.secser.constant.ZQSubTypeEnum;
 import com.xq.secser.ssbser.pojo.po.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;

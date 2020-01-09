@@ -1,4 +1,4 @@
-package com.xq.secser.ssbser.model;
+package com.xq.secser.constant;
 
 /**
  * @author sk-qianxiao
