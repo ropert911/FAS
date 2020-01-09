@@ -5,12 +5,7 @@ import com.xq.secser.ssbser.model.ZQSubTypeEnum;
 import com.xq.secser.ssbser.pojo.po.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFComment;
-import org.apache.poi.hssf.usermodel.HSSFPatriarch;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +19,6 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -51,21 +45,21 @@ public class Strategy {
                 .qhisrank(0.5).yhisrank(0.5)
                 .cft(new String[]{"zq"}).topN(40).esTime("2014-06-06")
                 .build();
-        czqSearchInfo.setSheetName("纯债");
+        czqSearchInfo.setSheetName("低_纯债");
         strategySearchInfoList.add(czqSearchInfo);
 
         StrategySearchInfo zqSearchInfo = StrategySearchInfo.builder().ft(new String[]{"zq"}).subt(new String[]{}).foudLevel(4).l1y(7).l3y(20)
                 .qhisrank(0.5).yhisrank(0.5)
                 .cft(new String[]{"zq"}).topN(40).esTime("2014-06-06")
                 .build();
-        zqSearchInfo.setSheetName("债券");
+        zqSearchInfo.setSheetName("中_债券");
         strategySearchInfoList.add(zqSearchInfo);
 
         StrategySearchInfo gphhSearchInfo = StrategySearchInfo.builder().ft(new String[]{"gp", "hh"}).subt(new String[]{}).foudLevel(3.5).l1y(8).l3y(24)
                 .qhisrank(0.3).yhisrank(0.3)
                 .cft(new String[]{"gp", "hh"}).topN(30).esTime("2014-06-06")
                 .build();
-        gphhSearchInfo.setSheetName("股票混合");
+        gphhSearchInfo.setSheetName("高_股票混合");
         strategySearchInfoList.add(gphhSearchInfo);
 
         XSSFWorkbook wb = new XSSFWorkbook();
@@ -218,7 +212,7 @@ public class Strategy {
         int rowNum = 0;
         final XSSFRow row = sheet.createRow(rowNum++);
         int columnIndex = 0;
-        int yearColumnIndex = 17;
+        int yearColumnIndex = 18;
         int flColumnIndex = yearColumnIndex + 5;
         XSSFCell cellCode = row.createCell(columnIndex++);
         XSSFCell cellName = row.createCell(columnIndex++);
@@ -227,6 +221,7 @@ public class Strategy {
         XSSFCell cellCCode = row.createCell(columnIndex++);
         XSSFCell cellCName = row.createCell(columnIndex++);
         XSSFCell cellCL1y = row.createCell(columnIndex++);
+        XSSFCell cellCL2y = row.createCell(columnIndex++);
         XSSFCell cellCL3y = row.createCell(columnIndex++);
         XSSFCell cellComment = row.createCell(columnIndex++);
         cellCode.setCellValue("代码");
@@ -236,10 +231,12 @@ public class Strategy {
         cellCCode.setCellValue("公司代码");
         cellCName.setCellValue("公司名称");
         cellCL1y.setCellValue("近1年");
+        cellCL2y.setCellValue("近2年");
         cellCL3y.setCellValue("近3年");
         cellComment.setCellValue("备注");
 
         sheet.setColumnWidth(cellName.getColumnIndex(), 6000);
+        sheet.setColumnWidth(cellCCode.getColumnIndex(), 0);
         sheet.setColumnWidth(cellCName.getColumnIndex(), 6500);
         sheet.setColumnWidth(cellComment.getColumnIndex(), 6500);
 
@@ -277,12 +274,14 @@ public class Strategy {
                 for (FundQuarterPo fundQuarterPo : fundQuarterPoList) {
                     XSSFCell cq = row.createCell(columnIndex++);
                     cq.setCellValue(fundQuarterPo.getQuarter() + "季");
+                    sheet.setColumnWidth(cq.getColumnIndex(), 0);
                 }
 
                 columnIndex = yearColumnIndex;
                 for (FundYearPo fundYearPo : fundYearPoList) {
                     XSSFCell cy = row.createCell(columnIndex++);
                     cy.setCellValue(fundYearPo.getYear() + "年");
+                    sheet.setColumnWidth(cy.getColumnIndex(), 0);
                 }
 
                 columnIndex = flColumnIndex;
@@ -321,6 +320,8 @@ public class Strategy {
             cellCName.setCellValue(comMap.get(item.getComcode()).getName());
             cellCL1y = row2.createCell(columnIndex++);
             cellCL1y.setCellValue(df.format(item.getL1y()));
+            cellCL2y = row2.createCell(columnIndex++);
+            cellCL2y.setCellValue(df.format(item.getL2y()));
             cellCL3y = row2.createCell(columnIndex++);
             cellCL3y.setCellValue(df.format(item.getL3y()));
             row2.createCell(columnIndex++);
