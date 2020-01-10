@@ -233,7 +233,7 @@ public class Strategy {
         cellComment.setCellValue("备注");
         cellSubT.setCellValue("子类型");
         cellLevel.setCellValue("级别");
-        cellZcgf.setCellValue("模型(亿元)");
+        cellZcgf.setCellValue("规模(亿元)");
         cellCCode.setCellValue("公司代码");
         cellCName.setCellValue("公司名称");
         cellCL1m.setCellValue("近1月");
@@ -306,7 +306,7 @@ public class Strategy {
                 sg.setCellValue("申购费");
 
                 XSSFCell yz = row.createCell(columnIndex++);
-                yz.setCellValue("动作费");
+                yz.setCellValue("运作费");
 
                 XSSFCell sh1 = row.createCell(columnIndex++);
                 sh1.setCellValue("赎回1");
