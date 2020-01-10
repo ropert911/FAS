@@ -216,6 +216,7 @@ public class Strategy {
         int flColumnIndex = yearColumnIndex + 5;
         XSSFCell cellCode = row.createCell(columnIndex++);
         XSSFCell cellName = row.createCell(columnIndex++);
+        XSSFCell cellComment = row.createCell(columnIndex++);
         XSSFCell cellSubT = row.createCell(columnIndex++);
         XSSFCell cellLevel = row.createCell(columnIndex++);
         XSSFCell cellZcgf = row.createCell(columnIndex++);
@@ -227,9 +228,9 @@ public class Strategy {
         XSSFCell cellCL1y = row.createCell(columnIndex++);
         XSSFCell cellCL2y = row.createCell(columnIndex++);
         XSSFCell cellCL3y = row.createCell(columnIndex++);
-        XSSFCell cellComment = row.createCell(columnIndex++);
         cellCode.setCellValue("代码");
         cellName.setCellValue("名称");
+        cellComment.setCellValue("备注");
         cellSubT.setCellValue("子类型");
         cellLevel.setCellValue("级别");
         cellZcgf.setCellValue("模型(亿元)");
@@ -241,8 +242,9 @@ public class Strategy {
         cellCL1y.setCellValue("近1年");
         cellCL2y.setCellValue("近2年");
         cellCL3y.setCellValue("近3年");
-        cellComment.setCellValue("备注");
 
+        sheet.setColumnWidth(cellSubT.getColumnIndex(), 0);
+        sheet.setColumnWidth(cellLevel.getColumnIndex(), 0);
         sheet.setColumnWidth(cellName.getColumnIndex(), 6000);
         sheet.setColumnWidth(cellCCode.getColumnIndex(), 0);
         sheet.setColumnWidth(cellCName.getColumnIndex(), 6500);
@@ -326,6 +328,8 @@ public class Strategy {
             cellCode.setCellValue(item.getCode());
             cellName = row2.createCell(columnIndex++);
             cellName.setCellValue(item.getName());
+            //备注
+            row2.createCell(columnIndex++);
             cellSubT = row2.createCell(columnIndex++);
             cellSubT.setCellValue(ZQSubTypeEnum.getDisStringBySubT(item.getSubt()));
             cellLevel = row2.createCell(columnIndex++);
@@ -353,7 +357,7 @@ public class Strategy {
             cellCL2y.setCellValue(df.format(item.getL2y()));
             cellCL3y = row2.createCell(columnIndex++);
             cellCL3y.setCellValue(df.format(item.getL3y()));
-            row2.createCell(columnIndex++);
+
 
             //季度
             for (FundQuarterPo fundQuarterPo : fundQuarterPoList) {
