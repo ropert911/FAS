@@ -318,7 +318,7 @@ public class Strategy {
                 sh3.setCellValue("赎回3");
 
                 XSSFCell sh4 = row.createCell(columnIndex++);
-                sh4.setCellValue("赎回3");
+                sh4.setCellValue("赎回4");
             }
 
             FoundFlPo flPo = flMap.get(item.getCode());
