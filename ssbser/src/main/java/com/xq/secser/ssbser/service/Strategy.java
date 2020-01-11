@@ -337,7 +337,7 @@ public class Strategy {
             cellZcgf = row2.createCell(columnIndex++);
             if (null != flPo) {
                 cellZcgf.setCellValue(df.format(flPo.getZcgm()));
-                if (flPo.getZcgm() < 8.0d) {
+                if (flPo.getZcgm() < 6.0d) {
                     cellZcgf.setCellStyle(styleRedBold);
                 }
             }
