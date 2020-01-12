@@ -481,16 +481,19 @@ public class Strategy {
 
             //设置本行显示格式
             switch (item.getSubt()) {
+                //长期纯债
                 case "lc": {
                     cellCode.setCellStyle(stylegreen);
                     cellName.setCellStyle(stylegreen);
                 }
                 break;
+                //短期纯债
                 case "sc": {
                     cellCode.setCellStyle(styleSc);
                     cellName.setCellStyle(styleSc);
                 }
                 break;
+                //可转债
                 case "kz": {
                     cellCode.setCellStyle(styleKz);
                     cellName.setCellStyle(styleKz);
