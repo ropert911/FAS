@@ -22,4 +22,14 @@ public enum FundTypeEnum {
     public String getUrlParam() {
         return urlParam;
     }
+
+    public static boolean isFundTypeEnum(String bbs){
+        for (FundTypeEnum it:values()){
+            if(it.urlParam.equals(bbs)){
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

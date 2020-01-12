@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS `ttfund`;
 CREATE TABLE  IF NOT EXISTS `ttfund` (
   `code` char(64) NOT NULL,
   `ft`  char(4) Not null ,
-  `info` varchar(400) character set gbk NOT NULL DEFAULT '',
+  `info` varchar(1000) character set gbk NOT NULL DEFAULT '',
   `subt`  char(6) Not null ,
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=gbk;

@@ -41,6 +41,15 @@ public class Strategy {
 
     public void search() {
         List<StrategySearchInfo> strategySearchInfoList = new ArrayList<>();
+
+        StrategySearchInfo chbSearchInfo = StrategySearchInfo.builder().ft(new String[]{"hb"}).subt(new String[]{}).foudLevel(4).l1y(2.5).l3y(10)
+                .qhisrank(0.5).yhisrank(0.5)
+                .cft(new String[]{"hb"}).topN(40).esTime("2014-06-06")
+                .build();
+        chbSearchInfo.setSheetName("活_货币");
+        strategySearchInfoList.add(chbSearchInfo);
+
+
         StrategySearchInfo czqSearchInfo = StrategySearchInfo.builder().ft(new String[]{"zq"}).subt(new String[]{"lc", "sc"}).foudLevel(4).l1y(5).l3y(15)
                 .qhisrank(0.5).yhisrank(0.5)
                 .cft(new String[]{"zq"}).topN(40).esTime("2014-06-06")
@@ -88,7 +97,19 @@ public class Strategy {
         logger.info("1. 初始基金 级别[{}] Topn[{}]=={}", searchInfo.getFoudLevel(), searchInfo.getTopN(), foundPoResult.stream().map(FoundPo::getCode).collect(Collectors.toSet()));
 
         /**基金筛选：近1、3年利润过滤；子类型过滤：如果为空，不过滤*/
-        List<FoundPo> rFoundPoResult = foundPoResult.stream().filter(s -> s.getL1y() >= searchInfo.getL1y()).filter(s -> s.getL3y() >= searchInfo.getL3y())
+        List<FoundPo> rFoundPoResult = foundPoResult.stream()
+                .filter(s -> {
+                    if (null == s.getL1y()) {
+                        return false;
+                    }
+                    return s.getL1y() >= searchInfo.getL1y();
+                })
+                .filter(s -> {
+                    if (null == s.getL3y()) {
+                        return false;
+                    }
+                    return s.getL3y() >= searchInfo.getL3y();
+                })
                 .filter(item -> {
                     if (searchInfo.getSubt().length == 0) {
                         return true;
@@ -298,6 +319,12 @@ public class Strategy {
                 for (FundYearPo fundYearPo : fundYearPoList) {
                     XSSFCell cy = row.createCell(columnIndex++);
                     cy.setCellValue(fundYearPo.getYear() + "年");
+                    sheet.setColumnWidth(cy.getColumnIndex(), 0);
+                }
+
+                while (columnIndex < flColumnIndex) {
+                    XSSFCell cy = row.createCell(columnIndex++);
+                    cy.setCellValue("XX 年");
                     sheet.setColumnWidth(cy.getColumnIndex(), 0);
                 }
 

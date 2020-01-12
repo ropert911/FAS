@@ -20,6 +20,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -28,10 +31,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -76,6 +76,27 @@ public class TTFundProvider implements FundProvider {
         return data;
     }
 
+    private String hbFunderRequest(long pageNum, long pageIndex) {
+        String urlPattern = "http://api.fund.eastmoney.com/FundRank/GetHbRankList?intCompany=0&MinsgType=&IsSale=1&strSortCol=SYL_Y&orderType=desc&pageIndex=%d&pageSize=%d&callback=jQuery18303371881317024832_1578794023577&_=%d";
+
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String date = localDate.format(formatter);
+        String url = String.format(urlPattern, pageIndex, pageNum, System.currentTimeMillis());
+
+        logger.debug("hbRequest pageIndex={} pageNum={} url={}", pageIndex, pageNum, url);
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.add("Referer", "http://fund.eastmoney.com/data/hbxfundranking.html");
+        requestHeaders.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36");
+        HttpEntity<String> requestEntity = new HttpEntity<String>(null, requestHeaders);
+//        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+        String data = responseEntity.getBody();
+        data = data.replaceAll("jQuery18303371881317024832_1578794023577\\(", "");
+        data = data.replaceAll("\\)$", "");
+        return data;
+    }
+
     private PageInfo parseReqData(String data, List<String> allData) {
         PageInfo pageInfo = PageInfo.builder().build();
         JSONObject configJson = JSON.parseObject(data);
@@ -100,6 +121,36 @@ public class TTFundProvider implements FundProvider {
         return pageInfo;
     }
 
+    private PageInfo parseHbReqData(String data, Map<String, String> allDataMap) {
+        PageInfo pageInfo = PageInfo.builder().build();
+        JSONObject configJson = JSON.parseObject(data);
+        pageInfo.setPageNum(configJson.getLong("PageSize"));
+        pageInfo.setPageIndex(configJson.getLong("PageIndex"));
+        pageInfo.setAllRecords(configJson.getLong("TotalCount"));
+        pageInfo.setAllPages(pageInfo.getAllRecords() / pageInfo.getPageNum() + 1);
+//        pageInfo.setAllNum(configJson.getLong("allNum"));
+//        pageInfo.setGpNum(configJson.getLong("gpNum"));
+//        pageInfo.setHhNum(configJson.getLong("hhNum"));
+//        pageInfo.setZqNum(configJson.getLong("zqNum"));
+//        pageInfo.setZsNum(configJson.getLong("zsNum"));
+//        pageInfo.setBbNum(configJson.getLong("bbNum"));
+//        pageInfo.setQdiiNum(configJson.getLong("qdiiNum"));
+//        pageInfo.setEtfNum(configJson.getLong("etfNum"));
+//        pageInfo.setLofNum(configJson.getLong("lofNum"));
+//        pageInfo.setFofNum(configJson.getLong("fofNum"));
+//
+        JSONArray jsonArray = configJson.getJSONArray("Data");
+        jsonArray.forEach(item -> {
+            String content = item.toString();
+            JSONObject itemConfigJson = JSON.parseObject(content);
+            String code = itemConfigJson.getString("FCODE");
+            logger.debug("{}=={}", code, content);
+            allDataMap.put(code, content);
+        });
+
+        return pageInfo;
+    }
+
     @Override
     public List<FoundPo> parseFund() {
         List<FoundPo> foundPoList = new ArrayList<>();
@@ -110,6 +161,8 @@ public class TTFundProvider implements FundProvider {
 
             ITtFund iTtFund = session.getMapper(ITtFund.class);
             List<TtFundPo> ttFundPoList = iTtFund.getAll();
+            //过滤出FundTypeEnum的基金
+            ttFundPoList = ttFundPoList.stream().filter(item -> FundTypeEnum.isFundTypeEnum(item.getFt())).collect(Collectors.toList());
             ttFundPoList.forEach(data -> {
                 String[] items = data.getInfo().split(",");
                 String code = items[0];
@@ -159,6 +212,76 @@ public class TTFundProvider implements FundProvider {
     }
 
     @Override
+    public List<FoundPo> parseHbFund() {
+        List<FoundPo> foundPoList = new ArrayList<>();
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            java.util.Date now = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+            ITtFund iTtFund = session.getMapper(ITtFund.class);
+            List<TtFundPo> ttFundPoList = iTtFund.getAll();
+            //过滤出hb的基金
+            ttFundPoList = ttFundPoList.stream().filter(item -> "hb".equals(item.getFt())).collect(Collectors.toList());
+            ttFundPoList.forEach(data -> {
+
+                JSONObject configJson = JSON.parseObject(data.getInfo());
+                String code = configJson.getString("FCODE");
+                String name = configJson.getString("SHORTNAME");
+                //更新日期
+                String date = configJson.getString("FSRQ");
+
+                String tmp = configJson.getString("SYL_Y");
+                Double l1m = (tmp == null || tmp.length() == 0) ? null : Double.valueOf(tmp);
+                tmp = configJson.getString("SYL_3Y");
+                Double l3m = (tmp == null || tmp.length() == 0) ? null : Double.valueOf(tmp);
+                tmp = configJson.getString("SYL_6Y");
+                Double l6m = (tmp == null || tmp.length() == 0) ? null : Double.valueOf(tmp);
+                tmp = configJson.getString("SYL_1N");
+                Double l1y = (tmp == null || tmp.length() == 0) ? null : Double.valueOf(tmp);
+                tmp = configJson.getString("SYL_2N");
+                Double l2y = (tmp == null || tmp.length() == 0) ? null : Double.valueOf(tmp);
+                tmp = configJson.getString("SYL_3N");
+                Double l3y = (tmp == null || tmp.length() == 0) ? null : Double.valueOf(tmp);
+                tmp = configJson.getString("SYL_JN");
+                Double ty = (tmp == null || tmp.length() == 0) ? null : Double.valueOf(tmp);
+                tmp = configJson.getString("SYL_LN");
+                Double cy = (tmp == null || tmp.length() == 0) ? null : Double.valueOf(tmp);
+                FoundPo foundPo = FoundPo.builder().code(code).name(name).ft(data.getFt()).l1m(l1m).l3m(l3m).l6m(l6m).l1y(l1y).l2y(l2y).l3y(l3y).ty(ty).cy(cy).build();
+                try {
+                    java.util.Date d = now;
+                    if (date.length() > 0) {
+                        d = format.parse(date);
+                    }
+
+                    foundPo.setDate(new java.sql.Date(d.getTime()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                foundPo.setSubt(data.getSubt());
+
+                foundPoList.add(foundPo);
+            });
+        } finally {
+        }
+
+
+        //包含基金的公司和基金的评级
+        List<FoundPo> cCodeLevel = parseFundLevelData();
+        Map<String, FoundPo> levMap = cCodeLevel.stream().collect(Collectors.toMap(FoundPo::getCode, a -> a, (key1, key2) -> key2));
+        foundPoList.forEach(item -> {
+            FoundPo t = levMap.get(item.getCode());
+            if (t != null) {
+                item.setComcode(t.getComcode());
+                item.setLevel(t.getLevel());
+            }
+        });
+
+
+        return foundPoList;
+    }
+
+    @Override
     public RedeemRate getflinfo(String fundCode) {
         String patten = "http://fundf10.eastmoney.com/jjfl_%s.html";
         String url = String.format(patten, fundCode);
@@ -166,12 +289,12 @@ public class TTFundProvider implements FundProvider {
         String data = responseEntity.getBody();
 
 
-        Double zcgm=null, purchfl=null, managefl=null, tgfl = null;
+        Double zcgm = null, purchfl = null, managefl = null, tgfl = null;
         int index = 0, index2 = 0;
         String sub;
         {
-            String r = getString(" 资产规模：<span>\\s+([0-9,\\.]+)亿元", data);
-            zcgm = Double.valueOf(r);
+            String r = getString(" 资产规模：<span>\\s+([0-9,\\.,\\,]+)亿元", data);
+            zcgm = Double.valueOf(r.replaceAll(",", ""));
         }
         {
             index = data.indexOf("申购费率（前端）");
@@ -207,7 +330,7 @@ public class TTFundProvider implements FundProvider {
 
         index = data.indexOf("赎回费率");
         index = data.indexOf("赎回费率", index + 1);
-        sub = data.substring(index, index + 500);
+        sub = data.substring(index);
         index = sub.indexOf("<tr>");
         index2 = sub.indexOf("</table>");
         sub = sub.substring(index, index2);
@@ -229,31 +352,36 @@ public class TTFundProvider implements FundProvider {
 
 
             List<String> mutir = getmutiString("<td>(.+)</td><td>([0-9,\\.]+)%", row);
-            String item = mutir.get(0);
-            Double value = Double.valueOf(mutir.get(1));
-            switch (shflindex) {
-                case 1:
-                    redeemRate.setC1(item);
-                    redeemRate.setFl(value);
-                    break;
-                case 2:
-                    redeemRate.setC2(item);
-                    redeemRate.setF2(value);
-                    break;
-                case 3:
-                    redeemRate.setC3(item);
-                    redeemRate.setF3(value);
-                    break;
-                case 4:
-                    redeemRate.setC4(item);
-                    redeemRate.setF4(value);
-                    break;
-                case 5:
-                    redeemRate.setC5(item);
-                    redeemRate.setF5(value);
-                    break;
-                default:
-                    break;
+            if (2 == mutir.size()) {
+                String item = mutir.get(0);
+                Double value = Double.valueOf(mutir.get(1));
+                if (item.length() > 30) {
+                    item = item.substring(0, 30);
+                }
+                switch (shflindex) {
+                    case 1:
+                        redeemRate.setC1(item);
+                        redeemRate.setFl(value);
+                        break;
+                    case 2:
+                        redeemRate.setC2(item);
+                        redeemRate.setF2(value);
+                        break;
+                    case 3:
+                        redeemRate.setC3(item);
+                        redeemRate.setF3(value);
+                        break;
+                    case 4:
+                        redeemRate.setC4(item);
+                        redeemRate.setF4(value);
+                        break;
+                    case 5:
+                        redeemRate.setC5(item);
+                        redeemRate.setF5(value);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             if (bend) {
@@ -390,6 +518,7 @@ public class TTFundProvider implements FundProvider {
 
     @Override
     public void initFoundData() {
+        //下载 债券、混合、股票、指数、qdii、fof数据
         for (FundTypeEnum fte : FundTypeEnum.values()) {
             if (FundTypeEnum.ZQ == fte) {
                 for (ZQSubTypeEnum st : ZQSubTypeEnum.values()) {
@@ -403,6 +532,21 @@ public class TTFundProvider implements FundProvider {
         }
 
         //评组表格从 http://fund.eastmoney.com/data/fundrating.html 基金评级得到
+    }
+
+    //下载货币类数据
+    @Override
+    public void initHbFoundData() {
+        Map<String, String> allDataMap = new HashMap<>();
+
+        String data = hbFunderRequest(100, 1);
+        PageInfo pageInfo = parseHbReqData(data, allDataMap);
+        for (long i = pageInfo.getPageIndex() + 1; i <= pageInfo.getAllPages(); ++i) {
+            data = hbFunderRequest(pageInfo.getPageNum(), i);
+            parseHbReqData(data, allDataMap);
+        }
+
+        batchHbFundInsertDb(allDataMap);
     }
 
     private void batchInsertDb(FundTypeEnum fundTypeEnum, String subType, List<String> allData) {
@@ -419,6 +563,30 @@ public class TTFundProvider implements FundProvider {
             iTtFund.insertFundBatch(ttFundPoList);
         } finally {
             session.close();
+        }
+    }
+
+    private void batchHbFundInsertDb(Map<String, String> allDataMap) {
+        List<TtFundPo> ttFundPoList = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : allDataMap.entrySet()) {
+            TtFundPo ttFundPo = TtFundPo.builder().code(entry.getKey()).ft("hb").info(entry.getValue()).subt("").build();
+            ttFundPoList.add(ttFundPo);
+        }
+
+        if (!ttFundPoList.isEmpty()) {
+            try (SqlSession session = sqlSessionFactory.openSession(true)) {
+                ITtFund iTtFund = session.getMapper(ITtFund.class);
+                int beginIndex = 0, step = 100, endIndex = 0;
+                int len = ttFundPoList.size();
+                while (beginIndex < len) {
+                    endIndex = beginIndex + 100;
+                    endIndex = endIndex > len ? len : endIndex;
+                    iTtFund.insertFundBatch(ttFundPoList.subList(beginIndex, endIndex));
+                    beginIndex += step;
+                }
+            } finally {
+            }
         }
     }
 

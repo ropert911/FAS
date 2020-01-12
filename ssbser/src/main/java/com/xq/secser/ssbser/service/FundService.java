@@ -3,6 +3,7 @@ package com.xq.secser.ssbser.service;
 import com.xq.secser.provider.CompanyProvider;
 import com.xq.secser.provider.FundHisProvider;
 import com.xq.secser.provider.FundProvider;
+import com.xq.secser.provider.tt.pojo.ITtFund;
 import com.xq.secser.ssbser.pojo.po.FoundFlPo;
 import com.xq.secser.ssbser.pojo.po.FoundPo;
 import com.xq.secser.ssbser.pojo.po.IFund;
@@ -36,8 +37,29 @@ public class FundService {
         fundProvider.initFoundData();
     }
 
+    public void initHbFoundData() {
+        fundProvider.initHbFoundData();
+    }
+
     public void parseFund() {
         List<FoundPo> foundPoList = fundProvider.parseFund();
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            IFund iFund = session.getMapper(IFund.class);
+            int beginIndex = 0, step = 500, endIndex = 0;
+            int len = foundPoList.size();
+            while (beginIndex < len) {
+                endIndex = beginIndex + 500;
+                endIndex = endIndex > len ? len : endIndex;
+                iFund.insertFundBatch(foundPoList.subList(beginIndex, endIndex));
+                beginIndex += step;
+            }
+        } finally {
+        }
+    }
+
+    public void parseHbFund() {
+        List<FoundPo> foundPoList = fundProvider.parseHbFund();
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             IFund iFund = session.getMapper(IFund.class);
@@ -129,7 +151,15 @@ public class FundService {
         if (!foundFlPoList.isEmpty()) {
             try (SqlSession session = sqlSessionFactory.openSession(true)) {
                 IFundFl iFundFl = session.getMapper(IFundFl.class);
-                iFundFl.batchInsert(foundFlPoList);
+
+                int beginIndex = 0, step = 50, endIndex = 0;
+                int len = foundFlPoList.size();
+                while (beginIndex < len) {
+                    endIndex = beginIndex + 50;
+                    endIndex = endIndex > len ? len : endIndex;
+                    iFundFl.batchInsert(foundFlPoList.subList(beginIndex, endIndex));
+                    beginIndex += step;
+                }
             } finally {
             }
         }

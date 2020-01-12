@@ -31,6 +31,12 @@ public class InitService implements ApplicationRunner {
     @Value("${com.xq.secser.parse.fund}")
     private boolean bParseFound;
 
+
+    @Value("${com.xq.secser.download.hbfund}")
+    private boolean bDowloadHbFound;
+    @Value("${com.xq.secser.parse.hbfund}")
+    private boolean bParseHbFound;
+
     @Value("${com.xq.secser.download.company}")
     private boolean bDowloadCompany;
     @Value("${com.xq.secser.parse.company}")
@@ -47,6 +53,15 @@ public class InitService implements ApplicationRunner {
         /**把foud原始数据解析到数据结构表里*/
         if (bParseFound) {
             fundService.parseFund();
+        }
+
+        /**下载货币基金数据*/
+        if (bDowloadHbFound) {
+            fundService.initHbFoundData();
+        }
+        /**解析货币基金数据*/
+        if (bParseHbFound) {
+            fundService.parseHbFund();
         }
 
         /**下载com数据*/

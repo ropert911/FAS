@@ -21,6 +21,17 @@ public interface FundProvider {
      * @return
      */
     List<FoundPo> parseFund();
+    /**
+     * 解析得到hbfound详细信息
+     *
+     * @return
+     */
+    List<FoundPo> parseHbFund();
+
+    /**
+     * 下载货币found数据
+     */
+    void initHbFoundData();
 
     /**
      *
