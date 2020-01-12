@@ -32,4 +32,6 @@ public class FoundFlPo {
     private Double f3;
     private String c4;
     private Double f4;
+    private String c5;
+    private Double f5;
 }

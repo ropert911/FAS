@@ -112,7 +112,8 @@ public class FundService {
                     .c1(redeemRate.getC1()).f1(redeemRate.getFl())
                     .c2(redeemRate.getC2()).f2(redeemRate.getF2())
                     .c3(redeemRate.getC3()).f3(redeemRate.getF3())
-                    .c4(redeemRate.getC4()).f4(redeemRate.getF4()).build();
+                    .c4(redeemRate.getC4()).f4(redeemRate.getF4())
+                    .c5(redeemRate.getC5()).f5(redeemRate.getF5()).build();
             dlFlPoList.add(foundFlPo);
         }
 

@@ -319,6 +319,9 @@ public class Strategy {
 
                 XSSFCell sh4 = row.createCell(columnIndex++);
                 sh4.setCellValue("赎回4");
+
+                XSSFCell sh5 = row.createCell(columnIndex++);
+                sh5.setCellValue("赎回5");
             }
 
             FoundFlPo flPo = flMap.get(item.getCode());
@@ -427,6 +430,17 @@ public class Strategy {
                         shf4cell.setCellStyle(styleRed);
                     } else {
                         shf4cell.setCellStyle(stylegreen);
+                    }
+                }
+
+                XSSFCell shf5cell = row2.createCell(columnIndex++);
+                if (flPo.getF5() != null) {
+                    shf5cell.setCellValue(flPo.getF5());
+                    shf5cell.setCellComment(createComment(wb, sheet, flPo.getC5()));
+                    if (!TransactionTypeEnum.isFlReasonable(item.getFt(), item.getSubt(), TransactionTypeEnum.SH, flPo.getF5())) {
+                        shf5cell.setCellStyle(styleRed);
+                    } else {
+                        shf5cell.setCellStyle(stylegreen);
                     }
                 }
             }

@@ -7,17 +7,19 @@
         <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into fundfl(code,zcgm,sgfl,yzfl,managefl,tgfl,c1,f1,c2,f2,c3,f3,c4,f4) values
+        insert into fundfl(code,zcgm,sgfl,yzfl,managefl,tgfl,c1,f1,c2,f2,c3,f3,c4,f4,c5,f5) values
         <foreach collection="list" item="fundflPo" index="index" separator=",">
             (
             #{fundflPo.code}, #{fundflPo.zcgm},#{fundflPo.sgfl},#{fundflPo.yzfl},#{fundflPo.managefl},#{fundflPo.tgfl},
             #{fundflPo.c1}, #{fundflPo.f1},#{fundflPo.c2},#{fundflPo.f2},
-            #{fundflPo.c3},#{fundflPo.f3}, #{fundflPo.c4},#{fundflPo.f4}
+            #{fundflPo.c3},#{fundflPo.f3}, #{fundflPo.c4},#{fundflPo.f4},
+            #{fundflPo.c5},#{fundflPo.f5}
             )
         </foreach>
         ON DUPLICATE KEY UPDATE
         zcgm=VALUES(zcgm),sgfl=VALUES(sgfl),yzfl=VALUES(yzfl),managefl=VALUES(managefl),tgfl=VALUES(tgfl),
-        c1=VALUES(c1),f1=VALUES(f1),c2=VALUES(c2),f2=VALUES(f2),c3=VALUES(c3),f3=VALUES(f3),c4=VALUES(c4),f4=VALUES(f4)
+        c1=VALUES(c1),f1=VALUES(f1),c2=VALUES(c2),f2=VALUES(f2),c3=VALUES(c3),f3=VALUES(f3),c4=VALUES(c4),f4=VALUES(f4),
+        c5=VALUES(c5),f5=VALUES(f5)
     </insert>
 
     <select id="getExistCodeByCodeList" resultType="java.lang.String">

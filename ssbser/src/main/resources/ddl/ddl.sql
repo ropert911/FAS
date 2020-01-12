@@ -63,8 +63,10 @@ CREATE TABLE  IF NOT EXISTS `fundfl` (
   `f2`  double  comment '费率',
   `c3`  char(30)  comment '说明3',
   `f3`  double  comment '费率',
-  `c4`  char(30)  comment '说明1',
+  `c4`  char(30)  comment '说明4',
   `f4`  double  comment '费率',
+  `c5`  char(30)  comment '说明5',
+  `f5`  double  comment '费率',
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=gbk;
 

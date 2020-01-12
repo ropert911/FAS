@@ -248,6 +248,10 @@ public class TTFundProvider implements FundProvider {
                     redeemRate.setC4(item);
                     redeemRate.setF4(value);
                     break;
+                case 5:
+                    redeemRate.setC5(item);
+                    redeemRate.setF5(value);
+                    break;
                 default:
                     break;
             }
