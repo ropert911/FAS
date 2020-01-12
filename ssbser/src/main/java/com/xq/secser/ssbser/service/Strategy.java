@@ -71,6 +71,13 @@ public class Strategy {
         gphhSearchInfo.setSheetName("高_股票混合");
         strategySearchInfoList.add(gphhSearchInfo);
 
+        StrategySearchInfo qd2hhSearchInfo = StrategySearchInfo.builder().ft(new String[]{"qdii"}).subt(new String[]{}).foudLevel(3.5).l1y(8).l3y(20)
+                .qhisrank(0.3).yhisrank(0.3)
+                .cft(new String[]{"dq2"}).topN(100).esTime("2014-06-06")
+                .build();
+        qd2hhSearchInfo.setSheetName("高_QDII");
+        strategySearchInfoList.add(qd2hhSearchInfo);
+
         XSSFWorkbook wb = new XSSFWorkbook();
         for (StrategySearchInfo s : strategySearchInfoList) {
             search_inner(wb, s);
