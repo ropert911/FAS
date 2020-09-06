@@ -1,9 +1,6 @@
 package com.xq.fin.analyser.data;
 
-import com.xq.fin.analyser.pojo.LrbPo;
-import com.xq.fin.analyser.pojo.XjllPo;
-import com.xq.fin.analyser.pojo.ZcfzPo;
-import com.xq.fin.analyser.pojo.ZyzbPo;
+import com.xq.fin.analyser.pojo.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +10,7 @@ public class SingleData {
     private List<XjllPo> xjllPoList;
     private List<LrbPo> lrbPoList;
     private List<ZyzbPo> zyzbPoList;
+    private List<BfbPo> bfbPoList;
 
     public List<ZcfzPo> getZcfzPoList() {
         return zcfzPoList;
@@ -44,5 +42,13 @@ public class SingleData {
 
     public void setZyzbPoList(List<ZyzbPo> zyzbPoList) {
         this.zyzbPoList = zyzbPoList;
+    }
+
+    public List<BfbPo> getBfbPoList() {
+        return bfbPoList;
+    }
+
+    public void setBfbPoList(List<BfbPo> bfbPoList) {
+        this.bfbPoList = bfbPoList;
     }
 }
