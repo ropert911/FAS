@@ -29,7 +29,7 @@ public class InitService implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        String codes = "002973";
+        String codes = "300746";
         String[] codsArray = codes.split(" ");
         for (String code : codsArray) {
             gloableData.allStockList.put(code, new SingleData());
@@ -100,9 +100,10 @@ public class InitService implements ApplicationRunner {
         ZcfzPo zcfzPo = zcfzPoList.get(0);
         logger.info("---资产-负债占比分析 时间={}", zcfzPo.getREPORTDATE());
 
-        logger.info("---- 货币资金/总资产>10%: {}  (货币资金={}亿 总资产={}亿) 货币资金/总资产={}%",
+        logger.info("---- 货币资金/总资产>10%: {} 值={}% (货币资金={}亿 总资产={}亿)",
                 zcfzPo.getMONETARYFUND() / zcfzPo.getSUMASSET() > 0.1 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
-                zcfzPo.getMONETARYFUND() / 100000000, zcfzPo.getSUMASSET() / 100000000, 100 * zcfzPo.getMONETARYFUND() / zcfzPo.getSUMASSET());
+                100 * zcfzPo.getMONETARYFUND() / zcfzPo.getSUMASSET(),
+                zcfzPo.getMONETARYFUND() / 100000000, zcfzPo.getSUMASSET() / 100000000);
         logger.info("---- 应收票据及应收账款/总资产<10%: {} 值={}% (应收票据及应收账款={}亿)",
                 zcfzPo.getACCOUNTBILLREC() / zcfzPo.getSUMASSET() < 0.10 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
                 100 * zcfzPo.getACCOUNTBILLREC() / zcfzPo.getSUMASSET(),
@@ -220,7 +221,7 @@ public class InitService implements ApplicationRunner {
                 ((zcfzPoThis.getACCOUNTBILLREC() - zcfzPoLast.getACCOUNTBILLREC()) / zcfzPoLast.getACCOUNTBILLREC()) <= (1.1 * yysrzz) ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
                 (100 * (zcfzPoThis.getACCOUNTBILLREC() - zcfzPoLast.getACCOUNTBILLREC()) / zcfzPoLast.getACCOUNTBILLREC()),
                 zcfzPoThis.getACCOUNTBILLREC() / 100000000, zcfzPoLast.getACCOUNTBILLREC() / 100000000);
-        logger.info("---- 存货/上期<10% <= 1.1*营业收入增长: {}  (存货{}亿 上期={}亿",
+        logger.info("---- 存货/上期<10% <= 1.1*营业收入增长: {}  (存货{}亿 上期={}亿)",
                 ((zcfzPoThis.getINVENTORY() - zcfzPoLast.getINVENTORY()) / zcfzPoLast.getINVENTORY()) <= (1.1 * yysrzz) ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
                 zcfzPoThis.getINVENTORY() / 100000000, zcfzPoLast.getINVENTORY() / 100000000);
         logger.info("---- 固定资产/上期<10% <= 1.1*营业收入增长: {}  (固定资产{}亿 上期={}亿",
