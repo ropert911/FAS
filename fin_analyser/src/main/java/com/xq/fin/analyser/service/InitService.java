@@ -108,14 +108,14 @@ public class InitService implements ApplicationRunner {
                 zcfzPo.getACCOUNTBILLREC() / zcfzPo.getSUMASSET() < 0.10 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
                 100 * zcfzPo.getACCOUNTBILLREC() / zcfzPo.getSUMASSET(),
                 zcfzPo.getACCOUNTBILLREC() / 100000000);
-        logger.info("---- 存货/总资产<10%: {}  (存货={}亿) 存货/总资产={}%",
+        logger.info("---- 存货/总资产<10%: {} 值={}%  (存货={}亿)",
                 zcfzPo.getINVENTORY() / zcfzPo.getSUMASSET() < 0.1 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
-                zcfzPo.getINVENTORY() / 100000000,
-                100 * zcfzPo.getINVENTORY() / zcfzPo.getSUMASSET());
-        logger.info("---- 固定资产/总资产<25%: {}  (固定资产={}亿) 固定资产/总资产={}%",
+                100 * zcfzPo.getINVENTORY() / zcfzPo.getSUMASSET(),
+                zcfzPo.getINVENTORY() / 100000000);
+        logger.info("---- 固定资产/总资产<25%: {}  值={}% (固定资产={}亿)",
                 zcfzPo.getFIXEDASSET() / zcfzPo.getSUMASSET() < 0.25 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
-                zcfzPo.getFIXEDASSET() / 100000000,
-                100 * zcfzPo.getFIXEDASSET() / zcfzPo.getSUMASSET());
+                100 * zcfzPo.getFIXEDASSET() / zcfzPo.getSUMASSET(),
+                zcfzPo.getFIXEDASSET() / 100000000);
         logger.info("---- 无形资产/总资产<10%: {} 值={}% (无形资产={}亿)",
                 zcfzPo.getINTANGIBLEASSET() / zcfzPo.getSUMASSET() < 0.10 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
                 100 * zcfzPo.getINTANGIBLEASSET() / zcfzPo.getSUMASSET(),
@@ -155,9 +155,9 @@ public class InitService implements ApplicationRunner {
                 xjllPo.getCASHEQUIENDING() / 100000000);
 
         double dqysz = zcfzPo.getSTBORROW() + zcfzPo.getNONLLIABONEYEAR();  //短期有息债
-        logger.info("---- 期末现金及现金等价物余额/短期有息债 > 75%: 值={}% {}  (期末现金及现金等价物余额={}亿 短期有息债={}亿",
-                100 * xjllPo.getCASHEQUIENDING() / dqysz,
+        logger.info("---- 期末现金及现金等价物余额/短期有息债 > 75%: {} 值={}%  (期末现金及现金等价物余额={}亿 短期有息债={}亿",
                 xjllPo.getCASHEQUIENDING() / dqysz > 0.75 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
+                100 * xjllPo.getCASHEQUIENDING() / dqysz,
                 xjllPo.getCASHEQUIENDING() / 100000000, dqysz / 100000000);
 
 
@@ -212,7 +212,7 @@ public class InitService implements ApplicationRunner {
         double yysrzz = zyzbPoThis.getYyzsrtbzz() / 100;    //经营收入增长
 
 
-        logger.info("---- 营业收入增长={}%", yysrzz * 100);
+        logger.info("---- 营业收入同比增长={}%  扣非净利润同比增长={}%", yysrzz * 100, zyzbPoThis.getKfjlrtbzz());
         logger.info("---- 货币资金/上期 >=营业收入增长: {} 增长={}% (货币资金={}亿 上期={}亿",
                 (zcfzPoThis.getMONETARYFUND() - zcfzPoLast.getMONETARYFUND()) / zcfzPoLast.getMONETARYFUND() >= yysrzz ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
                 100 * (zcfzPoThis.getMONETARYFUND() - zcfzPoLast.getMONETARYFUND()) / zcfzPoLast.getMONETARYFUND(),
@@ -221,17 +221,21 @@ public class InitService implements ApplicationRunner {
                 ((zcfzPoThis.getACCOUNTBILLREC() - zcfzPoLast.getACCOUNTBILLREC()) / zcfzPoLast.getACCOUNTBILLREC()) <= (1.1 * yysrzz) ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
                 (100 * (zcfzPoThis.getACCOUNTBILLREC() - zcfzPoLast.getACCOUNTBILLREC()) / zcfzPoLast.getACCOUNTBILLREC()),
                 zcfzPoThis.getACCOUNTBILLREC() / 100000000, zcfzPoLast.getACCOUNTBILLREC() / 100000000);
-        logger.info("---- 存货/上期<10% <= 1.1*营业收入增长: {}  (存货{}亿 上期={}亿)",
+        logger.info("---- 存货/上期<10% <= 1.1*营业收入增长: {} 值={}% (存货={}亿 上期={}亿)",
                 ((zcfzPoThis.getINVENTORY() - zcfzPoLast.getINVENTORY()) / zcfzPoLast.getINVENTORY()) <= (1.1 * yysrzz) ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
+                100 * ((zcfzPoThis.getINVENTORY() - zcfzPoLast.getINVENTORY()) / zcfzPoLast.getINVENTORY()),
                 zcfzPoThis.getINVENTORY() / 100000000, zcfzPoLast.getINVENTORY() / 100000000);
-        logger.info("---- 固定资产/上期<10% <= 1.1*营业收入增长: {}  (固定资产{}亿 上期={}亿",
+        logger.info("---- 固定资产/上期<10% <= 1.1*营业收入增长: {} 值={}% (固定资产{}亿 上期={}亿",
                 ((zcfzPoThis.getFIXEDASSET() - zcfzPoLast.getFIXEDASSET()) / zcfzPoLast.getFIXEDASSET()) <= (1.1 * yysrzz) ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
+                100 * ((zcfzPoThis.getFIXEDASSET() - zcfzPoLast.getFIXEDASSET()) / zcfzPoLast.getFIXEDASSET()),
                 zcfzPoThis.getFIXEDASSET() / 100000000, zcfzPoLast.getFIXEDASSET() / 100000000);
-        logger.info("---- 无形资产/上期<10% <= 1.1*营业收入增长: {}  (无形资产{}亿 上期={}亿",
+        logger.info("---- 无形资产/上期<10% <= 1.1*营业收入增长: {} 值={}%  (无形资产{}亿 上期={}亿",
                 ((zcfzPoThis.getINTANGIBLEASSET() - zcfzPoLast.getINTANGIBLEASSET()) / zcfzPoLast.getINTANGIBLEASSET()) <= (1.1 * yysrzz) ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
+                100 * ((zcfzPoThis.getINTANGIBLEASSET() - zcfzPoLast.getINTANGIBLEASSET()) / zcfzPoLast.getINTANGIBLEASSET()),
                 zcfzPoThis.getINTANGIBLEASSET() / 100000000, zcfzPoLast.getINTANGIBLEASSET() / 100000000);
-        logger.info("---- 三费支出/上期 <=1.1*营业收入增长: {}  (三费支出{}亿 上期={}亿",
+        logger.info("---- 三费支出/上期 <=1.1*营业收入增长: {}  值={}% (三费支出{}亿 上期={}亿",
                 ((lrbPoThis.getSALEEXP() + lrbPoThis.getMANAGEEXP() + lrbPoThis.getFINANCEEXP()) / (lrbPoLast.getSALEEXP() + lrbPoLast.getMANAGEEXP() + lrbPoLast.getFINANCEEXP()) - 1) <= (1.1 * yysrzz) ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
+                100 * ((lrbPoThis.getSALEEXP() + lrbPoThis.getMANAGEEXP() + lrbPoThis.getFINANCEEXP()) / (lrbPoLast.getSALEEXP() + lrbPoLast.getMANAGEEXP() + lrbPoLast.getFINANCEEXP()) - 1),
                 (lrbPoThis.getSALEEXP() + lrbPoThis.getMANAGEEXP() + lrbPoThis.getFINANCEEXP()) / 100000000,
                 (lrbPoLast.getSALEEXP() + lrbPoLast.getMANAGEEXP() + lrbPoLast.getFINANCEEXP()) / 100000000);
 
@@ -241,7 +245,7 @@ public class InitService implements ApplicationRunner {
                 bfbPoThis.getZcjzss() / 100000000, bfbPoThis.getYysr() / 100000000);
 
 
-        logger.info("---- 加权净资产收益率 >= 7%: {}  (加权净资产收益率={}%",
+        logger.info("---- 加权净资产收益率 >= 7%: {}  值={}%",
                 zyzbPoThis.getJqjzcsyl() >= 7 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
                 zyzbPoThis.getJqjzcsyl());
     }
