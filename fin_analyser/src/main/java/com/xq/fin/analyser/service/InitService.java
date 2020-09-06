@@ -115,19 +115,19 @@ public class InitService implements ApplicationRunner {
                 zcfzPo.getFIXEDASSET() / zcfzPo.getSUMASSET() < 0.25 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
                 zcfzPo.getFIXEDASSET() / 100000000,
                 100 * zcfzPo.getFIXEDASSET() / zcfzPo.getSUMASSET());
-        logger.info("---- 无形资产/总资产<10%: {}  (无形资产={}亿) 无形资产/总资产={}%",
+        logger.info("---- 无形资产/总资产<10%: {} 值={}% (无形资产={}亿)",
                 zcfzPo.getINTANGIBLEASSET() / zcfzPo.getSUMASSET() < 0.10 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
-                zcfzPo.getINTANGIBLEASSET() / 100000000,
-                100 * zcfzPo.getINTANGIBLEASSET() / zcfzPo.getSUMASSET());
-        logger.info("---- 金融资产/总资产<25%: {}  (金融资产={}亿) 金融资产/总资产={}%",
+                100 * zcfzPo.getINTANGIBLEASSET() / zcfzPo.getSUMASSET(),
+                zcfzPo.getINTANGIBLEASSET() / 100000000);
+        logger.info("---- 金融资产/总资产<25%: {} 值={}% (金融资产={}亿)",
                 zcfzPo.getGOODWILL() / zcfzPo.getSUMASSET() < 0.25 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
-                zcfzPo.getGOODWILL() / 100000000,
-                100 * zcfzPo.getGOODWILL() / zcfzPo.getSUMASSET());
+                100 * zcfzPo.getGOODWILL() / zcfzPo.getSUMASSET(),
+                zcfzPo.getGOODWILL() / 100000000);
 
-        logger.info("---- 商誉/净资产<=15%: {}  (商誉={}亿 净资产={}亿) 商誉/净资产={}%",
+        logger.info("---- 商誉/净资产<=15%: {} 值={}% (商誉={}亿 净资产={}亿)",
                 zcfzPo.getGOODWILL() / zcfzPo.getSUMSHEQUITY() <= 0.15 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
-                zcfzPo.getGOODWILL() / 100000000, zcfzPo.getSUMSHEQUITY() / 100000000,
-                100 * zcfzPo.getGOODWILL() / zcfzPo.getSUMSHEQUITY());
+                100 * zcfzPo.getGOODWILL() / zcfzPo.getSUMSHEQUITY(),
+                zcfzPo.getGOODWILL() / 100000000, zcfzPo.getSUMSHEQUITY() / 100000000);
     }
 
     //现金流分析
