@@ -30,4 +30,13 @@ public class StringUtil {
         }
         return r;
     }
+
+    public static String getSCByCode(String code) {
+        switch (code.substring(0, 1)) {
+            case "6":
+                return "SH" + code;
+            default:
+                return "SZ" + code;
+        }
+    }
 }

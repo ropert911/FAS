@@ -21,6 +21,7 @@ public class ZcfzPo {
     double INTANGIBLEASSET;         //无形资产
     double LTDEFERASSET;            //长期待摊费用
     double DEFERINCOMETAXASSET;     //递延所得税资产
+    double GOODWILL;                //商誉
     double SUMASSET;            //资产总计
     double SUMLLIAB;            //流动负债合计
     double STBORROW;                //短期借款
@@ -342,6 +343,14 @@ public class ZcfzPo {
 
     public double getSURPLUSRESERVE() {
         return SURPLUSRESERVE;
+    }
+
+    public double getGOODWILL() {
+        return GOODWILL;
+    }
+
+    public void setGOODWILL(double GOODWILL) {
+        this.GOODWILL = GOODWILL;
     }
 
     public void setSURPLUSRESERVE(double SURPLUSRESERVE) {

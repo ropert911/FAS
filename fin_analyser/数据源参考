@@ -1,0 +1,379 @@
+资产负债表
+http://f10.eastmoney.com/NewFinanceAnalysis/zcfzbAjax?companyType=4&reportDateType=0&reportType=1&endDate=&code=SH605168
+"[
+{
+	\"REPORTTYPE\":\"1\",
+	\"REPORTDATETYPE\":\"0\",
+	\"TYPE\":\"1\",
+	\"REPORTDATE\":\"2020/6/30 0:00:00\",		时间																					done
+	\"CURRENCY\":\"人民币\",					币种
+																					流动资产
+	\"MONETARYFUND\":\"948686818.06\",	\"MONETARYFUND_YOY\":\"767.921219970377\",		货币资金
+	\"ACCOUNTBILLREC\":\"986627916.25\",												应收票据及应收账款
+	\"BILLREC\":\"540000\",		\"BILLREC_YOY\":\"620\",								其中:应收票据
+	\"ACCOUNTREC\":\"986087916.25\",	\"ACCOUNTREC_YOY\":\"64.7877967145938\",	     	 应收账款
+	\"ADVANCEPAY\":\"94163641.13\",														预付款项
+	\"TOTAL_OTHER_RECE\":\"40698597.14\",												其他应收款合计
+	\"DIVIDENDREC\":\"300000\",															其中：应收股利
+	\"OTHERREC\":\"40398597.14\",															  其他应收款
+	\"INVENTORY\":\"5817362.85\",	 \"INVENTORY_YOY\":\"-19.4050466489739\",			存货
+	\"OTHERLASSET\":\"112447026.55\",													其他流动资产
+	\"SUMLASSET\":\"2188441361.98\",												流动资产合计
+																					非流动资产
+	\"LTREC\":\"521216.05\",															长期应收款
+	\"FIXEDASSET\":\"2718840.33\",														固定资产
+	\"INTANGIBLEASSET\":\"730041.82\",													无形资产
+	\"LTDEFERASSET\":\"3770144.93\",													长期待摊费用
+	\"DEFERINCOMETAXASSET\":\"1995478.66\",												递延所得税资产
+	\"SUMNONLASSET\":\"37453321.79\",												非流动资产合计
+	\"SUMASSET\":\"2225894683.77\",													资产总计
+
+																					流动负债
+	\"STBORROW\":\"52000000\",															短期借款
+	\"ACCOUNTPAY\":\"641627306.38\",													应付票据及应付账款
+	"ACCOUNTBILLPAY\":\"641627306.38\",													其中:应付账款
+																						预收款项
+	\"SALARYPAY\":\"7522549.8\",														应付职工薪酬
+	\"TAXPAY\":\"17949049.38\",															应交税费
+	\"TOTAL_OTHER_PAYABLE\":\"104545701.78\",											其他应付款合计
+	\"INTERESTPAY\":\"19999.98\",														其中:应付利息
+	\"DIVIDENDPAY\":\"103600050\",															 应付股利
+	\"OTHERPAY\":\"925651.799999997\",										                 其他应付款
+	\"NONLLIABONEYEAR\":\"4000000\",											        一年内到期的非流动负债
+	\"SUMLLIAB\":\"852109823.25\",													流动负债合计
+																					非流动负债
+	\"LTBORROW\":\"\",																	长期借款
+	\"LTACCOUNTPAY\":\"10000000\",														长期应付款
+	\"DEFERINCOMETAXLIAB\":\"\",														递延所得税负债
+	\"GOODWILL\":\"\",																	商誉
+	\"SUMNONLLIAB\":\"10000000\",													非流动负债合计
+	\"SUMLIAB\":\"862109823.25\",													负债合计
+																					所有者权益(或股东权益)
+	\"SHARECAPITAL\":\"69066700\",														实收资本（或股本）
+	\"CAPITALRESERVE\":\"989677305.8\",													资本公积
+	\"SURPLUSRESERVE\":\"44741458.12\",													盈余公积
+	\"RETAINEDEARNING\":\"260299396.6\",												非分配利润
+	\"SUMPARENTEQUITY\":\"1363784860.52\",											归属于母公司股东权益合计
+	\"SUMSHEQUITY\":\"1363784860.52\",												股东权益合计(净资产)
+	\"SUMLIABSHEQUITY\":\"2225894683.77\",											负债和股东权益合计
+	\"SETTLEMENTPROVISION\":\"\",		\"SETTLEMENTPROVISION_YOY\":\"\",\"LENDFUND\":\"\",					\"FVALUEFASSET\":\"\",		\"TRADEFASSET\":\"\",		\"DEFINEFVALUEFASSET\":\"\",
+	\"PREMIUMREC\":\"\",	\"RIREC\":\"\",	\"RICONTACTRESERVEREC\":\"\",	\"INTERESTREC\":\"\",	\"EXPORTREBATEREC\":\"\",	\"SUBSIDYREC\":\"\",	\"INTERNALREC\":\"\",	\"BUYSELLBACKFASSET\":\"\",
+	\"CLHELDSALEASS\":\"\",	\"NONLASSETONEYEAR\":\"\",	\"LOANADVANCES\":\"\",	\"SALEABLEFASSET\":\"\",	\"HELDMATURITYINV\":\"\",	\"LTEQUITYINV\":\"\",	\"ESTATEINVEST\":\"\",	\"CONSTRUCTIONPROGRESS\":\"\",
+	\"CONSTRUCTIONMATERIAL\":\"\",	\"LIQUIDATEFIXEDASSET\":\"\",	\"PRODUCTBIOLOGYASSET\":\"\",	\"OILGASASSET\":\"\",	\"DEVELOPEXP\":\"\",		\"OTHERNONLASSET\":\"\",
+	\"BORROWFROMCBANK\":\"\",	\"DEPOSIT\":\"\",	\"BORROWFUND\":\"\",	\"FVALUEFLIAB\":\"\",	\"TRADEFLIAB\":\"\",	\"DEFINEFVALUEFLIAB\":\"\",	\"BILLPAY\":\"\",	\"ADVANCERECEIVE\":\"\",	\"SELLBUYBACKFASSET\":\"\",
+	\"COMMPAY\":\"\",	\"RIPAY\":\"\",	\"INTERNALPAY\":\"\",	\"ANTICIPATELLIAB\":\"\",	\"CONTACTRESERVE\":\"\",	\"AGENTTRADESECURITY\":\"\",	\"AGENTUWSECURITY\":\"\",
+	\"DEFERINCOMEONEYEAR\":\"\",	\"STBONDREC\":\"\",	\"CLHELDSALELIAB\":\"\",	\"OTHERLLIAB\":\"\",		\"BONDPAY\":\"\",	\"PREFERSTOCBOND\":\"\",	\"SUSTAINBOND\":\"\",	\"LTSALARYPAY\":\"\",
+	\"SPECIALPAY\":\"\",	\"ANTICIPATELIAB\":\"\",	\"DEFERINCOME\":\"\",		\"OTHERNONLLIAB\":\"\",	\"OTHEREQUITY\":\"\",	\"PREFERREDSTOCK\":\"\",	\"SUSTAINABLEDEBT\":\"\",
+	\"OTHEREQUITYOTHER\":\"\",	\"INVENTORYSHARE\":\"\",	\"SPECIALRESERVE\":\"\",	\"GENERALRISKPREPARE\":\"\",	\"UNCONFIRMINVLOSS\":\"\",	\"PLANCASHDIVI\":\"\",	\"DIFFCONVERSIONFC\":\"\",
+	\"MINORITYEQUITY\":\"\",	\"MARGINOUTFUND\":\"\",	\"DERIVEFASSET\":\"\",	\"AMORCOSTFASSET\":\"\",	\"FVALUECOMPFASSET\":\"\",	\"CONTRACTASSET\":\"\",	\"HELDSALEASS\":\"\",	\"LASSETOTHER\":\"\",
+	\"LASSETBALANCE\":\"\",	\"CREDINV\":\"\",	\"AMORCOSTFASSETFLD\":\"\",	\"OTHCREDINV\":\"\",	\"FVALUECOMPFASSETFLD\":\"\",	\"OTHEREQUITYINV\":\"\",	\"OTHERNONFASSET\":\"\",	\"NONLASSETOTHER\":\"\",
+	\"NONLASSETBALANCE\":\"\",	\"ASSETOTHER\":\"\",	\"ASSETBALANCE\":\"\",	\"DERIVEFLIAB\":\"\",	\"CONTRACTLIAB\":\"\",	\"AMORCOSTFLIAB\":\"\",	\"HELDSALELIAB\":\"\",	\"LLIABOTHER\":\"\",	\"LLIABBALANCE\":\"\",
+	\"AMORCOSTFLIABFLD\":\"\",	\"NONLLIABOTHER\":\"\",	\"NONLLIABBALANCE\":\"\",	\"LIABOTHER\":\"\",	\"LIABBALANCE\":\"\",	\"OTHERCINCOME\":\"\",	\"PARENTEQUITYOTHER\":\"\",	\"PARENTEQUITYBALANCE\":\"\",
+	\"SHEQUITYOTHER\":\"\",	\"SHEQUITYBALANCE\":\"\",	\"LIABSHEQUITYOTHER\":\"\",	\"LIABSHEQUITYBALANCE\":\"\",	\"TRADE_FINASSET_NOTFVTPL\":\"\",	\"TRADE_FINLIAB_NOTFVTPL\":\"\",	\"LENDFUND_YOY\":\"\",
+	\"FVALUEFASSET_YOY\":\"\",	\"TRADEFASSET_YOY\":\"\",	\"DEFINEFVALUEFASSET_YOY\":\"\",	\"ADVANCEPAY_YOY\":\"119.56402958659\",	\"PREMIUMREC_YOY\":\"\",	\"RIREC_YOY\":\"\",	\"RICONTACTRESERVEREC_YOY\":\"\",
+	\"INTERESTREC_YOY\":\"\",	\"DIVIDENDREC_YOY\":\"\",	\"OTHERREC_YOY\":\"3.33741579071541\",	\"EXPORTREBATEREC_YOY\":\"\",	\"SUBSIDYREC_YOY\":\"\",	\"INTERNALREC_YOY\":\"\",	\"BUYSELLBACKFASSET_YOY\":\"\",
+	\"CLHELDSALEASS_YOY\":\"\",	\"NONLASSETONEYEAR_YOY\":\"\",	\"OTHERLASSET_YOY\":\"3069.43659825682\",	\"SUMLASSET_YOY\":\"173.375542030306\",	\"LOANADVANCES_YOY\":\"\",	\"SALEABLEFASSET_YOY\":\"\",
+	\"HELDMATURITYINV_YOY\":\"\",	\"LTREC_YOY\":\"-92.264120436681\",	\"LTEQUITYINV_YOY\":\"\",	\"ESTATEINVEST_YOY\":\"\",	\"FIXEDASSET_YOY\":\"52.1656869462196\",	\"CONSTRUCTIONPROGRESS_YOY\":\"\",
+	\"CONSTRUCTIONMATERIAL_YOY\":\"\",	\"LIQUIDATEFIXEDASSET_YOY\":\"\",	\"PRODUCTBIOLOGYASSET_YOY\":\"\",	\"OILGASASSET_YOY\":\"\",	\"INTANGIBLEASSET_YOY\":\"39.0053707265556\",	\"DEVELOPEXP_YOY\":\"\",
+	\"GOODWILL_YOY\":\"\",	\"LTDEFERASSET_YOY\":\"-8.38280759099112\",	\"DEFERINCOMETAXASSET_YOY\":\"42.6917879836927\",	\"OTHERNONLASSET_YOY\":\"\",	\"SUMNONLASSET_YOY\":\"157.178586355697\",
+	\"SUMASSET_YOY\":\"173.086151712922\",	\"STBORROW_YOY\":\"40.5405405405405\",	\"BORROWFROMCBANK_YOY\":\"\",	\"DEPOSIT_YOY\":\"\",	\"BORROWFUND_YOY\":\"\",	\"FVALUEFLIAB_YOY\":\"\",
+	\"TRADEFLIAB_YOY\":\"\",	\"DEFINEFVALUEFLIAB_YOY\":\"\",	\"BILLPAY_YOY\":\"\",	\"ACCOUNTPAY_YOY\":\"49.1677878185791\",	\"ADVANCERECEIVE_YOY\":\"\",	\"SELLBUYBACKFASSET_YOY\":\"\",
+	\"COMMPAY_YOY\":\"\",	\"SALARYPAY_YOY\":\"3.80706828764198\",	\"TAXPAY_YOY\":\"49.3796663769086\",	\"INTERESTPAY_YOY\":\"\",	\"DIVIDENDPAY_YOY\":\"\",\"RIPAY_YOY\":\"\",	\"INTERNALPAY_YOY\":\"\",
+	\"OTHERPAY_YOY\":\"-98.842673440309\",	\"ANTICIPATELLIAB_YOY\":\"\",	\"CONTACTRESERVE_YOY\":\"\",	\"AGENTTRADESECURITY_YOY\":\"\",	\"AGENTUWSECURITY_YOY\":\"\",	\"DEFERINCOMEONEYEAR_YOY\":\"\",
+	\"STBONDREC_YOY\":\"\",	\"CLHELDSALELIAB_YOY\":\"\",	\"NONLLIABONEYEAR_YOY\":\"\",	\"OTHERLLIAB_YOY\":\"\",	\"SUMLLIAB_YOY\":\"48.6546184859726\",	\"LTBORROW_YOY\":\"\",\"BONDPAY_YOY\":\"\",
+	\"PREFERSTOCBOND_YOY\":\"\",	\"SUSTAINBOND_YOY\":\"\",	\"LTACCOUNTPAY_YOY\":\"-28.5714285714286\",	\"LTSALARYPAY_YOY\":\"\",	\"SPECIALPAY_YOY\":\"\",	\"ANTICIPATELIAB_YOY\":\"\",\"DEFERINCOME_YOY\":\"\",
+	\"DEFERINCOMETAXLIAB_YOY\":\"\",	\"OTHERNONLLIAB_YOY\":\"\",	\"SUMNONLLIAB_YOY\":\"-28.5714285714286\",	\"SUMLIAB_YOY\":\"46.8134434727748\",	\"SHARECAPITAL_YOY\":\"33.3333976833977\",	\"OTHEREQUITY_YOY\":\"\",
+	\"PREFERREDSTOCK_YOY\":\"\",	\"SUSTAINABLEDEBT_YOY\":\"\",	\"OTHEREQUITYOTHER_YOY\":\"\",	\"CAPITALRESERVE_YOY\":\"5199.09738827983\",	\"INVENTORYSHARE_YOY\":\"\",	\"SPECIALRESERVE_YOY\":\"\",
+	\"SURPLUSRESERVE_YOY\":\"73.2363260057629\",	\"GENERALRISKPREPARE_YOY\":\"\",	\"UNCONFIRMINVLOSS_YOY\":\"\",	\"RETAINEDEARNING_YOY\":\"97.8392666489833\",	\"PLANCASHDIVI_YOY\":\"\",	\"DIFFCONVERSIONFC_YOY\":\"\",
+	\"SUMPARENTEQUITY_YOY\":\"498.481153201433\",	\"MINORITYEQUITY_YOY\":\"\",	\"SUMSHEQUITY_YOY\":\"498.481153201433\",	\"SUMLIABSHEQUITY_YOY\":\"173.086151712922\",	\"MARGINOUTFUND_YOY\":\"\",	\"DERIVEFASSET_YOY\":\"\",
+	\"ACCOUNTBILLREC_YOY\":\"64.8573752444249\",	\"AMORCOSTFASSET_YOY\":\"\",	\"FVALUECOMPFASSET_YOY\":\"\",	\"CONTRACTASSET_YOY\":\"\",	\"HELDSALEASS_YOY\":\"\",	\"LASSETOTHER_YOY\":\"\",
+	\"LASSETBALANCE_YOY\":\"\",	\"CREDINV_YOY\":\"\",	\"AMORCOSTFASSETFLD_YOY\":\"\",	\"OTHCREDINV_YOY\":\"\",	\"FVALUECOMPFASSETFLD_YOY\":\"\",	\"OTHEREQUITYINV_YOY\":\"\",
+	\"OTHERNONFASSET_YOY\":\"\",	\"NONLASSETOTHER_YOY\":\"\",	\"NONLASSETBALANCE_YOY\":\"\",	\"ASSETOTHER_YOY\":\"\",	\"ASSETBALANCE_YOY\":\"\",	\"DERIVEFLIAB_YOY\":\"\",
+	\"ACCOUNTBILLPAY_YOY\":\"49.1677878185791\",	\"CONTRACTLIAB_YOY\":\"\",	\"AMORCOSTFLIAB_YOY\":\"\",	\"HELDSALELIAB_YOY\":\"\",\"LLIABOTHER_YOY\":\"\",	\"LLIABBALANCE_YOY\":\"\",	\"AMORCOSTFLIABFLD_YOY\":\"\",
+	\"NONLLIABOTHER_YOY\":\"\",	\"NONLLIABBALANCE_YOY\":\"\",	\"LIABOTHER_YOY\":\"\",\"LIABBALANCE_YOY\":\"\",	\"OTHERCINCOME_YOY\":\"\",	\"PARENTEQUITYOTHER_YOY\":\"\",	\"PARENTEQUITYBALANCE_YOY\":\"\",
+	\"SHEQUITYOTHER_YOY\":\"\",	\"SHEQUITYBALANCE_YOY\":\"\",	\"LIABSHEQUITYOTHER_YOY\":\"\",	\"LIABSHEQUITYBALANCE_YOY\":\"\",	\"TOTAL_OTHER_RECE_YOY\":\"4.10479948549523\",	\"TOTAL_OTHER_PAYABLE_YOY\":\"30.7116967433425\",
+	\"TRADE_FINASSET_NOTFVTPL_YOY\":\"\",	\"AUDITOPINIONSDOMESTIC\":\"\",	\"AUDITOPINIONSDOMESTICJW\":\"\",	\"TRADE_FINLIAB_NOTFVTPL_YOY\":\"\"
+},
+....]"
+
+利润表
+http://f10.eastmoney.com/NewFinanceAnalysis/lrbAjax?companyType=4&reportDateType=0&reportType=1&endDate=&code=SH605168
+"[{
+	\"SECURITYCODE\":\"605168.SH\",
+	\"SECURITYSHORTNAME\":\"三人行\",
+	\"REPORTTYPE\":\"1\",
+	\"TYPE\":\"4\",
+	\"REPORTDATE\":\"2020/6/30 0:00:00\",
+	\"CURRENCY\":\"人民币\",
+	\"TOTALOPERATEREVE\":\"1149487542.89\",		\"TOTALOPERATEREVE_YOY\":\"61.2290214930814\",		营业总收入
+	\"OPERATEREVE\":\"1149487542.89\",		\"OPERATEREVE_YOY\":\"61.2290214930814\",					营业收入
+	\"TOTALOPERATEEXP\":\"1031441640.73\",	\"TOTALOPERATEEXP_YOY\":\"55.9609686798747\",			营业总成本
+	\"OPERATEEXP\":\"964196436.15\",		\"OPERATEEXP_YOY\":\"62.5440486365618\",					营业成本
+	\"RDEXP\":\"867697.86\",				\"RDEXP_YOY\":\"43.7077012926786\",							研发费用
+	\"OPERATETAX\":\"2949066.82\",			\"OPERATETAX_YOY\":\"14.3456039244724\",					营业税金及附加
+	\"SALEEXP\":\"46612810.14\",			\"SALEEXP_YOY\":\"-5.00389314128285\",						销售费用
+	\"MANAGEEXP\":\"15671984.7\",			\"MANAGEEXP_YOY\":\"7.12207358598493\",						管理费用
+	\"FINANCEEXP\":\"1143645.06\",			\"FINANCEEXP_YOY\":\"-10.2407233879411\",					财务费用
+																									其他经营收益
+	\"OPERATEPROFIT\":\"120166219.8\",		\"OPERATEPROFIT_YOY\":\"123.76163108493\",				营业利润
+	\"NONOPERATEREVE\":\"2102.63\",			\"NONOPERATEREVE_YOY\":\"212286.868686869\",				加:营业外收入
+	\"NONOPERATEEXP\":\"459999.92\",		\"NONOPERATEEXP_YOY\":\"3997.63343811993\",					减:营业外支出
+	\"SUMPROFIT\":\"119708322.51\",			\"SUMPROFIT_YOY\":\"122.955582470952\",					利润总额
+	\"INCOMETAX\":\"16986819.12\",			\"INCOMETAX_YOY\":\"97.7529187489681\",						减:所得税费用
+	\"NETPROFIT\":\"102721503.39\",			\"NETPROFIT_YOY\":\"127.755605403799\",					净利润
+	\"PARENTNETPROFIT\":\"102721503.39\",	\"PARENTNETPROFIT_YOY\":\"127.755605403799\",				其中:归属于母公司股东的净利润
+	\"KCFJCXSYJLR\":\"102659936.37\",		\"KCFJCXSYJLR_YOY\":\"155.718736274227\",					扣除非经常性损益后的净利润				****
+																									每股收益
+	\"BASICEPS\":\"1.88\",					\"BASICEPS_YOY\":\"116.091954022988\",						基本每股收益
+	\"DILUTEDEPS\":\"1.88\",				\"DILUTEDEPS_YOY\":\"116.091954022988\",					稀释每股收益
+	\"SUMCINCOME\":\"102721503.39\",		\"SUMCINCOME_YOY\":\"127.755605403799\",				综合收益总额
+	\"PARENTCINCOME\":\"102721503.39\",																	归属于母公司所有者的综合收益总额
+	\"PARENTCINCOME_YOY\":\"127.755605403799\",
+	\"INTREVE\":\"\",\"INTREVE_YOY\":\"\",\"PREMIUMEARNED\":\"\",\"PREMIUMEARNED_YOY\":\"\",\"COMMREVE\":\"\",\"COMMREVE_YOY\":\"\",\"OTHERREVE\":\"\",\"OTHERREVE_YOY\":\"\",
+	\"INTEXP\":\"\",\"INTEXP_YOY\":\"\",\"COMMEXP\":\"\",\"COMMEXP_YOY\":\"\",
+	\"SURRENDERPREMIUM\":\"\",\"SURRENDERPREMIUM_YOY\":\"\",\"NETINDEMNITYEXP\":\"\",\"NETINDEMNITYEXP_YOY\":\"\",\"NETCONTACTRESERVE\":\"\",\"NETCONTACTRESERVE_YOY\":\"\",\"POLICYDIVIEXP\":\"\",
+	\"POLICYDIVIEXP_YOY\":\"\",\"RIEXP\":\"\",\"RIEXP_YOY\":\"\",\"OTHEREXP\":\"\",\"OTHEREXP_YOY\":\"\",
+	\"ASSETDEVALUELOSS\":\"\",\"ASSETDEVALUELOSS_YOY\":\"\",\"FVALUEINCOME\":\"\",\"FVALUEINCOME_YOY\":\"\",\"INVESTINCOME\":\"\",
+	\"INVESTINCOME_YOY\":\"\",\"INVESTJOINTINCOME\":\"\",\"INVESTJOINTINCOME_YOY\":\"\",\"EXCHANGEINCOME\":\"\",\"EXCHANGEINCOME_YOY\":\"\",
+	\"NONLASSETREVE\":\"\",\"NONLASSETREVE_YOY\":\"\",\"NONLASSETNETLOSS\":\"\",\"NONLASSETNETLOSS_YOY\":\"\",\"COMBINEDNETPROFITB\":\"\",
+	\"COMBINEDNETPROFITB_YOY\":\"\",\"MINORITYINCOME\":\"\",\"MINORITYINCOME_YOY\":\"\",\"OTHERCINCOME\":\"\",\"OTHERCINCOME_YOY\":\"\",
+	\"PARENTOTHERCINCOME\":\"\",\"PARENTOTHERCINCOME_YOY\":\"\",\"MINORITYOTHERCINCOME\":\"\",
+	\"MINORITYOTHERCINCOME_YOY\":\"\",
+	\"MINORITYCINCOME\":\"\",\"MINORITYCINCOME_YOY\":\"\"
+}
+	...]"
+
+
+现金流量表
+http://f10.eastmoney.com/NewFinanceAnalysis/xjllbAjax?companyType=4&reportDateType=0&reportType=1&endDate=&code=SH605168
+"[{
+	\"SECURITYCODE\":\"605168.SH\",					代码
+	\"REPORTTYPE\":\"1\",
+	\"REPORTDATETYPE\":\"0\",
+	\"TYPE\":\"1\",
+	\"REPORTDATE\":\"2020/6/30 0:00:00\",			时间
+	\"CURRENCY\":\"人民币\",
+	\"NIDEPOSIT\":\"\",
+	\"NIBORROWFROMCBANK\":\"\",
+	\"NIBORROWFROMFI\":\"\",
+	\"PREMIUMREC\":\"\",\"NETRIREC\":\"\",\"NIINSUREDDEPOSITINV\":\"\",\"NIDISPTRADEFASSET\":\"\",\"INTANDCOMMREC\":\"\",\"NIBORROWFUND\":\"\",
+	\"NDLOANADVANCES\":\"\",\"NIBUYBACKFUND\":\"\",\"TAXRETURNREC\":\"\",
+
+	销售商品、提供劳务收到的现金				\"SALEGOODSSERVICEREC\":\"643949741.36\",
+	收到的税费返还
+	收到其他与经营活动有关的现金				\"OTHEROPERATEREC\":\"7685659.46\",
+经营活动现金流入小计							\"SUMOPERATEFLOWIN\":\"651635400.82\",
+	购买商品、接受劳务支付的现金				\"BUYGOODSSERVICEPAY\":\"725328863.31\",
+	支付给职工以及为职工支付的现金				\"EMPLOYEEPAY\":\"56697744.2\",
+	支付的各项税费								\"TAXPAY\":\"42815960.32\",
+	支付其他与经营活动有关的现金				\"OTHEROPERATEPAY\":\"33602291.39\",
+经营活动现金流出小计							\"SUMOPERATEFLOWOUT\":\"858444859.22\",
+经营活动产生的现金流量净额						\"NETOPERATECASHFLOW\":\"-206809458.4\",
+
+	处置固定资产、无形资产和其他长期资产收回的现金净额		\"DISPFILASSETREC\":\"74570\",
+投资活动现金流入小计										\"SUMINVFLOWIN\":\"74570\",
+	购建固定资产、无形资产和其他长期资产支付的现金			\"BUYFILASSETPAY\":\"1363225\",
+	投资支付的现金											\"INVPAY\":\"138017600\",
+投资活动现金流出小计										\"SUMINVFLOWOUT\":\"139380825\",
+投资活动产生的现金流量净额									\"NETINVCASHFLOW\":\"-139306255\",
+
+	吸收投资收到的现金					\"ACCEPTINVREC\":\"990447287.3\",
+	取得借款收到的现金					\"LOANREC\":\"20000000\",
+	收到其他与筹资活动有关的现金
+筹资活动现金流入小计						\"SUMFINAFLOWIN\":\"1010447287.3\",
+	偿还债务支付的现金						\"REPAYDEBTPAY\":\"35000000\",
+	分配股利、利润或偿付利息支付的现金		\"DIVIPROFITORINTPAY\":\"2526588.61\",
+	支付其他与筹资活动有关的现金			\"OTHERFINAPAY\":\"203700\",
+筹资活动现金流出小计					\"SUMFINAFLOWOUT\":\"37730288.61\",
+筹资活动产生的现金流量净额				\"NETFINACASHFLOW\":\"972716998.69\",
+
+现金及现金等价物净增加额				\"NICASHEQUI\":\"626601285.29\",
+	加:期初现金及现金等价物余额				\"CASHEQUIBEGINNING\":\"321383032.77\",
+期末现金及现金等价物余额					\"CASHEQUIENDING\":\"947984318.06\",
+	\"NILOANADVANCES\":\"\",\"NIDEPOSITINCBANKFI\":\"\",\"INDEMNITYPAY\":\"\",\"INTANDCOMMPAY\":\"\",\"DIVIPAY\":\"\",
+	\"DISPOSALINVREC\":\"\",\"INVINCOMEREC\":\"\",\"DISPSUBSIDIARYREC\":\"\",
+	\"REDUCEPLEDGETDEPOSIT\":\"\",\"OTHERINVREC\":\"\",
+	\"NIPLEDGELOAN\":\"\",\"GETSUBSIDIARYPAY\":\"\",\"ADDPLEDGETDEPOSIT\":\"\",\"OTHERINVPAY\":\"\",
+	\"SUBSIDIARYACCEPT\":\"\",\"ISSUEBONDREC\":\"\",
+	\"OTHERFINAREC\":\"\",\"SUBSIDIARYPAY\":\"\",
+	\"BUYSUBSIDIARYPAY\":\"\",\"SUBSIDIARYREDUCTCAPITAL\":\"\",
+	\"EFFECTEXCHANGERATE\":\"\",
+	\"SALEGOODSSERVICEREC_YOY\":\"39.2556069108171\",\"NIDEPOSIT_YOY\":\"\",
+	\"NIBORROWFROMCBANK_YOY\":\"\",\"NIBORROWFROMFI_YOY\":\"\",\"PREMIUMREC_YOY\":\"\",\"NETRIREC_YOY\":\"\",
+	\"NIINSUREDDEPOSITINV_YOY\":\"\",\"NIDISPTRADEFASSET_YOY\":\"\",\"INTANDCOMMREC_YOY\":\"\",\"NIBORROWFUND_YOY\":\"\",\"NDLOANADVANCES_YOY\":\"\",
+	\"NIBUYBACKFUND_YOY\":\"\",\"TAXRETURNREC_YOY\":\"\",\"OTHEROPERATEREC_YOY\":\"-55.7930363080897\",\"SUMOPERATEFLOWIN_YOY\":\"35.7851896693402\",
+	\"BUYGOODSSERVICEPAY_YOY\":\"53.4690862979902\",\"NILOANADVANCES_YOY\":\"\",\"NIDEPOSITINCBANKFI_YOY\":\"\",\"INDEMNITYPAY_YOY\":\"\",\"INTANDCOMMPAY_YOY\":\"\",
+	\"DIVIPAY_YOY\":\"\",\"EMPLOYEEPAY_YOY\":\"2.68076571493592\",\"TAXPAY_YOY\":\"28.5178271215573\",\"OTHEROPERATEPAY_YOY\":\"-20.0225905589597\",
+	\"SUMOPERATEFLOWOUT_YOY\":\"42.3223156557605\",\"NETOPERATECASHFLOW_YOY\":\"-67.7724010685947\",\"DISPOSALINVREC_YOY\":\"\",\"INVINCOMEREC_YOY\":\"\",
+	\"DISPFILASSETREC_YOY\":\"3573.39901477832\",\"DISPSUBSIDIARYREC_YOY\":\"\",\"REDUCEPLEDGETDEPOSIT_YOY\":\"\",\"OTHERINVREC_YOY\":\"\",\"SUMINVFLOWIN_YOY\":\"3573.39901477832\",
+	\"BUYFILASSETPAY_YOY\":\"-15.2932924969819\",\"INVPAY_YOY\":\"\",\"NIPLEDGELOAN_YOY\":\"\",\"GETSUBSIDIARYPAY_YOY\":\"\",\"ADDPLEDGETDEPOSIT_YOY\":\"\",\"OTHERINVPAY_YOY\":\"\",
+	\"SUMINVFLOWOUT_YOY\":\"8560.70588113067\",\"NETINVCASHFLOW_YOY\":\"-8567.00472066755\",\"ACCEPTINVREC_YOY\":\"\",\"SUBSIDIARYACCEPT_YOY\":\"\",\"LOANREC_YOY\":\"17.6470588235294\",
+	\"ISSUEBONDREC_YOY\":\"\",\"OTHERFINAREC_YOY\":\"\",\"SUMFINAFLOWIN_YOY\":\"3642.39736037037\",\"REPAYDEBTPAY_YOY\":\"20.6896551724138\",\"DIVIPROFITORINTPAY_YOY\":\"85.0512832620213\",
+	\"SUBSIDIARYPAY_YOY\":\"\",\"BUYSUBSIDIARYPAY_YOY\":\"\",\"OTHERFINAPAY_YOY\":\"51.3935340022297\",\"SUBSIDIARYREDUCTCAPITAL_YOY\":\"\",\"SUMFINAFLOWOUT_YOY\":\"23.7062898041595\",
+	\"NETFINACASHFLOW_YOY\":\"27892.7473160346\",\"EFFECTEXCHANGERATE_YOY\":\"\",\"NICASHEQUI_YOY\":\"588.101969769722\",\"CASHEQUIBEGINNING_YOY\":\"35.5968082013673\",
+	\"CASHEQUIENDING_YOY\":\"772.603287674955\"
+}]"
+
+===============================================================================================
+
+主要指标
+http://f10.eastmoney.com/NewFinanceAnalysis/MainTargetAjax?type=0&code=SH605168
+[
+	{
+		"date":"2020-06-30",
+		每股指标
+		"jbmgsy":"1.8800",			基本每股收益(元)
+		"kfmgsy":"1.8800",			扣非每股收益(元)
+		"xsmgsy":"1.8800",			稀释每股收益(元)
+		"mgjzc":"19.7459",			每股净资产(元)
+		"mggjj":"14.3293",			每股公积金(元)
+		"mgwfply":"3.7688",			每股未分配利润(元)
+		"mgjyxjl":"-2.9943",		每股经营现金流(元)
+		成长能力
+		"yyzsr":"11.5亿",			营业总收入(元)
+		"mlr":"1.82亿",				毛利润(元)
+		"gsjlr":"1.03亿",			归属净利润(元)
+		"kfjlr":"1.03亿",			扣非净利润(元)
+		"yyzsrtbzz":"61.23",		营业总收入同比增长(%)
+		"gsjlrtbzz":"127.76",		归属净利润同比增长(%)
+		"kfjlrtbzz":"155.72",		扣非净利润同比增长(%)
+		"yyzsrgdhbzz":"18.04",		营业总收入滚动环比增长(%)
+		"gsjlrgdhbzz":"14.85",		归属净利润滚动环比增长(%)
+		"kfjlrgdhbzz":"18.02",		扣非净利润滚动环比增长(%)
+		盈利能力
+		"jqjzcsyl":"17.34",			加权净资产收益率(%)
+		"tbjzcsyl":"7.53",			摊薄净资产收益率(%)
+		"tbzzcsyl":"6.68",			摊薄总资产收益率(%)
+		"mll":"16.12",				毛利率(%)
+		"jll":"8.94",				净利率(%)
+		"sjsl":"14.19",				实际税率(%)
+		盈利质量指标
+		"yskyysr":"--",				预收款/营业收入
+		"xsxjlyysr":"0.56",			销售现金流/营业收入
+		"jyxjlyysr":"-0.18",		经营现金流/营业收入
+		运营能力指标
+		"zzczzy":"0.75",			总资产周转率(次)
+		"yszkzzts":"111.44",		应收账款周转天数(天)
+		"chzzts":"1.46",			存货周转天数(天)
+		财务风险指标
+		"zcfzl":"38.73",			资产负债率(%)
+		"ldzczfz":"98.84",			流动负债/总负债(%)
+		"ldbl":"2.57",				流动比率
+		"sdbl":"2.56"				速动比率
+	},
+	{"date":"2020-03-31",...}]
+
+杜邦分析
+http://f10.eastmoney.com/NewFinanceAnalysis/DubangAnalysisAjax?code=SH605168
+{
+"bgq":[
+	{
+		"date":"2020-06-30",
+		"jzcsyl":"17.34%",			净资产收益率
+		"zzcjll":"6.68%",			总资产净利率
+		"gsmgsgddjlr":"100.00%",	归属母公司的净利润占比
+		"qycs":"1.63",				权益乘数
+		"yyjlrl":"8.94%",			营业净利润率
+		"zzczzl":"0.75次",			总资产周围率
+		"zcfzl":"38.73%",			资产负债率
+		"jlr":"1.03亿",				净利润
+		"yysr":"11.5亿",			营业总收入
+		"zcze":"22.3亿",			资产总额
+		"fzze":"8.62亿",			负债总额
+		"srze":"11.5亿",			收入总额
+		"cbze":"10.5亿",			成本总额
+		"ldzc":"21.9亿",			流动资产
+		"fldzc":"3745万",			非流动资产
+		"yycb":"9.64亿",			营业成本
+		"qjfy":"6343万",			期间费用
+		"hbzj":"9.49亿",			货币资金
+		"kgcsjrzc":"--",			可供出售金融资产
+		"wxzc":"73.0万",			无形资产
+		"gyjzbdsy":"--",			公允价值变动收益
+		"yysjjfj":"295万",			营业税金及附加
+		"jyxjrzc":"--",				交易性金融资产
+		"cyzdqtz":"--",				持有至到期投资
+		"kfzc":"--",				开发支出
+		"yywsr":"2103",				营业外收入
+		"sdsfy":"1699万",			所得税费用
+		"cwfy":"114万",				财务费用
+		"yszk":"9.86亿",			应收账款
+		"cqgqtz":"--",				长期股权投资
+		"sy":"--",					商誉
+		"tzsy":"--",				投资收益
+		"zcjzss":"--",				资产减值损失
+		"xsfy":"4661万",			销售费用
+		"yfzk":"9416万",			预付账款
+		"tzxfdc":"--",				投资性房地产
+		"cqdtfy":"377万",			长期待摊费用
+		"yywzc":"46.0万",			营业外支出
+		"glfy":"1567万",			管理费用
+		"qtysk":"--",				其它应收款
+		"gdzc":"272万",				固定资产
+		"dysdszc":"200万",			递延所得税资产
+		"ch":"582万",				存货
+		"zjgc":"--",				在建工程
+		"qtfldzc":"--",				其它非流动资产
+		"qtldzc":"1.12亿"		其它流动资产
+	},
+	{	"date":"2020-03-31",...}
+]}
+
+
+
+
+
+
+
+百分比
+http://f10.eastmoney.com/NewFinanceAnalysis/PercentAjax?code=SH605168&ctype=4&type=0
+{
+"zb":	资产负债表/总资产
+{
+	"date":"2020-06-30",
+	"zzc":"2225894683.77",										总资产
+		"ldzc":"2188441361.98",		"ldzcbfb":"98.32%",				流动资产
+			"hbzj":"948686818.06",		"hbzjbfb":"42.62%",				货币资金
+			"yszk":"986087916.25",		"yszkbfb":"44.30%",				应收账款
+			"ch":"5817362.85",			"chbfb":"0.26%",				存货
+			"yfzk":"94163641.13",		"yfzkbfb":"4.23%",				预付账款
+		"fldzc":"37453321.79",		"fldzcbfb":"1.68%",				非流动资产
+			"gdzc":"2718840.33",		"gdzcbfb":"0.12%",				固定资产
+			"wxzc":"730041.82",			"wxzcbfb":"0.03%",				无形资产
+			"cqdtfy":"3770144.93",		"cqdtfybfb":"0.17%",			长期待摊费用
+			"jrzc":"",					"jrzcbfb":"--",					金融资产
+	"zfzje":"862109823.25",										总负债金额
+		"ldfz":"852109823.25",			"ldfzbfb":"98.84%",			流动负债
+		"fldfz":"10000000",				"fldfzbfb":"1.16%"			非流动负债
+},
+"qylx":4,"type":0,
+"lr0":[		各项/营业收入
+	{
+		"date":"2020-06-30",
+		"yysr":"11.5亿",										营业收入(元)
+		"yycb":"9.64亿",	"yycbzb":"-83.88%",					营业成本(元)
+			"yysjjfj":"295万",		"yysjjfjzb":"-0.26%",			营业税金及附加(元)
+			"qjfy":"6343万",		"qjfyzb":"-5.52%",				期间费用(元)
+				"xsfy":"4661万",	"xsfyzb":"-4.06%",					销售费用(元)
+				"glfy":"1567万",	"glfyzb":"-1.36%",					管理费用(元)
+				"cwfy":"114万",		"cwfyzb":"-0.10%",					财务费用(元)
+			"zcjzss":"--",			"zcjzsszb":"--",				资产减值损失(元)
+		"qtjysy":"--",		"qtjysyzb":"--",					其他经营收益(元)
+		"gyjzbdsy":"--",	"gyjzbdsyzb":"--",						公允价值变动损益(元)
+		"tzsy":"--",		"tzsyzb":"--",							投资收益(元)
+		"yylr":"1.20亿",	"yylrzb":"10.45%",					营业利润(元)
+		"yywsr":"2103",		"yywsrzb":"0.00%",						加: 营业外收入(元)
+		"btsr":"--",		"btsrzb":"--",								补贴收入(元)
+		"yywzc":"46.0万",	"yywzczb":"-0.04%",						减:营业外支出(元)
+		"lrze":"1.20亿",	"lrzezb":"10.41%",					利润总额(元)
+		"sds":"1699万",		"sdszb":"-1.48%",						减:所得税(元)
+		"jlr":"1.03亿",		"jlrzb":"8.94%"						净利润(元)
+	},
+	......
+],
+"lr1":[],
+"lr2":[],
+"lr3":[]
+}
+
+
