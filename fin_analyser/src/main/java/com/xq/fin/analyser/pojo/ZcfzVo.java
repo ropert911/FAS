@@ -1,7 +1,7 @@
 package com.xq.fin.analyser.pojo;
 
 //资产负债
-public class ZcfzPo {
+public class ZcfzVo {
     String SECURITYCODE;        //代码
     String REPORTDATE;          //时间：202003，202006
     double SUMLASSET;           //流动资产

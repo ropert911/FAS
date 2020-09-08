@@ -2,8 +2,7 @@ package com.xq.fin.analyser.data;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.xq.fin.analyser.pojo.LrbPo;
-import com.xq.fin.analyser.pojo.ZyzbPo;
+import com.xq.fin.analyser.pojo.ZyzbVo;
 import com.xq.fin.analyser.util.StringUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
@@ -28,7 +27,7 @@ public class ZyzbUtil {
     private RestTemplate restTemplate;
 
     public void getData(String code) {
-        List<ZyzbPo> zyzbPoList = new ArrayList<>(10);
+        List<ZyzbVo> zyzbVoList = new ArrayList<>(10);
         String url = "http://f10.eastmoney.com/NewFinanceAnalysis/MainTargetAjax?type=0&code=" + StringUtil.getSCByCode(code);
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         String data = responseEntity.getBody();
@@ -44,186 +43,186 @@ public class ZyzbUtil {
         JSONArray jsonArray = JSONObject.parseArray(data);
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            ZyzbPo zyzbPo = new ZyzbPo();
+            ZyzbVo zyzbVo = new ZyzbVo();
 
             {
-                zyzbPo.setCode(code);
+                zyzbVo.setCode(code);
             }
             {
                 String pStr = jsonObject.getString("date");
                 List<String> date = StringUtil.getmutiString("([0-9]{4})-([0-9]{1,2})", pStr);
-                zyzbPo.setDate(String.format("%s%02d", date.get(0), Long.valueOf(date.get(1))));
+                zyzbVo.setDate(String.format("%s%02d", date.get(0), Long.valueOf(date.get(1))));
             }
             {
                 String pStr = jsonObject.getString("jbmgsy");
-                zyzbPo.setJbmgsy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setJbmgsy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("kfmgsy");
-                zyzbPo.setKfmgsy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setKfmgsy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("xsmgsy");
-                zyzbPo.setXsmgsy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setXsmgsy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("mgjzc");
-                zyzbPo.setMgjzc(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setMgjzc(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("mggjj");
-                zyzbPo.setMggjj(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setMggjj(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("mgwfply");
-                zyzbPo.setMgwfply(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setMgwfply(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("mgjyxjl");
-                zyzbPo.setMgjyxjl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setMgjyxjl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("yyzsr");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    zyzbPo.setYyzsr(pStr.equals("--") ? 0 : Double.valueOf(pStr) * 100000000);
+                    zyzbVo.setYyzsr(pStr.equals("--") ? 0 : Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    zyzbPo.setYyzsr(pStr.equals("--") ? 0 : Double.valueOf(pStr) * 10000);
+                    zyzbVo.setYyzsr(pStr.equals("--") ? 0 : Double.valueOf(pStr) * 10000);
                 } else {
-                    zyzbPo.setYyzsr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    zyzbVo.setYyzsr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("mlr");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    zyzbPo.setMlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 100000000);
+                    zyzbVo.setMlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    zyzbPo.setMlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 10000);
+                    zyzbVo.setMlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 10000);
                 } else {
-                    zyzbPo.setMlr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    zyzbVo.setMlr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("gsjlr");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    zyzbPo.setGsjlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 100000000);
+                    zyzbVo.setGsjlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    zyzbPo.setGsjlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 10000);
+                    zyzbVo.setGsjlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 10000);
                 } else {
-                    zyzbPo.setGsjlr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    zyzbVo.setGsjlr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("kfjlr");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    zyzbPo.setKfjlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 100000000);
+                    zyzbVo.setKfjlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    zyzbPo.setKfjlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 100000000);
+                    zyzbVo.setKfjlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 100000000);
                 } else {
-                    zyzbPo.setKfjlr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    zyzbVo.setKfjlr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("yyzsrtbzz");
-                zyzbPo.setYyzsrtbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setYyzsrtbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("gsjlrtbzz");
-                zyzbPo.setGsjlrtbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setGsjlrtbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("kfjlrtbzz");
-                zyzbPo.setKfjlrtbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setKfjlrtbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("yyzsrgdhbzz");
-                zyzbPo.setYyzsrgdhbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setYyzsrgdhbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("gsjlrgdhbzz");
-                zyzbPo.setGsjlrgdhbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setGsjlrgdhbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("kfjlrgdhbzz");
-                zyzbPo.setKfjlrgdhbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setKfjlrgdhbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("jqjzcsyl");
-                zyzbPo.setJqjzcsyl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setJqjzcsyl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("tbjzcsyl");
-                zyzbPo.setTbjzcsyl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setTbjzcsyl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("tbzzcsyl");
-                zyzbPo.setTbzzcsyl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setTbzzcsyl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("mll");
-                zyzbPo.setMll(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setMll(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("jll");
-                zyzbPo.setJll(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setJll(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("sjsl");
-                zyzbPo.setSjsl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setSjsl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("yskyysr");
-                zyzbPo.setYskyysr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setYskyysr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("xsxjlyysr");
-                zyzbPo.setXsxjlyysr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setXsxjlyysr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("jyxjlyysr");
-                zyzbPo.setJyxjlyysr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setJyxjlyysr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("zzczzy");
-                zyzbPo.setZzczzy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setZzczzy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("yszkzzts");
-                zyzbPo.setYszkzzts(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setYszkzzts(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("chzzts");
-                zyzbPo.setChzzts(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setChzzts(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("zcfzl");
-                zyzbPo.setZcfzl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setZcfzl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("ldzczfz");
-                zyzbPo.setLdzczfz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setLdzczfz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("ldbl");
-                zyzbPo.setLdbl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setLdbl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("sdbl");
-                zyzbPo.setSdbl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                zyzbVo.setSdbl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
             }
 
-            zyzbPoList.add(zyzbPo);
+            zyzbVoList.add(zyzbVo);
 
         }
 
-        zyzbPoList = zyzbPoList.stream().sorted(Comparator.comparing(ZyzbPo::getDate).reversed()).collect(Collectors.toList());
-        gloableData.allStockList.get(code).setZyzbPoList(zyzbPoList);
+        zyzbVoList = zyzbVoList.stream().sorted(Comparator.comparing(ZyzbVo::getDate).reversed()).collect(Collectors.toList());
+        gloableData.allStockList.get(code).setZyzbVoList(zyzbVoList);
     }
 }

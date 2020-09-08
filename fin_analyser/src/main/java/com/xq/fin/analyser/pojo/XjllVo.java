@@ -1,6 +1,6 @@
 package com.xq.fin.analyser.pojo;
 
-public class XjllPo {
+public class XjllVo {
     private String SECURITYCODE;  //代码
     private String REPORTDATE; //时间
     double SALEGOODSSERVICEREC;         //销售商品、提供劳务收到的现金

@@ -2,8 +2,7 @@ package com.xq.fin.analyser.data;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.xq.fin.analyser.pojo.BfbPo;
-import com.xq.fin.analyser.pojo.LrbPo;
+import com.xq.fin.analyser.pojo.BfbVo;
 import com.xq.fin.analyser.util.StringUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
@@ -28,7 +27,7 @@ public class BfbUtil {
     private RestTemplate restTemplate;
 
     public void getData(String code) {
-        List<BfbPo> bfbPoList = new ArrayList<>(10);
+        List<BfbVo> bfbVoList = new ArrayList<>(10);
         String url = "http://f10.eastmoney.com/NewFinanceAnalysis/PercentAjax?code=" + StringUtil.getSCByCode(code) + "&ctype=4&type=0";
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         String data = responseEntity.getBody();
@@ -45,224 +44,224 @@ public class BfbUtil {
         JSONArray jsonArray = origJsonObject.getJSONArray("lr0");
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            BfbPo bfbPo = new BfbPo();
+            BfbVo bfbVo = new BfbVo();
 
             {
                 String pStr = jsonObject.getString("date");
                 List<String> date = StringUtil.getmutiString("([0-9]{4})-([0-9]{1,2})", pStr);
-                bfbPo.setDate(String.format("%s%02d", date.get(0), Long.valueOf(date.get(1))));
+                bfbVo.setDate(String.format("%s%02d", date.get(0), Long.valueOf(date.get(1))));
             }
             {
                 String pStr = jsonObject.getString("yysr");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setYysr(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setYysr(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setYysr(Double.valueOf(pStr) * 10000);
+                    bfbVo.setYysr(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setYysr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setYysr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("yysjjfj");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setYysjjfj(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setYysjjfj(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setYysjjfj(Double.valueOf(pStr) * 10000);
+                    bfbVo.setYysjjfj(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setYysjjfj(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setYysjjfj(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("qjfy");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setQjfy(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setQjfy(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setQjfy(Double.valueOf(pStr) * 10000);
+                    bfbVo.setQjfy(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setQjfy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setQjfy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("xsfy");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setXsfy(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setXsfy(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setXsfy(Double.valueOf(pStr) * 10000);
+                    bfbVo.setXsfy(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setXsfy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setXsfy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("glfy");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setGlfy(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setGlfy(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setGlfy(Double.valueOf(pStr) * 10000);
+                    bfbVo.setGlfy(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setGlfy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setGlfy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("cwfy");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setCwfy(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setCwfy(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setCwfy(Double.valueOf(pStr) * 10000);
+                    bfbVo.setCwfy(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setCwfy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setCwfy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("zcjzss");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setZcjzss(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setZcjzss(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setZcjzss(Double.valueOf(pStr) * 10000);
+                    bfbVo.setZcjzss(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setZcjzss(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setZcjzss(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("qtjysy");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setQtjysy(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setQtjysy(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setQtjysy(Double.valueOf(pStr) * 10000);
+                    bfbVo.setQtjysy(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setQtjysy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setQtjysy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("gyjzbdsy");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setGyjzbdsy(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setGyjzbdsy(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setGyjzbdsy(Double.valueOf(pStr) * 10000);
+                    bfbVo.setGyjzbdsy(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setGyjzbdsy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setGyjzbdsy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("tzsy");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setTzsy(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setTzsy(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setTzsy(Double.valueOf(pStr) * 10000);
+                    bfbVo.setTzsy(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setTzsy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setTzsy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("yylr");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setYylr(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setYylr(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setYylr(Double.valueOf(pStr) * 10000);
+                    bfbVo.setYylr(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setYylr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setYylr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("yywsr");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setYywsr(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setYywsr(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setYywsr(Double.valueOf(pStr) * 10000);
+                    bfbVo.setYywsr(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setYywsr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setYywsr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("btsr");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setBtsr(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setBtsr(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setBtsr(Double.valueOf(pStr) * 10000);
+                    bfbVo.setBtsr(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setBtsr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setBtsr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("yywzc");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setYywzc(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setYywzc(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setYywzc(Double.valueOf(pStr) * 10000);
+                    bfbVo.setYywzc(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setYywzc(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setYywzc(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("lrze");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setLrze(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setLrze(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setLrze(Double.valueOf(pStr) * 10000);
+                    bfbVo.setLrze(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setLrze(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setLrze(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("sds");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setSds(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setSds(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setSds(Double.valueOf(pStr) * 10000);
+                    bfbVo.setSds(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setSds(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setSds(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
             {
                 String pStr = jsonObject.getString("jlr");
                 if (pStr.contains("亿")) {
                     pStr = pStr.replace("亿", "");
-                    bfbPo.setJlr(Double.valueOf(pStr) * 100000000);
+                    bfbVo.setJlr(Double.valueOf(pStr) * 100000000);
                 } else if (pStr.contains("万")) {
                     pStr = pStr.replace("万", "");
-                    bfbPo.setJlr(Double.valueOf(pStr) * 10000);
+                    bfbVo.setJlr(Double.valueOf(pStr) * 10000);
                 } else {
-                    bfbPo.setJlr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
+                    bfbVo.setJlr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
                 }
             }
 
 
-            bfbPoList.add(bfbPo);
+            bfbVoList.add(bfbVo);
 
         }
 
-        bfbPoList = bfbPoList.stream().sorted(Comparator.comparing(BfbPo::getDate).reversed()).collect(Collectors.toList());
-        gloableData.allStockList.get(code).setBfbPoList(bfbPoList);
+        bfbVoList = bfbVoList.stream().sorted(Comparator.comparing(BfbVo::getDate).reversed()).collect(Collectors.toList());
+        gloableData.allStockList.get(code).setBfbVoList(bfbVoList);
     }
 }

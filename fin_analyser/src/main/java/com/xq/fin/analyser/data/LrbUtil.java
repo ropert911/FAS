@@ -2,8 +2,7 @@ package com.xq.fin.analyser.data;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.xq.fin.analyser.pojo.LrbPo;
-import com.xq.fin.analyser.pojo.XjllPo;
+import com.xq.fin.analyser.pojo.LrbVo;
 import com.xq.fin.analyser.util.StringUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
@@ -28,7 +27,7 @@ public class LrbUtil {
     private RestTemplate restTemplate;
 
     public void getData(String code) {
-        List<LrbPo> lrbPoList = new ArrayList<>(10);
+        List<LrbVo> lrbVoList = new ArrayList<>(10);
         String url = "http://f10.eastmoney.com/NewFinanceAnalysis/lrbAjax?companyType=4&reportDateType=0&reportType=1&endDate=&code=" + StringUtil.getSCByCode(code);
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         String data = responseEntity.getBody();
@@ -42,113 +41,113 @@ public class LrbUtil {
         JSONArray jsonArray = JSONObject.parseArray(data);
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            LrbPo lrbPo = new LrbPo();
+            LrbVo lrbVo = new LrbVo();
 
             {
                 String pStr = jsonObject.getString("SECURITYCODE");
                 pStr = StringUtil.getString("([0-9]{6})", pStr);
-                lrbPo.setSECURITYCODE(pStr);
+                lrbVo.setSECURITYCODE(pStr);
             }
             {
 
                 String pStr = jsonObject.getString("SECURITYSHORTNAME");
-                lrbPo.setSECURITYSHORTNAME(pStr);
+                lrbVo.setSECURITYSHORTNAME(pStr);
             }
             {
                 String pStr = jsonObject.getString("REPORTDATE");
                 List<String> date = StringUtil.getmutiString("([0-9]{4})/([0-9]{1,2})", pStr);
-                lrbPo.setREPORTDATE(String.format("%s%02d", date.get(0), Long.valueOf(date.get(1))));
+                lrbVo.setREPORTDATE(String.format("%s%02d", date.get(0), Long.valueOf(date.get(1))));
             }
             {
                 String pStr = jsonObject.getString("TOTALOPERATEREVE");
-                lrbPo.setTOTALOPERATEREVE(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setTOTALOPERATEREVE(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("OPERATEREVE");
-                lrbPo.setOPERATEREVE(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setOPERATEREVE(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("TOTALOPERATEEXP");
-                lrbPo.setTOTALOPERATEEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setTOTALOPERATEEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("OPERATEEXP");
-                lrbPo.setOPERATEEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setOPERATEEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("RDEXP");
-                lrbPo.setRDEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setRDEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("OPERATETAX");
-                lrbPo.setOPERATETAX(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setOPERATETAX(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SALEEXP");
-                lrbPo.setSALEEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setSALEEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("MANAGEEXP");
-                lrbPo.setMANAGEEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setMANAGEEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("FINANCEEXP");
-                lrbPo.setFINANCEEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setFINANCEEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("OPERATEPROFIT");
-                lrbPo.setOPERATEPROFIT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setOPERATEPROFIT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("NONOPERATEREVE");
-                lrbPo.setNONOPERATEREVE(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setNONOPERATEREVE(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("NONOPERATEEXP");
-                lrbPo.setNONOPERATEEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setNONOPERATEEXP(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMPROFIT");
-                lrbPo.setSUMPROFIT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setSUMPROFIT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("INCOMETAX");
-                lrbPo.setINCOMETAX(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setINCOMETAX(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("NETPROFIT");
-                lrbPo.setNETPROFIT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setNETPROFIT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("PARENTNETPROFIT");
-                lrbPo.setPARENTNETPROFIT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setPARENTNETPROFIT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("KCFJCXSYJLR");
-                lrbPo.setKCFJCXSYJLR(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setKCFJCXSYJLR(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("BASICEPS");
-                lrbPo.setBASICEPS(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setBASICEPS(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("DILUTEDEPS");
-                lrbPo.setDILUTEDEPS(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setDILUTEDEPS(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMCINCOME");
-                lrbPo.setSUMCINCOME(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setSUMCINCOME(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("PARENTCINCOME");
-                lrbPo.setPARENTCINCOME(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                lrbVo.setPARENTCINCOME(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
 
-            lrbPoList.add(lrbPo);
+            lrbVoList.add(lrbVo);
 
         }
 
-        lrbPoList = lrbPoList.stream().sorted(Comparator.comparing(LrbPo::getREPORTDATE).reversed()).collect(Collectors.toList());
-        gloableData.allStockList.get(code).setLrbPoList(lrbPoList);
+        lrbVoList = lrbVoList.stream().sorted(Comparator.comparing(LrbVo::getREPORTDATE).reversed()).collect(Collectors.toList());
+        gloableData.allStockList.get(code).setLrbVoList(lrbVoList);
     }
 }

@@ -1,7 +1,7 @@
 package com.xq.fin.analyser.pojo;
 
 //营业各项统计
-public class BfbPo {
+public class BfbVo {
     String date;        //时间
     private double yysr;            //营业收入(元)
     private double yycb;            //营业成本(元)

@@ -2,8 +2,7 @@ package com.xq.fin.analyser.data;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.xq.fin.analyser.pojo.XjllPo;
-import com.xq.fin.analyser.pojo.ZcfzPo;
+import com.xq.fin.analyser.pojo.XjllVo;
 import com.xq.fin.analyser.util.StringUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
@@ -28,7 +27,7 @@ public class XjllUtil {
     private RestTemplate restTemplate;
 
     public void getData(String code) {
-        List<XjllPo> xjllPoList = new ArrayList<>(10);
+        List<XjllVo> xjllVoList = new ArrayList<>(10);
         String url = "http://f10.eastmoney.com/NewFinanceAnalysis/xjllbAjax?companyType=4&reportDateType=0&reportType=1&endDate=&code=" + StringUtil.getSCByCode(code);
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         String data = responseEntity.getBody();
@@ -42,128 +41,128 @@ public class XjllUtil {
         JSONArray jsonArray = JSONObject.parseArray(data);
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            XjllPo xjllPo = new XjllPo();
+            XjllVo xjllVo = new XjllVo();
 
             {
                 String pStr = jsonObject.getString("SECURITYCODE");
                 pStr = StringUtil.getString("([0-9]{6})", pStr);
-                xjllPo.setSECURITYCODE(pStr);
+                xjllVo.setSECURITYCODE(pStr);
             }
             {
                 String pStr = jsonObject.getString("REPORTDATE");
                 List<String> date = StringUtil.getmutiString("([0-9]{4})/([0-9]{1,2})", pStr);
-                xjllPo.setREPORTDATE(String.format("%s%02d", date.get(0), Long.valueOf(date.get(1))));
+                xjllVo.setREPORTDATE(String.format("%s%02d", date.get(0), Long.valueOf(date.get(1))));
             }
             {
                 String pStr = jsonObject.getString("SALEGOODSSERVICEREC");
-                xjllPo.setSALEGOODSSERVICEREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setSALEGOODSSERVICEREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("OTHEROPERATEREC");
-                xjllPo.setOTHEROPERATEREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setOTHEROPERATEREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMOPERATEFLOWIN");
-                xjllPo.setSUMOPERATEFLOWIN(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setSUMOPERATEFLOWIN(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("BUYGOODSSERVICEPAY");
-                xjllPo.setBUYGOODSSERVICEPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setBUYGOODSSERVICEPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("EMPLOYEEPAY");
-                xjllPo.setEMPLOYEEPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setEMPLOYEEPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("TAXPAY");
-                xjllPo.setTAXPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setTAXPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("OTHEROPERATEPAY");
-                xjllPo.setOTHEROPERATEPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setOTHEROPERATEPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMOPERATEFLOWOUT");
-                xjllPo.setSUMOPERATEFLOWOUT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setSUMOPERATEFLOWOUT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("NETOPERATECASHFLOW");
-                xjllPo.setNETOPERATECASHFLOW(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setNETOPERATECASHFLOW(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("DISPFILASSETREC");
-                xjllPo.setDISPFILASSETREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setDISPFILASSETREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMINVFLOWIN");
-                xjllPo.setSUMINVFLOWIN(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setSUMINVFLOWIN(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("BUYFILASSETPAY");
-                xjllPo.setBUYFILASSETPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setBUYFILASSETPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("INVPAY");
-                xjllPo.setINVPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setINVPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMINVFLOWOUT");
-                xjllPo.setSUMINVFLOWOUT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setSUMINVFLOWOUT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("NETINVCASHFLOW");
-                xjllPo.setNETINVCASHFLOW(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setNETINVCASHFLOW(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("ACCEPTINVREC");
-                xjllPo.setACCEPTINVREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setACCEPTINVREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("LOANREC");
-                xjllPo.setLOANREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setLOANREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMFINAFLOWIN");
-                xjllPo.setSUMFINAFLOWIN(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setSUMFINAFLOWIN(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("REPAYDEBTPAY");
-                xjllPo.setREPAYDEBTPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setREPAYDEBTPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("DIVIPROFITORINTPAY");
-                xjllPo.setDIVIPROFITORINTPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setDIVIPROFITORINTPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("OTHERFINAPAY");
-                xjllPo.setOTHERFINAPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setOTHERFINAPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMFINAFLOWOUT");
-                xjllPo.setSUMFINAFLOWOUT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setSUMFINAFLOWOUT(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("NETFINACASHFLOW");
-                xjllPo.setNETFINACASHFLOW(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setNETFINACASHFLOW(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("NICASHEQUI");
-                xjllPo.setNICASHEQUI(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setNICASHEQUI(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("CASHEQUIBEGINNING");
-                xjllPo.setCASHEQUIBEGINNING(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setCASHEQUIBEGINNING(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("CASHEQUIENDING");
-                xjllPo.setCASHEQUIENDING(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                xjllVo.setCASHEQUIENDING(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
 
-            xjllPoList.add(xjllPo);
+            xjllVoList.add(xjllVo);
 
         }
 
-        xjllPoList = xjllPoList.stream().sorted(Comparator.comparing(XjllPo::getREPORTDATE).reversed()).collect(Collectors.toList());
-        gloableData.allStockList.get(code).setXjllPoList(xjllPoList);
+        xjllVoList = xjllVoList.stream().sorted(Comparator.comparing(XjllVo::getREPORTDATE).reversed()).collect(Collectors.toList());
+        gloableData.allStockList.get(code).setXjllVoList(xjllVoList);
     }
 }

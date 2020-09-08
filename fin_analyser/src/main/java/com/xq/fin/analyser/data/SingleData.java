@@ -2,53 +2,52 @@ package com.xq.fin.analyser.data;
 
 import com.xq.fin.analyser.pojo.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SingleData {
-    private List<ZcfzPo> zcfzPoList;
-    private List<XjllPo> xjllPoList;
-    private List<LrbPo> lrbPoList;
-    private List<ZyzbPo> zyzbPoList;
-    private List<BfbPo> bfbPoList;
+    private List<ZcfzVo> zcfzVoList;
+    private List<XjllVo> xjllVoList;
+    private List<LrbVo> lrbVoList;
+    private List<ZyzbVo> zyzbVoList;
+    private List<BfbVo> bfbVoList;
 
-    public List<ZcfzPo> getZcfzPoList() {
-        return zcfzPoList;
+    public List<ZcfzVo> getZcfzVoList() {
+        return zcfzVoList;
     }
 
-    public void setZcfzPoList(List<ZcfzPo> zcfzPoList) {
-        this.zcfzPoList = zcfzPoList;
+    public void setZcfzVoList(List<ZcfzVo> zcfzVoList) {
+        this.zcfzVoList = zcfzVoList;
     }
 
-    public List<XjllPo> getXjllPoList() {
-        return xjllPoList;
+    public List<XjllVo> getXjllVoList() {
+        return xjllVoList;
     }
 
-    public void setXjllPoList(List<XjllPo> xjllPoList) {
-        this.xjllPoList = xjllPoList;
+    public void setXjllVoList(List<XjllVo> xjllVoList) {
+        this.xjllVoList = xjllVoList;
     }
 
-    public List<LrbPo> getLrbPoList() {
-        return lrbPoList;
+    public List<LrbVo> getLrbVoList() {
+        return lrbVoList;
     }
 
-    public void setLrbPoList(List<LrbPo> lrbPoList) {
-        this.lrbPoList = lrbPoList;
+    public void setLrbVoList(List<LrbVo> lrbVoList) {
+        this.lrbVoList = lrbVoList;
     }
 
-    public List<ZyzbPo> getZyzbPoList() {
-        return zyzbPoList;
+    public List<ZyzbVo> getZyzbVoList() {
+        return zyzbVoList;
     }
 
-    public void setZyzbPoList(List<ZyzbPo> zyzbPoList) {
-        this.zyzbPoList = zyzbPoList;
+    public void setZyzbVoList(List<ZyzbVo> zyzbVoList) {
+        this.zyzbVoList = zyzbVoList;
     }
 
-    public List<BfbPo> getBfbPoList() {
-        return bfbPoList;
+    public List<BfbVo> getBfbVoList() {
+        return bfbVoList;
     }
 
-    public void setBfbPoList(List<BfbPo> bfbPoList) {
-        this.bfbPoList = bfbPoList;
+    public void setBfbVoList(List<BfbVo> bfbVoList) {
+        this.bfbVoList = bfbVoList;
     }
 }

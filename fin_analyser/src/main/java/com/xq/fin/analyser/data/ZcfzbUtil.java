@@ -2,7 +2,7 @@ package com.xq.fin.analyser.data;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.xq.fin.analyser.pojo.ZcfzPo;
+import com.xq.fin.analyser.pojo.ZcfzVo;
 import com.xq.fin.analyser.util.StringUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class ZcfzbUtil {
 
     public void getData(String code) {
         logger.info("code=[{}]", code);
-        List<ZcfzPo> zcfzPoList = new ArrayList<>(10);
+        List<ZcfzVo> zcfzVoList = new ArrayList<>(10);
         String url = "http://f10.eastmoney.com/NewFinanceAnalysis/zcfzbAjax?companyType=4&reportDateType=0&reportType=1&endDate=&code=" + StringUtil.getSCByCode(code);
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         String data = responseEntity.getBody();
@@ -46,185 +46,185 @@ public class ZcfzbUtil {
         JSONArray jsonArray = JSONObject.parseArray(data);
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            ZcfzPo zcfzPo = new ZcfzPo();
+            ZcfzVo zcfzVo = new ZcfzVo();
 
             {
                 String pStr = jsonObject.getString("SECURITYCODE");
                 pStr = StringUtil.getString("([0-9]{6})", pStr);
-                zcfzPo.setSECURITYCODE(pStr);
+                zcfzVo.setSECURITYCODE(pStr);
             }
             {
                 String pStr = jsonObject.getString("REPORTDATE");
                 List<String> date = StringUtil.getmutiString("([0-9]{4})/([0-9]{1,2})", pStr);
-                zcfzPo.setREPORTDATE(String.format("%s%02d", date.get(0), Long.valueOf(date.get(1))));
+                zcfzVo.setREPORTDATE(String.format("%s%02d", date.get(0), Long.valueOf(date.get(1))));
             }
             {
                 String pStr = jsonObject.getString("SUMLASSET");
-                zcfzPo.setSUMLASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setSUMLASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("MONETARYFUND");
-                zcfzPo.setMONETARYFUND(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setMONETARYFUND(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("ACCOUNTBILLREC");
-                zcfzPo.setACCOUNTBILLREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setACCOUNTBILLREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("BILLREC");
-                zcfzPo.setBILLREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setBILLREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("ACCOUNTREC");
-                zcfzPo.setACCOUNTREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setACCOUNTREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("ADVANCEPAY");
-                zcfzPo.setADVANCEPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setADVANCEPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("TOTAL_OTHER_RECE");
-                zcfzPo.setTOTAL_OTHER_RECE(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setTOTAL_OTHER_RECE(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("DIVIDENDREC");
-                zcfzPo.setDIVIDENDREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setDIVIDENDREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("OTHERREC");
-                zcfzPo.setOTHERREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setOTHERREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("INVENTORY");
-                zcfzPo.setINVENTORY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setINVENTORY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("OTHERLASSET");
-                zcfzPo.setOTHERLASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setOTHERLASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMNONLASSET");
-                zcfzPo.setSUMNONLASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setSUMNONLASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("LTREC");
-                zcfzPo.setLTREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setLTREC(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("FIXEDASSET");
-                zcfzPo.setFIXEDASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setFIXEDASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("INTANGIBLEASSET");
-                zcfzPo.setINTANGIBLEASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setINTANGIBLEASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("LTDEFERASSET");
-                zcfzPo.setLTDEFERASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setLTDEFERASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("DEFERINCOMETAXASSET");
-                zcfzPo.setDEFERINCOMETAXASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setDEFERINCOMETAXASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("GOODWILL");
-                zcfzPo.setGOODWILL(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setGOODWILL(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMASSET");
-                zcfzPo.setSUMASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setSUMASSET(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMLLIAB");
-                zcfzPo.setSUMLLIAB(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setSUMLLIAB(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("STBORROW");
-                zcfzPo.setSTBORROW(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setSTBORROW(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("ACCOUNTPAY");
-                zcfzPo.setACCOUNTPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setACCOUNTPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("ACCOUNTBILLPAY");
-                zcfzPo.setACCOUNTBILLPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setACCOUNTBILLPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SALARYPAY");
-                zcfzPo.setSALARYPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setSALARYPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("TAXPAY");
-                zcfzPo.setTAXPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setTAXPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("TOTAL_OTHER_PAYABLE");
-                zcfzPo.setTOTAL_OTHER_PAYABLE(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setTOTAL_OTHER_PAYABLE(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("INTERESTPAY");
-                zcfzPo.setINTERESTPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setINTERESTPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("DIVIDENDPAY");
-                zcfzPo.setDIVIDENDPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setDIVIDENDPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("OTHERPAY");
-                zcfzPo.setOTHERPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setOTHERPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("NONLLIABONEYEAR");
-                zcfzPo.setNONLLIABONEYEAR(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setNONLLIABONEYEAR(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMNONLLIAB");
-                zcfzPo.setSUMNONLLIAB(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setSUMNONLLIAB(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("LTACCOUNTPAY");
-                zcfzPo.setLTACCOUNTPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
+                zcfzVo.setLTACCOUNTPAY(pStr.isEmpty() ? 0 : Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMLIAB");
-                zcfzPo.setSUMLIAB(Double.valueOf(pStr));
+                zcfzVo.setSUMLIAB(Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMSHEQUITY");
-                zcfzPo.setSUMSHEQUITY(Double.valueOf(pStr));
+                zcfzVo.setSUMSHEQUITY(Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SHARECAPITAL");
-                zcfzPo.setSHARECAPITAL(Double.valueOf(pStr));
+                zcfzVo.setSHARECAPITAL(Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("CAPITALRESERVE");
-                zcfzPo.setCAPITALRESERVE(Double.valueOf(pStr));
+                zcfzVo.setCAPITALRESERVE(Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SURPLUSRESERVE");
-                zcfzPo.setSURPLUSRESERVE(Double.valueOf(pStr));
+                zcfzVo.setSURPLUSRESERVE(Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("RETAINEDEARNING");
-                zcfzPo.setRETAINEDEARNING(Double.valueOf(pStr));
+                zcfzVo.setRETAINEDEARNING(Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMPARENTEQUITY");
-                zcfzPo.setSUMPARENTEQUITY(Double.valueOf(pStr));
+                zcfzVo.setSUMPARENTEQUITY(Double.valueOf(pStr));
             }
             {
                 String pStr = jsonObject.getString("SUMLIABSHEQUITY");
-                zcfzPo.setSUMLIABSHEQUITY(Double.valueOf(pStr));
+                zcfzVo.setSUMLIABSHEQUITY(Double.valueOf(pStr));
             }
 
 
-            zcfzPoList.add(zcfzPo);
+            zcfzVoList.add(zcfzVo);
 
         }
 
-        zcfzPoList = zcfzPoList.stream().sorted(Comparator.comparing(ZcfzPo::getREPORTDATE).reversed()).collect(Collectors.toList());
-        gloableData.allStockList.get(code).setZcfzPoList(zcfzPoList);
+        zcfzVoList = zcfzVoList.stream().sorted(Comparator.comparing(ZcfzVo::getREPORTDATE).reversed()).collect(Collectors.toList());
+        gloableData.allStockList.get(code).setZcfzVoList(zcfzVoList);
     }
 }

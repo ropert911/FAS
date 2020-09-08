@@ -1,7 +1,7 @@
 package com.xq.fin.analyser.pojo;
 
 //主要指标
-public class ZyzbPo {
+public class ZyzbVo {
     private String code;    //code
     private String date;    //时间
                                     //每股指标

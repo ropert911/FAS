@@ -1,6 +1,6 @@
 package com.xq.fin.analyser.pojo;
 
-public class LrbPo {
+public class LrbVo {
     private String SECURITYCODE;    //代码
     private String SECURITYSHORTNAME; //名称
     private String REPORTDATE;      //时间
