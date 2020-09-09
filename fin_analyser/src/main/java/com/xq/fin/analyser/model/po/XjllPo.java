@@ -6,12 +6,14 @@ import lombok.ToString;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @ToString
 @Data
 @Table(name = "gp_xjll")
-public class XjllPo {
+public class XjllPo implements Serializable {
+    private static final long serialVersionUID = 2L;
     @Id
     private String code;    //代码
     @Id

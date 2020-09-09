@@ -6,6 +6,7 @@ import lombok.ToString;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * 利润表
@@ -14,7 +15,8 @@ import javax.persistence.Table;
 @ToString
 @Data
 @Table(name = "gp_lrb")
-public class LrbPo {
+public class LrbPo implements Serializable {
+    private static final long serialVersionUID = 3L;
     @Id
     private String code;    //代码
     @Id
@@ -29,7 +31,7 @@ public class LrbPo {
     private double SALEEXP;                 //销售费用
     private double MANAGEEXP;               //管理费用
     private double FINANCEEXP;              //财务费用
-                                        //其它营业收益
+    //其它营业收益
     private double OPERATEPROFIT;       //营业利润
     private double NONOPERATEREVE;          //加:营业外收入
     private double NONOPERATEEXP;           //减:营业外支出

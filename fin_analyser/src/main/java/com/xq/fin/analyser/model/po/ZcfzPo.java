@@ -6,6 +6,7 @@ import lombok.ToString;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * 资产负债表
@@ -14,7 +15,8 @@ import javax.persistence.Table;
 @ToString
 @Data
 @Table(name = "gp_zcvz")
-public class ZcfzPo {
+public class ZcfzPo implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     private String code;    //代码
     @Id

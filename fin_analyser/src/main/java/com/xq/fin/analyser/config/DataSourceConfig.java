@@ -54,7 +54,7 @@ public class DataSourceConfig {
 
             //判断数据库是否存在
             boolean databaseExist = false;
-            ResultSet rs = statement.executeQuery("SELECT u.datname  FROM pg_catalog.pg_database u where u.datname='" + datasourceName + "'");
+            ResultSet rs = statement.executeQuery("show databases");
             while (rs.next()) {
                 String name = rs.getString(1);
                 if (datasourceName.equals(name)) {
@@ -65,7 +65,7 @@ public class DataSourceConfig {
 
             /** 如果数据库不存在就创建数据库*/
             if (!databaseExist) {
-                statement.executeUpdate("CREATE DATABASE " + datasourceName + " ENCODING = 'UTF8' ");
+                statement.executeUpdate("CREATE DATABASE " + datasourceName+" default CHARACTER SET utf8 collate utf8_general_ci");
             }
 
             statement.close();
