@@ -1,53 +1,26 @@
 package com.xq.fin.analyser.data;
 
-import com.xq.fin.analyser.pojo.*;
+import com.xq.fin.analyser.model.po.*;
+import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class SingleData {
-    private List<ZcfzVo> zcfzVoList;
-    private List<XjllVo> xjllVoList;
-    private List<LrbVo> lrbVoList;
-    private List<ZyzbVo> zyzbVoList;
-    private List<BfbVo> bfbVoList;
+    private GpBaseInfoPo gpBaseInfoPo;
+    private List<ZcfzPo> zcfzPoList;
+    private List<XjllPo> xjllPoList;
+    private List<LrbPo> lrbPoList;
+    private List<ZyzbPo> zyzbPoList;
+    private List<BfbPo> bfbPoList;
 
-    public List<ZcfzVo> getZcfzVoList() {
-        return zcfzVoList;
-    }
-
-    public void setZcfzVoList(List<ZcfzVo> zcfzVoList) {
-        this.zcfzVoList = zcfzVoList;
-    }
-
-    public List<XjllVo> getXjllVoList() {
-        return xjllVoList;
-    }
-
-    public void setXjllVoList(List<XjllVo> xjllVoList) {
-        this.xjllVoList = xjllVoList;
-    }
-
-    public List<LrbVo> getLrbVoList() {
-        return lrbVoList;
-    }
-
-    public void setLrbVoList(List<LrbVo> lrbVoList) {
-        this.lrbVoList = lrbVoList;
-    }
-
-    public List<ZyzbVo> getZyzbVoList() {
-        return zyzbVoList;
-    }
-
-    public void setZyzbVoList(List<ZyzbVo> zyzbVoList) {
-        this.zyzbVoList = zyzbVoList;
-    }
-
-    public List<BfbVo> getBfbVoList() {
-        return bfbVoList;
-    }
-
-    public void setBfbVoList(List<BfbVo> bfbVoList) {
-        this.bfbVoList = bfbVoList;
+    public SingleData() {
+        gpBaseInfoPo = new GpBaseInfoPo();
+        zcfzPoList = new ArrayList<>();
+        xjllPoList = new ArrayList<>();
+        lrbPoList = new ArrayList<>();
+        zyzbPoList = new ArrayList<>();
+        bfbPoList = new ArrayList<>();
     }
 }

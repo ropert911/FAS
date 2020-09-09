@@ -18,8 +18,8 @@ Date: 2020-06-05 14:54:23
 -- ----------------------------
 -- Table structure for device_model
 -- ----------------------------
-DROP TABLE IF EXISTS `gp_zcvz`;
-CREATE TABLE  IF NOT EXISTS `gp_zcvz` (
+DROP TABLE IF EXISTS `gp_zcfz`;
+CREATE TABLE  IF NOT EXISTS `gp_zcfz` (
     `code` char(64) NOT NULL,
     `time` char(64) NOT NULL,
     `SUMLASSET`  double,
@@ -123,5 +123,72 @@ CREATE TABLE  IF NOT EXISTS `gp_xjll` (
     `NICASHEQUI`  double,
     `CASHEQUIBEGINNING`  double,
     `CASHEQUIENDING`  double,
+    PRIMARY KEY (`code`,`time`)
+) ENGINE=InnoDB DEFAULT CHARSET=gbk;
+
+
+DROP TABLE IF EXISTS `gp_zyzb`;
+CREATE TABLE  IF NOT EXISTS `gp_zyzb` (
+    `code` char(64) NOT NULL,
+    `time` char(64) NOT NULL,
+    `jbmgsy`  double,
+    `kfmgsy`  double,
+    `xsmgsy`  double,
+    `mgjzc`  double,
+    `mggjj`  double,
+    `mgwfply`  double,
+    `mgjyxjl`  double,
+    `yyzsr`  double,
+    `mlr`  double,
+    `gsjlr`  double,
+    `kfjlr`  double,
+    `yyzsrtbzz`  double,
+    `gsjlrtbzz`  double,
+    `kfjlrtbzz`  double,
+    `yyzsrgdhbzz`  double,
+    `gsjlrgdhbzz`  double,
+    `kfjlrgdhbzz`  double,
+    `jqjzcsyl`  double,
+    `tbjzcsyl`  double,
+    `tbzzcsyl`  double,
+    `mll`  double,
+    `jll`  double,
+    `sjsl`  double,
+    `yskyysr`  double,
+    `xsxjlyysr`  double,
+    `jyxjlyysr`  double,
+    `zzczzy`  double,
+    `yszkzzts`  double,
+    `chzzts`  double,
+    `zcfzl`  double,
+    `ldzczfz`  double,
+    `ldbl`  double,
+    `sdbl`  double,
+    PRIMARY KEY (`code`,`time`)
+) ENGINE=InnoDB DEFAULT CHARSET=gbk;
+
+
+DROP TABLE IF EXISTS `gp_bfb`;
+CREATE TABLE  IF NOT EXISTS `gp_bfb` (
+    `code` char(64) NOT NULL,
+    `time` char(64) NOT NULL,
+    `yysr`  double,
+    `yycb`  double,
+    `yysjjfj`  double,
+    `qjfy`  double,
+    `xsfy`  double,
+    `glfy`  double,
+    `cwfy`  double,
+    `zcjzss`  double,
+    `qtjysy`  double,
+    `gyjzbdsy`  double,
+    `tzsy`  double,
+    `yylr`  double,
+    `yywsr`  double,
+    `btsr`  double,
+    `yywzc`  double,
+    `lrze`  double,
+    `sds`  double,
+    `jlr`  double,
     PRIMARY KEY (`code`,`time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=gbk;

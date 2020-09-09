@@ -1,26 +1,11 @@
-package com.xq.fin.analyser.model.po;
+package com.xq.fin.analyser.tt.vo;
 
 import lombok.Data;
-import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
-import java.io.Serializable;
-
-@Entity
-@ToString
 @Data
-@Table(name = "gp_xjll")
-@IdClass(CodeTimeKey.class)
-public class XjllPo implements Serializable {
-    private static final long serialVersionUID = 2L;
-    @Id
-    private String code;    //代码
-    @Id
-    private String time;    //时间：202003，202006
-
+public class XjllVo {
+    String code;        //代码
+    String time;          //时间：202003，202006
     double SALEGOODSSERVICEREC;         //销售商品、提供劳务收到的现金
     double OTHEROPERATEREC;             //收到其他与经营活动有关的现金
     double SUMOPERATEFLOWIN;        //经营活动现金流入小计

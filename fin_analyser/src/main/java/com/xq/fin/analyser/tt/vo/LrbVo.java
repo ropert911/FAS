@@ -1,29 +1,12 @@
-package com.xq.fin.analyser.model.po;
+package com.xq.fin.analyser.tt.vo;
 
 import lombok.Data;
-import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
-import java.io.Serializable;
-
-/**
- * 利润表
- */
-@Entity
-@ToString
 @Data
-@Table(name = "gp_lrb")
-@IdClass(CodeTimeKey.class)
-public class LrbPo implements Serializable {
-    private static final long serialVersionUID = 3L;
-    @Id
-    private String code;    //代码
-    @Id
-    private String time;    //时间：202003，202006
-
+public class LrbVo {
+    private String code;        //代码
+    private String time;          //时间：202003，202006
+    private String SECURITYSHORTNAME; //名称
     double TOTALOPERATEREVE;            //营业总收入
     private double OPERATEREVE;             //营业收入
     private double TOTALOPERATEEXP;     //营业总成本
@@ -33,7 +16,6 @@ public class LrbPo implements Serializable {
     private double SALEEXP;                 //销售费用
     private double MANAGEEXP;               //管理费用
     private double FINANCEEXP;              //财务费用
-    //其它营业收益
     private double OPERATEPROFIT;       //营业利润
     private double NONOPERATEREVE;          //加:营业外收入
     private double NONOPERATEEXP;           //减:营业外支出

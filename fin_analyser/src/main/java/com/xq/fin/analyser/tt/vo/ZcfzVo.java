@@ -1,23 +1,11 @@
-package com.xq.fin.analyser.model.po;
+package com.xq.fin.analyser.tt.vo;
 
 import lombok.Data;
-import lombok.ToString;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
 
 //资产负债
-@Entity
-@ToString
 @Data
-@Table(name = "gp_zcfz")
-@IdClass(CodeTimeKey.class)
-public class ZcfzPo {
-    @Id
+public class ZcfzVo {
     String code;        //代码
-    @Id
     String time;          //时间：202003，202006
     double SUMLASSET;           //流动资产
     double MONETARYFUND;            //货币资金
