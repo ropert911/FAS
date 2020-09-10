@@ -1,5 +1,6 @@
 package com.xq.fin.analyser.util;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -69,5 +70,32 @@ public class StringUtil {
         String year = yearMonth.substring(0, 4);
         String month = yearMonth.substring(4, 6);
         return String.format("%d%02d", Long.valueOf(year) - 1, Long.valueOf(month));
+    }
+
+    //    4月底前：一季报公布完毕。一季报基本奠定了一年的基本情况。
+//            5-7月是分红最密集的时间段，尤其是6月；可在4月中开始准备进入。
+//            7月1日-8月31日：中报披露时间是在半年度结束的两个月内完成。
+//            10月底：三季报公布完毕。
+//    年报：明年1月中旬起至4月底要公布完毕
+    public static String getLastReportTime() {
+        LocalDate localDate = LocalDate.now();
+        long year = localDate.getYear();
+        long month = localDate.getMonthValue();
+
+        //去年报时间 : 明年1月中旬起至4月底要公布完毕
+        if (1 <= month && month <= 4) {
+            year -= 1;
+            month = 12;
+        } else if (5 <= month && month <= 6) {
+            //4月底前：一季报公布完毕
+            month = 3;
+        } else if (7 <= month && month <= 9) {
+            //7月1日-8月31日：中报披露时间是在半年度结束的两个月内完成
+            month = 6;
+        } else {
+            month = 9;
+        }
+
+        return String.format("%04d%02d", year, month);
     }
 }

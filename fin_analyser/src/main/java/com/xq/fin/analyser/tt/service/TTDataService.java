@@ -34,7 +34,8 @@ public class TTDataService {
     private BfbUtil bfbUtil;
 
 
-    public void getData(SingleData singleData, String code) {
+    public SingleData getData(String code) {
+        SingleData singleData = new SingleData();
         singleData.getBaseInfoPo().setCode(code);
 
         //资产负债
@@ -75,5 +76,7 @@ public class TTDataService {
             BeanUtils.copyProperties(bfbVo, bfbPo);
             singleData.getBfbPoList().add(bfbPo);
         }
+
+        return singleData;
     }
 }
