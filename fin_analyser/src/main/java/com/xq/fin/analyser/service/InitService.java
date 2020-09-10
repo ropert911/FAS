@@ -1,18 +1,21 @@
 package com.xq.fin.analyser.service;
 
-import com.xq.fin.analyser.data.GloableData;
 import com.xq.fin.analyser.data.SingleData;
 import com.xq.fin.analyser.model.po.*;
 import com.xq.fin.analyser.model.repository.*;
 import com.xq.fin.analyser.tt.service.TTDataService;
+import com.xq.fin.analyser.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,11 +24,10 @@ public class InitService implements ApplicationRunner {
     private static Logger logger = LoggerFactory.getLogger(InitService.class);
 
     @Autowired
-    private GloableData gloableData;
-
-    @Autowired
     private TTDataService ttDataService;
 
+    @Autowired
+    private BaseInfoRepository baseInfoRepository;
     @Autowired
     private ZcfzRepository zcfzRepository;
     @Autowired
@@ -37,6 +39,34 @@ public class InitService implements ApplicationRunner {
     @Autowired
     private BfbRepository bfbRepository;
 
+//    4月底前：一季报公布完毕。一季报基本奠定了一年的基本情况。
+//            5-7月是分红最密集的时间段，尤其是6月；可在4月中开始准备进入。
+//            7月1日-8月31日：中报披露时间是在半年度结束的两个月内完成。
+//            10月底：三季报公布完毕。
+//    年报：。
+
+    private String getLastReportTime() {
+        LocalDate localDate = LocalDate.now();
+        long year = localDate.getYear();
+        long month = localDate.getMonthValue();
+
+        //去年报时间 : 明年1月中旬起至4月底要公布完毕
+        if (1 <= month && month < 4) {
+            year -= 1;
+            month = 12;
+        } else if (4 <= month && month <= 6) {
+            //4月底前：一季报公布完毕
+            month = 3;
+        } else if (7 <= month && month <= 9) {
+            //7月1日-8月31日：中报披露时间是在半年度结束的两个月内完成
+            month = 6;
+        } else {
+            month = 9;
+        }
+
+        return String.format("%04d%02d", year, month);
+    }
+
     @Override
     public void run(ApplicationArguments args) {
         String codes = "300815";
@@ -44,54 +74,50 @@ public class InitService implements ApplicationRunner {
         //获取数据
         String[] codsArray = codes.split(" ");
         for (String code : codsArray) {
-            SingleData singleData = new SingleData();
-            ttDataService.getData(singleData, code);
-            gloableData.allStockList.put(code, singleData);
-        }
+            String lastReportTime = getLastReportTime();
+            List<ZcfzPo> zcfzPoList = zcfzRepository.findByCodeAndTime(code, lastReportTime);
+            if (CollectionUtils.isEmpty(zcfzPoList)) {
+                SingleData singleData = new SingleData();
+                ttDataService.getData(singleData, code);
 
-        //保存
-        for (SingleData singleData : gloableData.allStockList.values()) {
-            zcfzRepository.saveAll(singleData.getZcfzPoList());
-            lrbRepository.saveAll(singleData.getLrbPoList());
-            xjllRepository.saveAll(singleData.getXjllPoList());
-            zyzbRepository.saveAll(singleData.getZyzbPoList());
-            bfbRepository.saveAll(singleData.getBfbPoList());
+                baseInfoRepository.save(singleData.getBaseInfoPo());
+                zcfzRepository.saveAll(singleData.getZcfzPoList());
+                lrbRepository.saveAll(singleData.getLrbPoList());
+                xjllRepository.saveAll(singleData.getXjllPoList());
+                zyzbRepository.saveAll(singleData.getZyzbPoList());
+                bfbRepository.saveAll(singleData.getBfbPoList());
+            } else {
+                logger.info("no need dowload {} {}", code, lastReportTime);
+            }
         }
 
 
         //加载数据，进行单个指标的分析
         for (String code : codsArray) {
-            loadData(code);
-            analyse(code);
+            SingleData singleData = loadData(code);
+            analyse(singleData);
         }
 
         System.exit(0);
     }
 
-    void loadData(String code) {
-        gloableData.clean();
-
+    public SingleData loadData(String code) {
         SingleData singleData = new SingleData();
+        singleData.setBaseInfoPo(baseInfoRepository.findByCode(code).get(0));
         singleData.getZcfzPoList().addAll(zcfzRepository.findByCode(code).stream().sorted(Comparator.comparing(com.xq.fin.analyser.model.po.ZcfzPo::getTime).reversed()).collect(Collectors.toList()));
         singleData.getLrbPoList().addAll(lrbRepository.findByCode(code).stream().sorted(Comparator.comparing(LrbPo::getTime).reversed()).collect(Collectors.toList()));
         singleData.getXjllPoList().addAll(xjllRepository.findByCode(code).stream().sorted(Comparator.comparing(XjllPo::getTime).reversed()).collect(Collectors.toList()));
         singleData.getZyzbPoList().addAll(zyzbRepository.findByCode(code).stream().sorted(Comparator.comparing(ZyzbPo::getTime).reversed()).collect(Collectors.toList()));
         singleData.getBfbPoList().addAll(bfbRepository.findByCode(code).stream().sorted(Comparator.comparing(BfbPo::getTime).reversed()).collect(Collectors.toList()));
-        gloableData.allStockList.put(code, singleData);
+        return singleData;
     }
 
-    void analyse(String code) {
-        logger.info("股票代码={} 名称={}  ==============", code, gloableData.allStockList.get(code).getGpBaseInfoPo().getName());
-        debtCapacityAnalyse(gloableData.allStockList.get(code).getZcfzPoList());
-        zczbfxAnayAnalyse(gloableData.allStockList.get(code).getZcfzPoList());
-        xjllAnalyse(gloableData.allStockList.get(code).getZcfzPoList(), gloableData.allStockList.get(code).getLrbPoList(), gloableData.allStockList.get(code).getXjllPoList());
-        ylllAnalyse(gloableData.allStockList.get(code).getZcfzPoList(), gloableData.allStockList.get(code).getLrbPoList(),
-                gloableData.allStockList.get(code).getZyzbPoList(), gloableData.allStockList.get(code).getBfbPoList());
-        for (ZcfzPo zcfzPo : gloableData.allStockList.get(code).getZcfzPoList()) {
-            logger.info("代码={} 时间={} 流动资产={} 货币资金={} 流动负债={} 应付票据及应付账款={} 其他应付款合计={}", zcfzPo.getCode(), zcfzPo.getTime(),
-                    zcfzPo.getSUMLASSET(), zcfzPo.getMONETARYFUND(),
-                    zcfzPo.getSUMLLIAB(), zcfzPo.getACCOUNTPAY(), zcfzPo.getTOTAL_OTHER_PAYABLE());
-        }
+    void analyse(SingleData singleData) {
+        logger.info("============== 股票代码={} 名称={}", singleData.getBaseInfoPo().getCode(), singleData.getBaseInfoPo().getName());
+        debtCapacityAnalyse(singleData.getZcfzPoList());
+        zczbfxAnayAnalyse(singleData.getZcfzPoList());
+        xjllAnalyse(singleData.getZcfzPoList(), singleData.getLrbPoList(), singleData.getXjllPoList());
+        ylllAnalyse(singleData.getZcfzPoList(), singleData.getLrbPoList(), singleData.getZyzbPoList(), singleData.getBfbPoList());
     }
 
     //短期偿债能力分析
@@ -129,8 +155,8 @@ public class InitService implements ApplicationRunner {
     }
 
     //资产占比分析
-    void zczbfxAnayAnalyse(List<com.xq.fin.analyser.model.po.ZcfzPo> zcfzPoList) {
-        com.xq.fin.analyser.model.po.ZcfzPo zcfzPo = zcfzPoList.get(0);
+    void zczbfxAnayAnalyse(List<ZcfzPo> zcfzPoList) {
+        ZcfzPo zcfzPo = zcfzPoList.get(0);
         logger.info("---资产-负债占比分析 时间={}", zcfzPo.getTime());
 
         logger.info("---- 货币资金/总资产>10%: {} 值={}% (货币资金={}亿 总资产={}亿)",
@@ -211,31 +237,28 @@ public class InitService implements ApplicationRunner {
         BfbPo bfbPoThis = bfbPoList.get(0);
         BfbPo bfbPoLast = null;
 
-        String thisYear = zyzbPoThis.getTime().substring(0, 4);
+
+        String qntq = StringUtil.getLastYearTime(zyzbPoThis.getTime());
         for (ZcfzPo tmp : zcfzPoList) {
-            String lastYear = tmp.getTime().substring(0, 4);
-            if (!thisYear.equals(lastYear)) {
+            if (qntq.equals(tmp.getTime())) {
                 zcfzPoLast = tmp;
                 break;
             }
         }
         for (LrbPo tmp : lrbPoList) {
-            String lastYear = tmp.getTime().substring(0, 4);
-            if (!thisYear.equals(lastYear)) {
+            if (qntq.equals(tmp.getTime())) {
                 lrbPoLast = tmp;
                 break;
             }
         }
         for (ZyzbPo tmp : zyzbPoList) {
-            String lastYear = tmp.getTime().substring(0, 4);
-            if (!thisYear.equals(lastYear)) {
+            if (qntq.equals(tmp.getTime())) {
                 zyzbPoLast = tmp;
                 break;
             }
         }
         for (BfbPo tmp : bfbPoList) {
-            String lastYear = tmp.getTime().substring(0, 4);
-            if (!thisYear.equals(lastYear)) {
+            if (qntq.equals(tmp.getTime())) {
                 bfbPoLast = tmp;
                 break;
             }

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 public class SingleData {
-    private GpBaseInfoPo gpBaseInfoPo;
+    private BaseInfoPo baseInfoPo;
     private List<ZcfzPo> zcfzPoList;
     private List<XjllPo> xjllPoList;
     private List<LrbPo> lrbPoList;
@@ -16,7 +16,7 @@ public class SingleData {
     private List<BfbPo> bfbPoList;
 
     public SingleData() {
-        gpBaseInfoPo = new GpBaseInfoPo();
+        baseInfoPo = new BaseInfoPo();
         zcfzPoList = new ArrayList<>();
         xjllPoList = new ArrayList<>();
         lrbPoList = new ArrayList<>();

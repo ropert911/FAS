@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @ToString
 @Data
 @Table(name = "gp_info")
-public class GpBaseInfoPo {
+public class BaseInfoPo {
     @Id
     private String code;
     private String name;

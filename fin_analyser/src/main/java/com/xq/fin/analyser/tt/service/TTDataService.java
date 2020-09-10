@@ -35,6 +35,8 @@ public class TTDataService {
 
 
     public void getData(SingleData singleData, String code) {
+        singleData.getBaseInfoPo().setCode(code);
+
         //资产负债
         List<ZcfzVo> zcfzVoList = zcfzbUtil.getData(code);
         for (ZcfzVo zcfzVo : zcfzVoList) {
@@ -49,6 +51,8 @@ public class TTDataService {
             LrbPo lrbPo = new LrbPo();
             BeanUtils.copyProperties(lrbVo, lrbPo);
             singleData.getLrbPoList().add(lrbPo);
+
+            singleData.getBaseInfoPo().setName(lrbVo.getSECURITYSHORTNAME());
         }
         //现金流量
         List<XjllVo> xjllVoList = xjllUtil.getData(code);

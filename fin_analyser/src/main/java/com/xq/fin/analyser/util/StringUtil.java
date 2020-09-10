@@ -45,14 +45,29 @@ public class StringUtil {
     }
 
     public static String getTime(String data) {
-        List<String> date = StringUtil.getmutiString("([0-9]{4})/([0-9]{1,2})", data);
+        List<String> date = StringUtil.getmutiString("([0-9]{4})[/-]([0-9]{1,2})", data);
         return String.format("%s%02d", date.get(0), Long.valueOf(date.get(1)));
     }
-    public static double getDouble(String data){
-        if(data.isEmpty()){
+
+    public static double getDouble(String data) {
+        if (data.isEmpty()) {
             return 0;
-        }else {
+        } else if ("--".equals(data)) {
+            return 0;
+        } else if (data.contains("亿")) {
+            data = data.replace("亿", "");
+            return Double.valueOf(data) * 100000000;
+        } else if (data.contains("万")) {
+            data = data.replace("万", "");
+            return Double.valueOf(data) * 10000;
+        } else {
             return Double.valueOf(data);
         }
+    }
+
+    public static String getLastYearTime(String yearMonth) {
+        String year = yearMonth.substring(0, 4);
+        String month = yearMonth.substring(4, 6);
+        return String.format("%d%02d", Long.valueOf(year) - 1, Long.valueOf(month));
     }
 }

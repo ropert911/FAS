@@ -36,178 +36,41 @@ public class ZyzbUtil {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             ZyzbVo zyzbVo = new ZyzbVo();
 
-            {
-                zyzbVo.setCode(code);
-            }
-            {
-                String pStr = jsonObject.getString("date");
-                List<String> date = StringUtil.getmutiString("([0-9]{4})-([0-9]{1,2})", pStr);
-                zyzbVo.setTime(String.format("%s%02d", date.get(0), Long.valueOf(date.get(1))));
-            }
-            {
-                String pStr = jsonObject.getString("jbmgsy");
-                zyzbVo.setJbmgsy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("kfmgsy");
-                zyzbVo.setKfmgsy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("xsmgsy");
-                zyzbVo.setXsmgsy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("mgjzc");
-                zyzbVo.setMgjzc(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("mggjj");
-                zyzbVo.setMggjj(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("mgwfply");
-                zyzbVo.setMgwfply(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("mgjyxjl");
-                zyzbVo.setMgjyxjl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("yyzsr");
-                if (pStr.contains("亿")) {
-                    pStr = pStr.replace("亿", "");
-                    zyzbVo.setYyzsr(pStr.equals("--") ? 0 : Double.valueOf(pStr) * 100000000);
-                } else if (pStr.contains("万")) {
-                    pStr = pStr.replace("万", "");
-                    zyzbVo.setYyzsr(pStr.equals("--") ? 0 : Double.valueOf(pStr) * 10000);
-                } else {
-                    zyzbVo.setYyzsr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-                }
-            }
-            {
-                String pStr = jsonObject.getString("mlr");
-                if (pStr.contains("亿")) {
-                    pStr = pStr.replace("亿", "");
-                    zyzbVo.setMlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 100000000);
-                } else if (pStr.contains("万")) {
-                    pStr = pStr.replace("万", "");
-                    zyzbVo.setMlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 10000);
-                } else {
-                    zyzbVo.setMlr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-                }
-            }
-            {
-                String pStr = jsonObject.getString("gsjlr");
-                if (pStr.contains("亿")) {
-                    pStr = pStr.replace("亿", "");
-                    zyzbVo.setGsjlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 100000000);
-                } else if (pStr.contains("万")) {
-                    pStr = pStr.replace("万", "");
-                    zyzbVo.setGsjlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 10000);
-                } else {
-                    zyzbVo.setGsjlr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-                }
-            }
-            {
-                String pStr = jsonObject.getString("kfjlr");
-                if (pStr.contains("亿")) {
-                    pStr = pStr.replace("亿", "");
-                    zyzbVo.setKfjlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 100000000);
-                } else if (pStr.contains("万")) {
-                    pStr = pStr.replace("万", "");
-                    zyzbVo.setKfjlr(pStr.isEmpty() ? 0 : Double.valueOf(pStr) * 100000000);
-                } else {
-                    zyzbVo.setKfjlr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-                }
-            }
-            {
-                String pStr = jsonObject.getString("yyzsrtbzz");
-                zyzbVo.setYyzsrtbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("gsjlrtbzz");
-                zyzbVo.setGsjlrtbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("kfjlrtbzz");
-                zyzbVo.setKfjlrtbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("yyzsrgdhbzz");
-                zyzbVo.setYyzsrgdhbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("gsjlrgdhbzz");
-                zyzbVo.setGsjlrgdhbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("kfjlrgdhbzz");
-                zyzbVo.setKfjlrgdhbzz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("jqjzcsyl");
-                zyzbVo.setJqjzcsyl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("tbjzcsyl");
-                zyzbVo.setTbjzcsyl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("tbzzcsyl");
-                zyzbVo.setTbzzcsyl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("mll");
-                zyzbVo.setMll(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("jll");
-                zyzbVo.setJll(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("sjsl");
-                zyzbVo.setSjsl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("yskyysr");
-                zyzbVo.setYskyysr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("xsxjlyysr");
-                zyzbVo.setXsxjlyysr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("jyxjlyysr");
-                zyzbVo.setJyxjlyysr(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("zzczzy");
-                zyzbVo.setZzczzy(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("yszkzzts");
-                zyzbVo.setYszkzzts(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("chzzts");
-                zyzbVo.setChzzts(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("zcfzl");
-                zyzbVo.setZcfzl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("ldzczfz");
-                zyzbVo.setLdzczfz(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("ldbl");
-                zyzbVo.setLdbl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
-            {
-                String pStr = jsonObject.getString("sdbl");
-                zyzbVo.setSdbl(pStr.equals("--") ? 0 : Double.valueOf(pStr));
-            }
+            zyzbVo.setCode(code);
+            zyzbVo.setTime(StringUtil.getTime(jsonObject.getString("date")));
+            zyzbVo.setJbmgsy(StringUtil.getDouble(jsonObject.getString("jbmgsy")));
+            zyzbVo.setKfmgsy(StringUtil.getDouble(jsonObject.getString("kfmgsy")));
+            zyzbVo.setXsmgsy(StringUtil.getDouble(jsonObject.getString("xsmgsy")));
+            zyzbVo.setMgjzc(StringUtil.getDouble(jsonObject.getString("mgjzc")));
+            zyzbVo.setMggjj(StringUtil.getDouble(jsonObject.getString("mggjj")));
+            zyzbVo.setMgwfply(StringUtil.getDouble(jsonObject.getString("mgwfply")));
+            zyzbVo.setMgjyxjl(StringUtil.getDouble(jsonObject.getString("mgjyxjl")));
+            zyzbVo.setYyzsr(StringUtil.getDouble(jsonObject.getString("yyzsr")));
+            zyzbVo.setMlr(StringUtil.getDouble(jsonObject.getString("mlr")));
+            zyzbVo.setGsjlr(StringUtil.getDouble(jsonObject.getString("gsjlr")));
+            zyzbVo.setKfjlr(StringUtil.getDouble(jsonObject.getString("kfjlr")));
+            zyzbVo.setYyzsrtbzz(StringUtil.getDouble(jsonObject.getString("yyzsrtbzz")));
+            zyzbVo.setGsjlrtbzz(StringUtil.getDouble(jsonObject.getString("gsjlrtbzz")));
+            zyzbVo.setKfjlrtbzz(StringUtil.getDouble(jsonObject.getString("kfjlrtbzz")));
+            zyzbVo.setYyzsrgdhbzz(StringUtil.getDouble(jsonObject.getString("yyzsrgdhbzz")));
+            zyzbVo.setGsjlrgdhbzz(StringUtil.getDouble(jsonObject.getString("gsjlrgdhbzz")));
+            zyzbVo.setKfjlrgdhbzz(StringUtil.getDouble(jsonObject.getString("kfjlrgdhbzz")));
+            zyzbVo.setJqjzcsyl(StringUtil.getDouble(jsonObject.getString("jqjzcsyl")));
+            zyzbVo.setTbjzcsyl(StringUtil.getDouble(jsonObject.getString("tbjzcsyl")));
+            zyzbVo.setTbzzcsyl(StringUtil.getDouble(jsonObject.getString("tbzzcsyl")));
+            zyzbVo.setMll(StringUtil.getDouble(jsonObject.getString("mll")));
+            zyzbVo.setJll(StringUtil.getDouble(jsonObject.getString("jll")));
+            zyzbVo.setSjsl(StringUtil.getDouble(jsonObject.getString("sjsl")));
+            zyzbVo.setYskyysr(StringUtil.getDouble(jsonObject.getString("yskyysr")));
+            zyzbVo.setXsxjlyysr(StringUtil.getDouble(jsonObject.getString("xsxjlyysr")));
+            zyzbVo.setJyxjlyysr(StringUtil.getDouble(jsonObject.getString("jyxjlyysr")));
+            zyzbVo.setZzczzy(StringUtil.getDouble(jsonObject.getString("zzczzy")));
+            zyzbVo.setYszkzzts(StringUtil.getDouble(jsonObject.getString("yszkzzts")));
+            zyzbVo.setChzzts(StringUtil.getDouble(jsonObject.getString("chzzts")));
+            zyzbVo.setZcfzl(StringUtil.getDouble(jsonObject.getString("zcfzl")));
+            zyzbVo.setLdzczfz(StringUtil.getDouble(jsonObject.getString("ldzczfz")));
+            zyzbVo.setLdbl(StringUtil.getDouble(jsonObject.getString("ldbl")));
+            zyzbVo.setSdbl(StringUtil.getDouble(jsonObject.getString("sdbl")));
 
             zyzbVoList.add(zyzbVo);
 

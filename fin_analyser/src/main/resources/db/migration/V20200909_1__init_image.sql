@@ -1,23 +1,10 @@
-/*
-Navicat PGSQL Data Transfer
+DROP TABLE IF EXISTS `gp_info`;
+CREATE TABLE  IF NOT EXISTS `gp_info` (
+    `code` char(64) NOT NULL,
+    `name` char(64) NOT NULL,
+    PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=gbk;
 
-Source Server         : 194
-Source Server Version : 101200
-Source Host           : 192.168.20.194:5432
-Source Database       : image
-Source Schema         : public
-
-Target Server Type    : PGSQL
-Target Server Version : 101200
-File Encoding         : 65001
-
-Date: 2020-06-05 14:54:23
-*/
-
-
--- ----------------------------
--- Table structure for device_model
--- ----------------------------
 DROP TABLE IF EXISTS `gp_zcfz`;
 CREATE TABLE  IF NOT EXISTS `gp_zcfz` (
     `code` char(64) NOT NULL,

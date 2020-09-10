@@ -2,7 +2,6 @@ package com.xq.fin.analyser.tt.vo;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.xq.fin.analyser.data.GloableData;
 import com.xq.fin.analyser.util.StringUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
@@ -13,16 +12,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class XjllUtil {
     private static Logger logger = LoggerFactory.getLogger(XjllUtil.class);
 
-    @Autowired
-    private GloableData gloableData;
     @Autowired
     private RestTemplate restTemplate;
 
