@@ -39,7 +39,7 @@ public class InitService implements ApplicationRunner {
     @Autowired
     private BfbRepository bfbRepository;
 
-//    4月底前：一季报公布完毕。一季报基本奠定了一年的基本情况。
+    //    4月底前：一季报公布完毕。一季报基本奠定了一年的基本情况。
 //            5-7月是分红最密集的时间段，尤其是6月；可在4月中开始准备进入。
 //            7月1日-8月31日：中报披露时间是在半年度结束的两个月内完成。
 //            10月底：三季报公布完毕。
@@ -53,7 +53,7 @@ public class InitService implements ApplicationRunner {
         if (1 <= month && month <= 4) {
             year -= 1;
             month = 12;
-        } else if (4 < month && month <= 6) {
+        } else if (5 <= month && month <= 6) {
             //4月底前：一季报公布完毕
             month = 3;
         } else if (7 <= month && month <= 9) {
@@ -71,9 +71,9 @@ public class InitService implements ApplicationRunner {
         String codes = "300815";
 
         //获取数据
+        String lastReportTime = getLastReportTime();
         String[] codsArray = codes.split(" ");
         for (String code : codsArray) {
-            String lastReportTime = getLastReportTime();
             List<ZcfzPo> zcfzPoList = zcfzRepository.findByCodeAndTime(code, lastReportTime);
             if (CollectionUtils.isEmpty(zcfzPoList)) {
                 SingleData singleData = new SingleData();
@@ -122,7 +122,7 @@ public class InitService implements ApplicationRunner {
     //短期偿债能力分析
     void debtCapacityAnalyse(List<com.xq.fin.analyser.model.po.ZcfzPo> zcfzPoList) {
         com.xq.fin.analyser.model.po.ZcfzPo zcfzPo = zcfzPoList.get(0);
-        logger.info("---短期偿债能力-现金流分析 时间={}", zcfzPo.getTime());
+        logger.info("**** 短期偿债能力-现金流分析 时间={}", zcfzPo.getTime());
         logger.info("---- 受限货币资金/货币资金<10%：{}", "\033[32;4m" + "请查看报表文件，搜索货币资金" + "\033[0m");
         logger.info("---- 其他货币资金/货币资金<10%：{}", "\033[32;4m" + "请查看报表文件，搜索货币资金" + "\033[0m");
         logger.info("---- 货币资金*3>=流动负债: {} (货币资金={}亿 流动负债={}亿)",
@@ -156,7 +156,7 @@ public class InitService implements ApplicationRunner {
     //资产占比分析
     void zczbfxAnayAnalyse(List<ZcfzPo> zcfzPoList) {
         ZcfzPo zcfzPo = zcfzPoList.get(0);
-        logger.info("---资产-负债占比分析 时间={}", zcfzPo.getTime());
+        logger.info("**** 资产-负债占比分析 时间={}", zcfzPo.getTime());
 
         logger.info("---- 货币资金/总资产>10%: {} 值={}% (货币资金={}亿 总资产={}亿)",
                 zcfzPo.getMONETARYFUND() / zcfzPo.getSUMASSET() > 0.1 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
@@ -194,7 +194,7 @@ public class InitService implements ApplicationRunner {
         ZcfzPo zcfzPo = zcfzPoList.get(0);  //资产负债
         LrbPo lrbPo = lrbPoList.get(0);     //利润表
         XjllPo xjllPo = xjllPoList.get(0);  //现金流量表
-        logger.info("---现金流分析 时间={}", xjllPo.getTime());
+        logger.info("**** 现金流分析 时间={}", xjllPo.getTime());
 
         logger.info("---- 经营活动产生的现金流量净额>0: {}  (经营活动产生的现金流量净额={}亿",
                 xjllPo.getNETOPERATECASHFLOW() > 0 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
@@ -232,9 +232,7 @@ public class InitService implements ApplicationRunner {
         LrbPo lrbPoThis = lrbPoList.get(0);
         LrbPo lrbPoLast = null;
         ZyzbPo zyzbPoThis = zyzbPoList.get(0);
-        ZyzbPo zyzbPoLast = null;
         BfbPo bfbPoThis = bfbPoList.get(0);
-        BfbPo bfbPoLast = null;
 
 
         String qntq = StringUtil.getLastYearTime(zyzbPoThis.getTime());
@@ -250,20 +248,8 @@ public class InitService implements ApplicationRunner {
                 break;
             }
         }
-        for (ZyzbPo tmp : zyzbPoList) {
-            if (qntq.equals(tmp.getTime())) {
-                zyzbPoLast = tmp;
-                break;
-            }
-        }
-        for (BfbPo tmp : bfbPoList) {
-            if (qntq.equals(tmp.getTime())) {
-                bfbPoLast = tmp;
-                break;
-            }
-        }
 
-        logger.info("---盈利经营分析 时间={}", zyzbPoThis.getTime());
+        logger.info("**** 盈利经营分析 时间={}", zyzbPoThis.getTime());
         double yysrzz = zyzbPoThis.getYyzsrtbzz() / 100;    //经营收入增长
 
 
