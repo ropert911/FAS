@@ -1,7 +1,7 @@
-package com.xq.fin.analyser.tt.service;
+package com.xq.fin.analyser.tt;
 
 import com.xq.fin.analyser.data.BfbUtil;
-import com.xq.fin.analyser.data.SingleData;
+import com.xq.fin.analyser.model.SingleData;
 import com.xq.fin.analyser.model.po.*;
 import com.xq.fin.analyser.tt.vo.*;
 import com.xq.fin.analyser.tt.vo.ZcfzVo;

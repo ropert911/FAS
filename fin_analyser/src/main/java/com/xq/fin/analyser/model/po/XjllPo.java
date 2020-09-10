@@ -1,5 +1,6 @@
 package com.xq.fin.analyser.model.po;
 
+import com.xq.fin.analyser.model.po.key.CodeTimeKey;
 import lombok.Data;
 import lombok.ToString;
 

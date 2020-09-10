@@ -1,6 +1,6 @@
 package com.xq.fin.analyser.model.repository;
 
-import com.xq.fin.analyser.model.po.CodeTimeKey;
+import com.xq.fin.analyser.model.po.key.CodeTimeKey;
 import com.xq.fin.analyser.model.po.LrbPo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

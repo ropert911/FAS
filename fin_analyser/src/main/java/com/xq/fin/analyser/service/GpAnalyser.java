@@ -1,6 +1,6 @@
 package com.xq.fin.analyser.service;
 
-import com.xq.fin.analyser.data.SingleData;
+import com.xq.fin.analyser.model.SingleData;
 import com.xq.fin.analyser.model.po.*;
 import com.xq.fin.analyser.util.StringUtil;
 import org.slf4j.Logger;

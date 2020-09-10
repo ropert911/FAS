@@ -1,6 +1,6 @@
 package com.xq.fin.analyser.service;
 
-import com.xq.fin.analyser.data.SingleData;
+import com.xq.fin.analyser.model.SingleData;
 import com.xq.fin.analyser.model.po.BfbPo;
 import com.xq.fin.analyser.model.po.LrbPo;
 import com.xq.fin.analyser.model.po.XjllPo;

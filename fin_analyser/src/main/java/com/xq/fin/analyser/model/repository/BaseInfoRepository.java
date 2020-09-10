@@ -1,8 +1,6 @@
 package com.xq.fin.analyser.model.repository;
 
 import com.xq.fin.analyser.model.po.BaseInfoPo;
-import com.xq.fin.analyser.model.po.BfbPo;
-import com.xq.fin.analyser.model.po.CodeTimeKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package com.xq.fin.analyser.data;
+package com.xq.fin.analyser.model;
 
 import com.xq.fin.analyser.model.po.*;
 import lombok.Data;

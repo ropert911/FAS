@@ -1,9 +1,9 @@
 package com.xq.fin.analyser.service;
 
-import com.xq.fin.analyser.data.SingleData;
+import com.xq.fin.analyser.model.SingleData;
 import com.xq.fin.analyser.model.po.*;
 import com.xq.fin.analyser.model.repository.*;
-import com.xq.fin.analyser.tt.service.TTDataService;
+import com.xq.fin.analyser.tt.TTDataService;
 import com.xq.fin.analyser.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +13,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class InitService implements ApplicationRunner {
@@ -36,7 +32,7 @@ public class InitService implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        String codes = "605168";
+        String codes = "002777";
 
         //获取数据
         String lastReportTime = StringUtil.getLastReportTime();

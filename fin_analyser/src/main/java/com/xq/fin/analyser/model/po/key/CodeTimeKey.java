@@ -1,4 +1,4 @@
-package com.xq.fin.analyser.model.po;
+package com.xq.fin.analyser.model.po.key;
 
 import lombok.Data;
 import lombok.ToString;
