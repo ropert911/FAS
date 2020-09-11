@@ -37,14 +37,14 @@ public class GpAnalyser {
                 zcfzPo.getMONETARYFUND() / dqysz > 0.7 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
                 100 * zcfzPo.getMONETARYFUND() / dqysz,
                 zcfzPo.getMONETARYFUND() / 100000000, dqysz / 100000000);
-        logger.info("---- 货币资金/流动负债>1/3: {} 值={} (货币资金={}亿 流动负债={}亿)",
+        logger.info("---- 货币资金/流动负债>1/3: {} 值={}% (货币资金={}亿 流动负债={}亿)",
                 zcfzPo.getMONETARYFUND() / zcfzPo.getSUMLLIAB() >= 0.333333 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
-                zcfzPo.getMONETARYFUND() / zcfzPo.getSUMLLIAB(),
+                100*zcfzPo.getMONETARYFUND() / zcfzPo.getSUMLLIAB(),
                 zcfzPo.getMONETARYFUND() / 100000000, zcfzPo.getSUMLLIAB() / 100000000);
-        logger.info("----货币资金/总资产=[5%,60%]: {} 值={}  (货币资金={}亿 总资产={}亿 比重={}%)",
+        logger.info("---- 货币资金/总资产=[5%,60%]: {} 值={}%  (货币资金={}亿 总资产={}亿)",
                 (zcfzPo.getMONETARYFUND() / zcfzPo.getSUMASSET() >= 0.05 && zcfzPo.getMONETARYFUND() / zcfzPo.getSUMASSET() <= 0.60) ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
-                zcfzPo.getMONETARYFUND() / zcfzPo.getSUMASSET(),
-                zcfzPo.getMONETARYFUND() / 100000000, zcfzPo.getSUMASSET() / 100000000, 100 * zcfzPo.getMONETARYFUND() / zcfzPo.getSUMASSET());
+                100*zcfzPo.getMONETARYFUND() / zcfzPo.getSUMASSET(),
+                zcfzPo.getMONETARYFUND() / 100000000, zcfzPo.getSUMASSET() / 100000000);
         logger.info("---- 短期有息债/流动负债<=50%: {} 值={}% (短期有息债={}亿 短期借款={}亿 一年内到期的非流动负债={}亿 流动负债={}亿)",
                 dqysz / zcfzPo.getSUMLLIAB() <= 0.5 ? "\033[36;4m" + "正常" + "\033[0m" : "\033[31;4m" + "注意" + "\033[0m",
                 100 * dqysz / zcfzPo.getSUMLLIAB(),
