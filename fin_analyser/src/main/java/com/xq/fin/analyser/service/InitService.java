@@ -32,7 +32,7 @@ public class InitService implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        String codes = "002987";
+        String codes = "605100";
 
         //获取数据
         String lastReportTime = StringUtil.getLastReportTime();
